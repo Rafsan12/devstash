@@ -1,16 +1,20 @@
 # Current Feature
 
-<!-- Feature Name -->
+Dashboard UI Phase 3
 
 ## Status
 
 <!-- Not Started|In Progress|Completed -->
 
-Not Started
+Completed
 
 ## Goals
 
-<!-- Goals & requirements -->
+- The main area to the right
+- Recent collections
+- Pinned Items
+- 10 Recent items
+- 4 stats cards at the top for number of items, collections, favorite items and favorite collections
 
 ## Notes
 
@@ -26,3 +30,5 @@ Not Started
 - Dashboard UI Phase 1 started
 - Dashboard UI Phase 1 completed
 - Dashboard UI Phase 2 completed
+- Dashboard UI Phase 3 started
+- Dashboard UI Phase 3 completed

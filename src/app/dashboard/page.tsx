@@ -7,50 +7,18 @@ import { Input } from "@/components/ui/input";
 import {
   mockDashboardData,
   type DashboardCollection,
-  type DashboardItemTypeId,
 } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
-
-const itemTypeRouteMap: Record<DashboardItemTypeId, string> = {
-  snippet: "snippets",
-  prompt: "prompts",
-  command: "commands",
-  note: "notes",
-  file: "files",
-  image: "images",
-  link: "links",
-};
-
-const itemTypeIconMap: Record<DashboardItemTypeId, string> = {
-  snippet: "</>",
-  prompt: "AI",
-  command: ">_",
-  note: "N",
-  file: "F",
-  image: "IMG",
-  link: "URL",
-};
-
-const recentCollections = mockDashboardData.collections
-  .map((collection) => {
-    const lastViewedAt = mockDashboardData.items
-      .filter((item) => item.collectionId === collection.id)
-      .map((item) => item.lastViewedAt)
-      .sort((left, right) => right.localeCompare(left))[0];
-
-    return {
-      ...collection,
-      lastViewedAt,
-    };
-  })
-  .sort((left, right) =>
-    (right.lastViewedAt ?? "").localeCompare(left.lastViewedAt ?? ""),
-  )
-  .slice(0, 3);
-
-const favoriteCollections = mockDashboardData.collections.filter(
-  (collection) => collection.isFavorite,
-);
+import {
+  itemTypeRouteMap,
+  itemTypeIconMap,
+  recentCollections,
+  favoriteCollections,
+} from "@/lib/dashboard-utils";
+import { StatsCardsSection } from "@/components/dashboard/stats-cards-section";
+import { PinnedItemsSection } from "@/components/dashboard/pinned-items-section";
+import { RecentCollectionsSection } from "@/components/dashboard/recent-collections-section";
+import { RecentItemsSection } from "@/components/dashboard/recent-items-section";
 
 export default function DashboardPage() {
   const [isDesktop, setIsDesktop] = useState(false);
@@ -236,53 +204,12 @@ export default function DashboardPage() {
                 </div>
               </header>
 
-              <section className="flex-1 px-4 py-6 sm:px-6">
-                <div className="mb-6 flex flex-col gap-3 border-b border-white/10 pb-6 sm:flex-row sm:items-end sm:justify-between">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">
-                      Phase 2
-                    </p>
-                    <h2 className="mt-2 text-3xl font-semibold text-white">Main</h2>
-                    <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-400">
-                      The dashboard now includes a collapsible navigation system,
-                      favorite collections, recent collections, and type-based
-                      links built directly from mock data.
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-sky-400/20 bg-sky-400/10 px-4 py-3 text-sm text-sky-100">
-                    {mockDashboardData.collections.length} collections loaded from
-                    mock data
-                  </div>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                  {mockDashboardData.collections.slice(0, 6).map((collection) => (
-                    <article
-                      className="rounded-[22px] border border-white/8 bg-black/30 p-5"
-                      key={collection.id}
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <h3 className="text-lg font-semibold text-white">
-                            {collection.name}
-                          </h3>
-                          <p className="mt-2 text-sm leading-6 text-zinc-400">
-                            {collection.description}
-                          </p>
-                        </div>
-                        {collection.isFavorite ? (
-                          <span className="rounded-full bg-amber-400/15 px-2.5 py-1 text-xs font-medium text-amber-200">
-                            Favorite
-                          </span>
-                        ) : null}
-                      </div>
-                      <div className="mt-6 flex items-center justify-between text-sm text-zinc-500">
-                        <span>{collection.itemCount} items</span>
-                        <span>{collection.itemTypeIds.join(" / ")}</span>
-                      </div>
-                    </article>
-                  ))}
-                </div>
+              <section className="flex-1 space-y-8 px-4 py-6 sm:px-6">
+                {/* Stats Cards */}
+                <StatsCardsSection />
+                <PinnedItemsSection />
+                <RecentCollectionsSection />
+                <RecentItemsSection />
               </section>
             </div>
           </div>

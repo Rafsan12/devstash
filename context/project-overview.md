@@ -7,9 +7,10 @@
 
 ## 1. Vision
 
-DevStash is a minimal, keyboard-driven knowledge workspace built *for developers, by developers*. Notes behave like files (`.md`, `.ts`, etc.) but are organized like a structured database — fast to write, easy to search, pleasant to use.
+DevStash is a minimal, keyboard-driven knowledge workspace built _for developers, by developers_. Notes behave like files (`.md`, `.ts`, etc.) but are organized like a structured database — fast to write, easy to search, pleasant to use.
 
 **Design pillars:**
+
 - ⚡ Speed-first
 - 🖤 Minimal dark UI
 - ⌨️ Keyboard-driven workflow
@@ -19,9 +20,9 @@ DevStash is a minimal, keyboard-driven knowledge workspace built *for developers
 
 ## 2. Target Users
 
-| Audience | Use Cases |
-|---|---|
-| **Developers** (primary) | Code snippets, architecture notes, AI prompts, debug logs, learning notes |
+| Audience                          | Use Cases                                                                 |
+| --------------------------------- | ------------------------------------------------------------------------- |
+| **Developers** (primary)          | Code snippets, architecture notes, AI prompts, debug logs, learning notes |
 | **Knowledge workers** (secondary) | Structured notes, searchable reference material, distraction-free writing |
 
 ---
@@ -38,18 +39,25 @@ DevStash
 
 ### Item Types
 
-| Type | Extension | Description |
-|---|---|---|
-| `markdown` | `.md` | Documentation, notes |
-| `code` | `.ts` / `.js` | Snippets & scripts |
-| `prompt` | `.prompt` | AI prompt storage |
-| `text` | `.txt` | Plain text |
+| Type       | Extension     | Description          |
+| ---------- | ------------- | -------------------- |
+| `markdown` | `.md`         | Documentation, notes |
+| `code`     | `.ts` / `.js` | Snippets & scripts   |
+| `prompt`   | `.prompt`     | AI prompt storage    |
+| `text`     | `.txt`        | Plain text           |
 
-*Future: `.json`, `.yaml`, `.pdf`, images, attachments*
+_Future: `.json`, `.yaml`, `.pdf`, images, attachments_
 
 ---
 
 ## 4. Data Architecture
+
+### Screenshots
+
+Refer to the screenshots below as a base for the dashboard UI. It does not have to be exact,Use it as a reference:
+
+- @context/screenshots/dashboard-ui-main.png
+- @context/screenshots/dashboard-ui-drawer.png
 
 ### Prisma Schema
 
@@ -130,26 +138,26 @@ enum ItemType {
 
 ### MVP (v1)
 
-| Feature | Description |
-|---|---|
-| 🔐 **Authentication** | Email/password login, session management, protected routes |
-| 📁 **Collections** | Create & manage named collections (smart folders) |
-| 📝 **Items** | Create/edit/delete notes with file types |
-| ✍️ **Markdown Editor** | Rich editor (TipTap or CodeMirror) |
-| 🔍 **Search** | Global full-text search across title, content, tags |
-| 📌 **Pin Notes** | Pin important items to sidebar |
-| 🕐 **Recently Visited** | Track and display last-opened items |
-| 🌑 **Dark Mode** | Default dark theme |
+| Feature                 | Description                                                |
+| ----------------------- | ---------------------------------------------------------- |
+| 🔐 **Authentication**   | Email/password login, session management, protected routes |
+| 📁 **Collections**      | Create & manage named collections (smart folders)          |
+| 📝 **Items**            | Create/edit/delete notes with file types                   |
+| ✍️ **Markdown Editor**  | Rich editor (TipTap or CodeMirror)                         |
+| 🔍 **Search**           | Global full-text search across title, content, tags        |
+| 📌 **Pin Notes**        | Pin important items to sidebar                             |
+| 🕐 **Recently Visited** | Track and display last-opened items                        |
+| 🌑 **Dark Mode**        | Default dark theme                                         |
 
 ### Post-MVP
 
-| Feature | Description |
-|---|---|
+| Feature         | Description                                            |
+| --------------- | ------------------------------------------------------ |
 | 📎 File uploads | Images, PDFs, attachments (S3 / R2 / Supabase Storage) |
-| 🤖 AI features | Summarize notes, generate docs, semantic search |
-| 🕸️ Graph view | Obsidian-style note relationship graph |
-| 🏷️ Tags | `#react` `#security` `#prompt` tagging system |
-| 🔗 Wiki links | `[[JWT Security]]`-style note linking |
+| 🤖 AI features  | Summarize notes, generate docs, semantic search        |
+| 🕸️ Graph view   | Obsidian-style note relationship graph                 |
+| 🏷️ Tags         | `#react` `#security` `#prompt` tagging system          |
+| 🔗 Wiki links   | `[[JWT Security]]`-style note linking                  |
 
 ---
 
@@ -180,19 +188,19 @@ enum ItemType {
 
 ## 7. Tech Stack
 
-| Layer | Choice | Notes |
-|---|---|---|
-| **Framework** | [Next.js](https://nextjs.org/) (App Router) | Full-stack, file-based routing |
-| **Language** | TypeScript | Type safety throughout |
-| **Styling** | [Tailwind CSS](https://tailwindcss.com/) | Utility-first |
-| **Components** | [shadcn/ui](https://ui.shadcn.com/) | Accessible, composable |
-| **Database** | [PostgreSQL](https://www.postgresql.org/) | Relational, full-text search |
-| **ORM** | [Prisma](https://www.prisma.io/) | Type-safe DB client |
-| **Auth** | [NextAuth.js](https://next-auth.js.org/) or [Lucia](https://lucia-auth.com/) | Session management |
-| **Editor** | [TipTap](https://tiptap.dev/) or [CodeMirror](https://codemirror.net/) | Rich / code-aware editing |
-| **Search** | PostgreSQL FTS → [Meilisearch](https://www.meilisearch.com/) | Start simple, scale later |
-| **Hosting** | [Vercel](https://vercel.com/) | Edge-optimized Next.js |
-| **DB Hosting** | [Supabase](https://supabase.com/) | Managed Postgres |
+| Layer          | Choice                                                                       | Notes                          |
+| -------------- | ---------------------------------------------------------------------------- | ------------------------------ |
+| **Framework**  | [Next.js](https://nextjs.org/) (App Router)                                  | Full-stack, file-based routing |
+| **Language**   | TypeScript                                                                   | Type safety throughout         |
+| **Styling**    | [Tailwind CSS](https://tailwindcss.com/)                                     | Utility-first                  |
+| **Components** | [shadcn/ui](https://ui.shadcn.com/)                                          | Accessible, composable         |
+| **Database**   | [PostgreSQL](https://www.postgresql.org/)                                    | Relational, full-text search   |
+| **ORM**        | [Prisma](https://www.prisma.io/)                                             | Type-safe DB client            |
+| **Auth**       | [NextAuth.js](https://next-auth.js.org/) or [Lucia](https://lucia-auth.com/) | Session management             |
+| **Editor**     | [TipTap](https://tiptap.dev/) or [CodeMirror](https://codemirror.net/)       | Rich / code-aware editing      |
+| **Search**     | PostgreSQL FTS → [Meilisearch](https://www.meilisearch.com/)                 | Start simple, scale later      |
+| **Hosting**    | [Vercel](https://vercel.com/)                                                | Edge-optimized Next.js         |
+| **DB Hosting** | [Supabase](https://supabase.com/)                                            | Managed Postgres               |
 
 ---
 
@@ -255,15 +263,17 @@ GET    /api/recent               → Get recently visited items
 ## 10. Storage Strategy
 
 ### Phase 1 — Simple (MVP)
+
 Store content directly in PostgreSQL as `TEXT`. Fast to build, no extra infrastructure.
 
 ### Phase 2 — Scalable
+
 Store large files in object storage; DB holds reference only.
 
-| Option | Notes |
-|---|---|
-| [AWS S3](https://aws.amazon.com/s3/) | Most established |
-| [Cloudflare R2](https://developers.cloudflare.com/r2/) | No egress fees, S3-compatible |
+| Option                                                       | Notes                          |
+| ------------------------------------------------------------ | ------------------------------ |
+| [AWS S3](https://aws.amazon.com/s3/)                         | Most established               |
+| [Cloudflare R2](https://developers.cloudflare.com/r2/)       | No egress fees, S3-compatible  |
 | [Supabase Storage](https://supabase.com/docs/guides/storage) | Easiest if already on Supabase |
 
 ```
@@ -277,13 +287,15 @@ content       String?   @db.Text  // kept for small/inline items
 
 ## 11. Editor Options
 
-### Option A — TipTap *(Recommended for v1)*
+### Option A — TipTap _(Recommended for v1)_
+
 - ✅ Modern, highly extensible
 - ✅ Markdown support out of the box
 - ✅ Great ecosystem of extensions
 - ✅ Feels like a polished product editor
 
-### Option B — CodeMirror *(Better for dev-heavy use)*
+### Option B — CodeMirror _(Better for dev-heavy use)_
+
 - ✅ Syntax highlighting for `.ts`, `.js`, `.json`, `.yaml`
 - ✅ Feels like a mini IDE
 - ✅ Great for code snippet storage
@@ -297,25 +309,25 @@ content       String?   @db.Text  // kept for small/inline items
 
 These are the areas most likely to cause problems — address them early.
 
-| Challenge | Risk | Mitigation |
-|---|---|---|
-| **Search scaling** | Slow FTS on large datasets | Start with PG FTS, migrate to Meilisearch at scale |
-| **Editor complexity** | Rich editors have subtle bugs | Pick one editor and go deep, don't mix |
-| **Note relationships** | `[[wiki links]]` are non-trivial to implement | Defer to post-MVP, design schema with this in mind |
-| **Large note performance** | Big content blobs are slow to load/render | Lazy load content, paginate list views |
-| **Auth edge cases** | Session expiry, concurrent logins | Use a battle-tested lib (NextAuth/Lucia), don't roll your own |
+| Challenge                  | Risk                                          | Mitigation                                                    |
+| -------------------------- | --------------------------------------------- | ------------------------------------------------------------- |
+| **Search scaling**         | Slow FTS on large datasets                    | Start with PG FTS, migrate to Meilisearch at scale            |
+| **Editor complexity**      | Rich editors have subtle bugs                 | Pick one editor and go deep, don't mix                        |
+| **Note relationships**     | `[[wiki links]]` are non-trivial to implement | Defer to post-MVP, design schema with this in mind            |
+| **Large note performance** | Big content blobs are slow to load/render     | Lazy load content, paginate list views                        |
+| **Auth edge cases**        | Session expiry, concurrent logins             | Use a battle-tested lib (NextAuth/Lucia), don't roll your own |
 
 ---
 
 ## 13. Design Inspiration
 
-| App | What to take from it |
-|---|---|
-| [Notion](https://notion.so) | Clean editor UX, block-based feel |
-| [Linear](https://linear.app) | Speed, keyboard shortcuts, dark theme |
-| [Raycast](https://raycast.com) | Command palette, minimal chrome |
-| [Vercel Dashboard](https://vercel.com) | Typography, spacing, pro dark UI |
-| [Obsidian](https://obsidian.md) | File-first thinking, graph potential |
+| App                                    | What to take from it                  |
+| -------------------------------------- | ------------------------------------- |
+| [Notion](https://notion.so)            | Clean editor UX, block-based feel     |
+| [Linear](https://linear.app)           | Speed, keyboard shortcuts, dark theme |
+| [Raycast](https://raycast.com)         | Command palette, minimal chrome       |
+| [Vercel Dashboard](https://vercel.com) | Typography, spacing, pro dark UI      |
+| [Obsidian](https://obsidian.md)        | File-first thinking, graph potential  |
 
 ---
 
@@ -336,4 +348,4 @@ These are the areas most likely to cause problems — address them early.
 
 ---
 
-*DevStash — Every note is a searchable, organized knowledge file.*
+_DevStash — Every note is a searchable, organized knowledge file._
