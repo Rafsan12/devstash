@@ -1,24 +1,24 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState, type ReactNode } from "react";
+import { PinnedItemsSection } from "@/components/dashboard/pinned-items-section";
+import { RecentCollectionsSection } from "@/components/dashboard/recent-collections-section";
+import { RecentItemsSection } from "@/components/dashboard/recent-items-section";
+import { StatsCardsSection } from "@/components/dashboard/stats-cards-section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  favoriteCollections,
+  itemTypeIconMap,
+  itemTypeRouteMap,
+  recentCollections,
+} from "@/lib/dashboard-utils";
 import {
   mockDashboardData,
   type DashboardCollection,
 } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
-import {
-  itemTypeRouteMap,
-  itemTypeIconMap,
-  recentCollections,
-  favoriteCollections,
-} from "@/lib/dashboard-utils";
-import { StatsCardsSection } from "@/components/dashboard/stats-cards-section";
-import { PinnedItemsSection } from "@/components/dashboard/pinned-items-section";
-import { RecentCollectionsSection } from "@/components/dashboard/recent-collections-section";
-import { RecentItemsSection } from "@/components/dashboard/recent-items-section";
+import Link from "next/link";
+import { useEffect, useState, type ReactNode } from "react";
 
 export default function DashboardPage() {
   const [isDesktop, setIsDesktop] = useState(false);
@@ -195,10 +195,14 @@ export default function DashboardPage() {
                       />
                     </div>
                     <div className="flex items-center gap-3">
-                      <Button className="min-w-32" variant="outline">
+                      <Button className="group whitespace-nowrap px-6 font-semibold tracking-wide" variant="premium-outline">
+                        <PlusIcon className="mr-2 h-4 w-4 transition-transform group-hover:rotate-90" />
                         New Collection
                       </Button>
-                      <Button className="min-w-24">New Item</Button>
+                      <Button className="group whitespace-nowrap px-6 font-semibold tracking-wide" variant="premium">
+                        <PlusIcon className="mr-2 h-4 w-4 transition-transform group-hover:rotate-90" />
+                        New Item
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -313,6 +317,26 @@ function SearchIcon() {
         stroke="currentColor"
         strokeLinecap="round"
         strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function PlusIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M12 4v16m8-8H4"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
       />
     </svg>
   );

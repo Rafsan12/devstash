@@ -1,7 +1,7 @@
-﻿import * as React from "react";
+import * as React from "react";
 import { cn } from "@/lib/utils";
 
-type ButtonVariant = "default" | "outline" | "ghost";
+type ButtonVariant = "default" | "outline" | "ghost" | "premium" | "premium-outline";
 type ButtonSize = "default" | "sm" | "icon";
 
 const variantClasses: Record<ButtonVariant, string> = {
@@ -10,6 +10,10 @@ const variantClasses: Record<ButtonVariant, string> = {
   outline:
     "border border-white/12 bg-white/5 text-white hover:bg-white/10",
   ghost: "bg-transparent text-zinc-300 hover:bg-white/8 hover:text-white",
+  premium: 
+    "bg-[linear-gradient(135deg,#3b82f6_0%,#8b5cf6_100%)] text-white shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_25px_rgba(139,92,246,0.5)] border-0 hover:scale-[1.02] transition-all duration-300 ease-out",
+  "premium-outline": 
+    "border border-sky-400/30 bg-sky-400/10 text-sky-100 hover:bg-sky-400/20 hover:border-sky-400/50 shadow-[0_0_15px_rgba(56,189,248,0.1)] hover:shadow-[0_0_20px_rgba(56,189,248,0.2)] transition-all duration-300 ease-out",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
