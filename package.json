@@ -2,14 +2,24 @@
   "name": "--sre-dir",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "schema": "prisma/schema"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:format": "prisma format --schema=prisma/schema",
+    "db:generate": "prisma generate --schema=prisma/schema",
+    "db:migrate": "prisma migrate dev --schema=prisma/schema"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.5.0",
+    "@prisma/client": "^7.5.0",
+    "@types/pg": "^8.20.0",
     "next": "16.1.7",
+    "pg": "^8.20.0",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
@@ -19,8 +29,10 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
+    "dotenv": "^17.3.1",
     "eslint": "^9",
     "eslint-config-next": "16.1.7",
+    "prisma": "^7.5.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

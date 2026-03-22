@@ -1,0 +1,35 @@
+model Item {
+  id            String   @id @default(cuid())
+  title         String
+  content       String   @db.Text
+  type          ItemType
+  fileExtension String
+  collectionId  String
+  userId        String
+  isPinned      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  collection  Collection   @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recentItems RecentItem[]
+}
+
+model RecentItem {
+  id        String   @id @default(cuid())
+  userId    String
+  itemId    String
+  visitedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, itemId])
+}
+
+enum ItemType {
+  markdown
+  code
+  prompt
+  text
+}
