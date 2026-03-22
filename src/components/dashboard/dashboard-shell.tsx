@@ -2,21 +2,29 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { type DashboardSidebarCollection } from "@/lib/db/collections";
 import {
-  favoriteCollections,
-  itemTypeIconMap,
-  itemTypeRouteMap,
-  recentCollections,
-} from "@/lib/dashboard-utils";
-import {
-  mockDashboardData,
-  type DashboardCollection,
-} from "@/lib/mock-data";
+  type DashboardSidebarItemType,
+  type DashboardSidebarUser,
+} from "@/lib/db/items";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
+import { ItemTypeIcon, withAlpha } from "./item-type-icon";
 
-export function DashboardShell({ children }: { children: ReactNode }) {
+export function DashboardShell({
+  children,
+  favoriteCollections,
+  recentCollections,
+  sidebarItemTypes,
+  user,
+}: {
+  children: ReactNode;
+  favoriteCollections: DashboardSidebarCollection[];
+  recentCollections: DashboardSidebarCollection[];
+  sidebarItemTypes: DashboardSidebarItemType[];
+  user: DashboardSidebarUser | null;
+}) {
   const [isDesktop, setIsDesktop] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -38,6 +46,11 @@ export function DashboardShell({ children }: { children: ReactNode }) {
   }, []);
 
   const sidebarExpanded = isDesktop ? isSidebarOpen : true;
+  const displayUser = user ?? {
+    name: "Demo User",
+    email: "demo@devstash.io",
+    avatarLabel: "DU",
+  };
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.12),_transparent_28%),linear-gradient(180deg,_#09090b_0%,_#050507_100%)] text-white">
@@ -79,23 +92,21 @@ export function DashboardShell({ children }: { children: ReactNode }) {
 
                 <div className="flex-1 space-y-6 overflow-y-auto px-4 py-5">
                   <SidebarSection label="Types" sidebarExpanded={sidebarExpanded}>
-                    {mockDashboardData.itemTypes.map((itemType) => (
+                    {sidebarItemTypes.map((itemType) => (
                       <Link
                         className={cn(
                           "flex items-center gap-3 rounded-2xl px-3 py-3 text-sm transition hover:bg-white/[0.05] hover:text-white",
                           sidebarExpanded ? "justify-between" : "justify-center",
                         )}
-                        href={`/items/${itemTypeRouteMap[itemType.id]}`}
+                        href={itemType.href}
                         key={itemType.id}
                       >
                         <div className="flex items-center gap-3 overflow-hidden">
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-[11px] font-semibold text-sky-200">
-                            {itemTypeIconMap[itemType.id]}
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-sky-200">
+                            <ItemTypeIcon icon={itemType.icon} />
                           </span>
                           {sidebarExpanded ? (
-                            <span className="truncate text-zinc-200">
-                              {itemType.name}
-                            </span>
+                            <span className="truncate text-zinc-200">{itemType.name}</span>
                           ) : null}
                         </div>
                         {sidebarExpanded ? (
@@ -111,6 +122,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                         collection={collection}
                         key={collection.id}
                         sidebarExpanded={sidebarExpanded}
+                        variant="favorite"
                       />
                     ))}
                   </SidebarSection>
@@ -122,8 +134,31 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                         key={collection.id}
                         meta={`${collection.itemCount} items`}
                         sidebarExpanded={sidebarExpanded}
+                        variant="recent"
                       />
                     ))}
+                  </SidebarSection>
+
+                  <SidebarSection label="Collections" sidebarExpanded={sidebarExpanded}>
+                    <Link
+                      className={cn(
+                        "flex items-center gap-3 rounded-2xl px-3 py-3 text-sm transition hover:bg-white/[0.05] hover:text-white",
+                        sidebarExpanded ? "justify-between" : "justify-center",
+                      )}
+                      href="/collections"
+                    >
+                      <div className="flex items-center gap-3 overflow-hidden">
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-xs font-semibold text-zinc-200">
+                          ALL
+                        </span>
+                        {sidebarExpanded ? (
+                          <span className="truncate text-zinc-200">View all collections</span>
+                        ) : null}
+                      </div>
+                      {sidebarExpanded ? (
+                        <span className="text-xs text-zinc-500">Open</span>
+                      ) : null}
+                    </Link>
                   </SidebarSection>
                 </div>
 
@@ -135,15 +170,15 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                     )}
                   >
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-sm font-semibold text-zinc-950">
-                      {mockDashboardData.user.avatarLabel}
+                      {displayUser.avatarLabel}
                     </div>
                     {sidebarExpanded ? (
                       <div className="min-w-0">
                         <p className="truncate text-sm font-medium text-white">
-                          {mockDashboardData.user.name}
+                          {displayUser.name}
                         </p>
                         <p className="truncate text-sm text-zinc-500">
-                          {mockDashboardData.user.email}
+                          {displayUser.email}
                         </p>
                       </div>
                     ) : null}
@@ -191,11 +226,17 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                       />
                     </div>
                     <div className="flex items-center gap-3">
-                      <Button className="group whitespace-nowrap px-6 font-semibold tracking-wide" variant="premium-outline">
+                      <Button
+                        className="group whitespace-nowrap px-6 font-semibold tracking-wide"
+                        variant="premium-outline"
+                      >
                         <PlusIcon className="mr-2 h-4 w-4 transition-transform group-hover:rotate-90" />
                         New Collection
                       </Button>
-                      <Button className="group whitespace-nowrap px-6 font-semibold tracking-wide" variant="premium">
+                      <Button
+                        className="group whitespace-nowrap px-6 font-semibold tracking-wide"
+                        variant="premium"
+                      >
                         <PlusIcon className="mr-2 h-4 w-4 transition-transform group-hover:rotate-90" />
                         New Item
                       </Button>
@@ -238,11 +279,35 @@ function CollectionListItem({
   collection,
   meta,
   sidebarExpanded,
+  variant,
 }: {
-  collection: DashboardCollection;
+  collection: DashboardSidebarCollection;
   meta?: string;
   sidebarExpanded: boolean;
+  variant: "favorite" | "recent";
 }) {
+  const leadingBadge =
+    variant === "favorite" ? (
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-xs font-semibold text-amber-200">
+        STAR
+      </span>
+    ) : (
+      <span
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border"
+        style={{
+          borderColor: withAlpha(collection.dominantTypeColor, "52"),
+          backgroundColor: withAlpha(collection.dominantTypeColor, "14"),
+        }}
+      >
+        <span
+          className="h-3 w-3 rounded-full"
+          style={{
+            backgroundColor: collection.dominantTypeColor,
+          }}
+        />
+      </span>
+    );
+
   return (
     <button
       className={cn(
@@ -252,9 +317,7 @@ function CollectionListItem({
       type="button"
     >
       <div className="flex items-center gap-3 overflow-hidden">
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-xs font-semibold text-amber-200">
-          {collection.isFavorite ? "STAR" : "COL"}
-        </span>
+        {leadingBadge}
         {sidebarExpanded ? (
           <div className="min-w-0">
             <p className="truncate text-sm font-medium text-zinc-200">
@@ -266,7 +329,7 @@ function CollectionListItem({
           </div>
         ) : null}
       </div>
-      {sidebarExpanded && collection.isFavorite ? (
+      {sidebarExpanded && variant === "favorite" ? (
         <span className="text-amber-300">*</span>
       ) : null}
     </button>

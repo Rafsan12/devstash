@@ -1,6 +1,6 @@
 # Current Feature
 
-Dashboard Items
+Stats & Sidebar
 
 ## Status
 
@@ -10,35 +10,37 @@ Completed
 
 ## Goals
 
-- Replace the dashboard's dummy pinned and recent item data with real database-backed data
-- Fetch item data from Neon through Prisma instead of `@src/lib/mock-data.ts`
-- Preserve the existing dashboard item layout and visual design in the main dashboard area
-- Keep the implementation modular by introducing item-specific database access helpers
-- Ensure empty pinned states stay hidden when there are no pinned items
+- Replace the remaining dashboard stats and sidebar mock data with real database-backed data
+- Display system item types in the sidebar using database data instead of `@src/lib/mock-data.ts`
+- Show real collection data in the sidebar while preserving the existing layout and interaction style
+- Keep the implementation modular by extending the database-backed dashboard helpers
+- Add the remaining sidebar navigation needed for collections browsing
 
 ## Requirements
 
 ### Data Source And Fetching
 
-- Create `src/lib/db/items.ts` with data fetching functions
-- Fetch items directly in the dashboard server component
+- Create or extend `src/lib/db/items.ts` with database functions for stats and sidebar item types
+- Fetch stats and sidebar data from the database instead of mock data
 - Use Prisma with the Neon database as the source of truth
-- Stop using `@src/lib/mock-data.ts` for pinned and recent dashboard items
+- Use `src/lib/db/collections.ts` as the reference for sidebar collection shaping where helpful
 
-### Item Card Behavior
+### Sidebar And Stats Behavior
 
-- Keep the current pinned and recent item presentation as it exists today
-- Derive each item card icon and border styling from the item type
-- Display item type tags and any other metadata already shown in the current UI
-- Update collection stats display
-- Render nothing in the pinned section when there are no pinned items
+- Keep the current dashboard design and layout intact
+- Display stats using database-backed values
+- Display item types in the sidebar with their icons and links to `/items/[typename]`
+- Show actual collection data in the sidebar
+- Add a `View all collections` link beneath the collections list that routes to `/collections`
+- Keep star icons for favorite collections
+- For recent collections, show a colored circle based on the most-used item type in that collection
 
 ## Notes
 
 - Use the current dashboard UI and screenshot reference as the visual baseline
-- The design should remain unchanged while the item data source becomes real and scalable
-- This feature covers the main dashboard area on the right side, including pinned and recent items
-- The existing UI should be preserved, with only the backing data and related stats becoming database-driven
+- This feature focuses on the remaining stats and sidebar areas still tied to mock dashboard data
+- The existing UI should be preserved, with only the backing data and sidebar collection presentation becoming database-driven
+- The collections database helper can be reused as a reference for recent collection coloring and shaping
 
 ## History
 
@@ -58,3 +60,5 @@ Completed
 - Dashboard Collections completed
 - Dashboard Items added as the current feature
 - Dashboard Items completed
+- Stats & Sidebar added as the current feature
+- Stats & Sidebar completed
