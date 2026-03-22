@@ -1,0 +1,9 @@
+model ItemType {
+  id        String   @id
+  icon      String
+  color     String
+  isSystem  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  items Item[]
+}

@@ -56,6 +56,7 @@ export const ModelName = {
   Session: 'Session',
   VerificationToken: 'VerificationToken',
   Collection: 'Collection',
+  ItemType: 'ItemType',
   Item: 'Item',
   RecentItem: 'RecentItem'
 } as const
@@ -83,6 +84,7 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   password: 'password',
+  isPro: 'isPro',
   createdAt: 'createdAt'
 } as const
 
@@ -137,11 +139,22 @@ export const CollectionScalarFieldEnum = {
 export type CollectionScalarFieldEnum = (typeof CollectionScalarFieldEnum)[keyof typeof CollectionScalarFieldEnum]
 
 
+export const ItemTypeScalarFieldEnum = {
+  id: 'id',
+  icon: 'icon',
+  color: 'color',
+  isSystem: 'isSystem',
+  createdAt: 'createdAt'
+} as const
+
+export type ItemTypeScalarFieldEnum = (typeof ItemTypeScalarFieldEnum)[keyof typeof ItemTypeScalarFieldEnum]
+
+
 export const ItemScalarFieldEnum = {
   id: 'id',
   title: 'title',
   content: 'content',
-  type: 'type',
+  itemTypeId: 'itemTypeId',
   fileExtension: 'fileExtension',
   collectionId: 'collectionId',
   userId: 'userId',

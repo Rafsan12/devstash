@@ -2,7 +2,7 @@ model Item {
   id            String   @id @default(cuid())
   title         String
   content       String   @db.Text
-  type          ItemType
+  itemTypeId    String
   fileExtension String
   collectionId  String
   userId        String
@@ -11,8 +11,13 @@ model Item {
   updatedAt     DateTime @updatedAt
 
   collection  Collection   @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  itemType    ItemType     @relation(fields: [itemTypeId], references: [id], onDelete: Restrict)
   user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   recentItems RecentItem[]
+
+  @@index([itemTypeId])
+  @@index([collectionId])
+  @@index([userId])
 }
 
 model RecentItem {
@@ -25,11 +30,4 @@ model RecentItem {
   item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
   @@unique([userId, itemId])
-}
-
-enum ItemType {
-  markdown
-  code
-  prompt
-  text
 }

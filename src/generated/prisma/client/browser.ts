@@ -43,6 +43,11 @@ export type VerificationToken = Prisma.VerificationTokenModel
  */
 export type Collection = Prisma.CollectionModel
 /**
+ * Model ItemType
+ * 
+ */
+export type ItemType = Prisma.ItemTypeModel
+/**
  * Model Item
  * 
  */

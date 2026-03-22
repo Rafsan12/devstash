@@ -28,7 +28,7 @@ export type ItemMinAggregateOutputType = {
   id: string | null
   title: string | null
   content: string | null
-  type: $Enums.ItemType | null
+  itemTypeId: string | null
   fileExtension: string | null
   collectionId: string | null
   userId: string | null
@@ -41,7 +41,7 @@ export type ItemMaxAggregateOutputType = {
   id: string | null
   title: string | null
   content: string | null
-  type: $Enums.ItemType | null
+  itemTypeId: string | null
   fileExtension: string | null
   collectionId: string | null
   userId: string | null
@@ -54,7 +54,7 @@ export type ItemCountAggregateOutputType = {
   id: number
   title: number
   content: number
-  type: number
+  itemTypeId: number
   fileExtension: number
   collectionId: number
   userId: number
@@ -69,7 +69,7 @@ export type ItemMinAggregateInputType = {
   id?: true
   title?: true
   content?: true
-  type?: true
+  itemTypeId?: true
   fileExtension?: true
   collectionId?: true
   userId?: true
@@ -82,7 +82,7 @@ export type ItemMaxAggregateInputType = {
   id?: true
   title?: true
   content?: true
-  type?: true
+  itemTypeId?: true
   fileExtension?: true
   collectionId?: true
   userId?: true
@@ -95,7 +95,7 @@ export type ItemCountAggregateInputType = {
   id?: true
   title?: true
   content?: true
-  type?: true
+  itemTypeId?: true
   fileExtension?: true
   collectionId?: true
   userId?: true
@@ -181,7 +181,7 @@ export type ItemGroupByOutputType = {
   id: string
   title: string
   content: string
-  type: $Enums.ItemType
+  itemTypeId: string
   fileExtension: string
   collectionId: string
   userId: string
@@ -215,7 +215,7 @@ export type ItemWhereInput = {
   id?: Prisma.StringFilter<"Item"> | string
   title?: Prisma.StringFilter<"Item"> | string
   content?: Prisma.StringFilter<"Item"> | string
-  type?: Prisma.EnumItemTypeFilter<"Item"> | $Enums.ItemType
+  itemTypeId?: Prisma.StringFilter<"Item"> | string
   fileExtension?: Prisma.StringFilter<"Item"> | string
   collectionId?: Prisma.StringFilter<"Item"> | string
   userId?: Prisma.StringFilter<"Item"> | string
@@ -223,6 +223,7 @@ export type ItemWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   collection?: Prisma.XOR<Prisma.CollectionScalarRelationFilter, Prisma.CollectionWhereInput>
+  itemType?: Prisma.XOR<Prisma.ItemTypeScalarRelationFilter, Prisma.ItemTypeWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   recentItems?: Prisma.RecentItemListRelationFilter
 }
@@ -231,7 +232,7 @@ export type ItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  itemTypeId?: Prisma.SortOrder
   fileExtension?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -239,6 +240,7 @@ export type ItemOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   collection?: Prisma.CollectionOrderByWithRelationInput
+  itemType?: Prisma.ItemTypeOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   recentItems?: Prisma.RecentItemOrderByRelationAggregateInput
 }
@@ -250,7 +252,7 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ItemWhereInput | Prisma.ItemWhereInput[]
   title?: Prisma.StringFilter<"Item"> | string
   content?: Prisma.StringFilter<"Item"> | string
-  type?: Prisma.EnumItemTypeFilter<"Item"> | $Enums.ItemType
+  itemTypeId?: Prisma.StringFilter<"Item"> | string
   fileExtension?: Prisma.StringFilter<"Item"> | string
   collectionId?: Prisma.StringFilter<"Item"> | string
   userId?: Prisma.StringFilter<"Item"> | string
@@ -258,6 +260,7 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   collection?: Prisma.XOR<Prisma.CollectionScalarRelationFilter, Prisma.CollectionWhereInput>
+  itemType?: Prisma.XOR<Prisma.ItemTypeScalarRelationFilter, Prisma.ItemTypeWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   recentItems?: Prisma.RecentItemListRelationFilter
 }, "id">
@@ -266,7 +269,7 @@ export type ItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  itemTypeId?: Prisma.SortOrder
   fileExtension?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -285,7 +288,7 @@ export type ItemScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Item"> | string
   title?: Prisma.StringWithAggregatesFilter<"Item"> | string
   content?: Prisma.StringWithAggregatesFilter<"Item"> | string
-  type?: Prisma.EnumItemTypeWithAggregatesFilter<"Item"> | $Enums.ItemType
+  itemTypeId?: Prisma.StringWithAggregatesFilter<"Item"> | string
   fileExtension?: Prisma.StringWithAggregatesFilter<"Item"> | string
   collectionId?: Prisma.StringWithAggregatesFilter<"Item"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Item"> | string
@@ -298,12 +301,12 @@ export type ItemCreateInput = {
   id?: string
   title: string
   content: string
-  type: $Enums.ItemType
   fileExtension: string
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   collection: Prisma.CollectionCreateNestedOneWithoutItemsInput
+  itemType: Prisma.ItemTypeCreateNestedOneWithoutItemsInput
   user: Prisma.UserCreateNestedOneWithoutItemsInput
   recentItems?: Prisma.RecentItemCreateNestedManyWithoutItemInput
 }
@@ -312,7 +315,7 @@ export type ItemUncheckedCreateInput = {
   id?: string
   title: string
   content: string
-  type: $Enums.ItemType
+  itemTypeId: string
   fileExtension: string
   collectionId: string
   userId: string
@@ -326,12 +329,12 @@ export type ItemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumItemTypeFieldUpdateOperationsInput | $Enums.ItemType
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   collection?: Prisma.CollectionUpdateOneRequiredWithoutItemsNestedInput
+  itemType?: Prisma.ItemTypeUpdateOneRequiredWithoutItemsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutItemsNestedInput
   recentItems?: Prisma.RecentItemUpdateManyWithoutItemNestedInput
 }
@@ -340,7 +343,7 @@ export type ItemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumItemTypeFieldUpdateOperationsInput | $Enums.ItemType
+  itemTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -354,7 +357,7 @@ export type ItemCreateManyInput = {
   id?: string
   title: string
   content: string
-  type: $Enums.ItemType
+  itemTypeId: string
   fileExtension: string
   collectionId: string
   userId: string
@@ -367,7 +370,6 @@ export type ItemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumItemTypeFieldUpdateOperationsInput | $Enums.ItemType
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -378,7 +380,7 @@ export type ItemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumItemTypeFieldUpdateOperationsInput | $Enums.ItemType
+  itemTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -401,7 +403,7 @@ export type ItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  itemTypeId?: Prisma.SortOrder
   fileExtension?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -414,7 +416,7 @@ export type ItemMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  itemTypeId?: Prisma.SortOrder
   fileExtension?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -427,7 +429,7 @@ export type ItemMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  itemTypeId?: Prisma.SortOrder
   fileExtension?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -525,12 +527,46 @@ export type ItemUncheckedUpdateManyWithoutCollectionNestedInput = {
   deleteMany?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
 }
 
-export type EnumItemTypeFieldUpdateOperationsInput = {
-  set?: $Enums.ItemType
+export type ItemCreateNestedManyWithoutItemTypeInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutItemTypeInput, Prisma.ItemUncheckedCreateWithoutItemTypeInput> | Prisma.ItemCreateWithoutItemTypeInput[] | Prisma.ItemUncheckedCreateWithoutItemTypeInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutItemTypeInput | Prisma.ItemCreateOrConnectWithoutItemTypeInput[]
+  createMany?: Prisma.ItemCreateManyItemTypeInputEnvelope
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
+export type ItemUncheckedCreateNestedManyWithoutItemTypeInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutItemTypeInput, Prisma.ItemUncheckedCreateWithoutItemTypeInput> | Prisma.ItemCreateWithoutItemTypeInput[] | Prisma.ItemUncheckedCreateWithoutItemTypeInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutItemTypeInput | Prisma.ItemCreateOrConnectWithoutItemTypeInput[]
+  createMany?: Prisma.ItemCreateManyItemTypeInputEnvelope
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+}
+
+export type ItemUpdateManyWithoutItemTypeNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutItemTypeInput, Prisma.ItemUncheckedCreateWithoutItemTypeInput> | Prisma.ItemCreateWithoutItemTypeInput[] | Prisma.ItemUncheckedCreateWithoutItemTypeInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutItemTypeInput | Prisma.ItemCreateOrConnectWithoutItemTypeInput[]
+  upsert?: Prisma.ItemUpsertWithWhereUniqueWithoutItemTypeInput | Prisma.ItemUpsertWithWhereUniqueWithoutItemTypeInput[]
+  createMany?: Prisma.ItemCreateManyItemTypeInputEnvelope
+  set?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  disconnect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  delete?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  update?: Prisma.ItemUpdateWithWhereUniqueWithoutItemTypeInput | Prisma.ItemUpdateWithWhereUniqueWithoutItemTypeInput[]
+  updateMany?: Prisma.ItemUpdateManyWithWhereWithoutItemTypeInput | Prisma.ItemUpdateManyWithWhereWithoutItemTypeInput[]
+  deleteMany?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
+}
+
+export type ItemUncheckedUpdateManyWithoutItemTypeNestedInput = {
+  create?: Prisma.XOR<Prisma.ItemCreateWithoutItemTypeInput, Prisma.ItemUncheckedCreateWithoutItemTypeInput> | Prisma.ItemCreateWithoutItemTypeInput[] | Prisma.ItemUncheckedCreateWithoutItemTypeInput[]
+  connectOrCreate?: Prisma.ItemCreateOrConnectWithoutItemTypeInput | Prisma.ItemCreateOrConnectWithoutItemTypeInput[]
+  upsert?: Prisma.ItemUpsertWithWhereUniqueWithoutItemTypeInput | Prisma.ItemUpsertWithWhereUniqueWithoutItemTypeInput[]
+  createMany?: Prisma.ItemCreateManyItemTypeInputEnvelope
+  set?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  disconnect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  delete?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  connect?: Prisma.ItemWhereUniqueInput | Prisma.ItemWhereUniqueInput[]
+  update?: Prisma.ItemUpdateWithWhereUniqueWithoutItemTypeInput | Prisma.ItemUpdateWithWhereUniqueWithoutItemTypeInput[]
+  updateMany?: Prisma.ItemUpdateManyWithWhereWithoutItemTypeInput | Prisma.ItemUpdateManyWithWhereWithoutItemTypeInput[]
+  deleteMany?: Prisma.ItemScalarWhereInput | Prisma.ItemScalarWhereInput[]
 }
 
 export type ItemCreateNestedOneWithoutRecentItemsInput = {
@@ -551,12 +587,12 @@ export type ItemCreateWithoutUserInput = {
   id?: string
   title: string
   content: string
-  type: $Enums.ItemType
   fileExtension: string
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   collection: Prisma.CollectionCreateNestedOneWithoutItemsInput
+  itemType: Prisma.ItemTypeCreateNestedOneWithoutItemsInput
   recentItems?: Prisma.RecentItemCreateNestedManyWithoutItemInput
 }
 
@@ -564,7 +600,7 @@ export type ItemUncheckedCreateWithoutUserInput = {
   id?: string
   title: string
   content: string
-  type: $Enums.ItemType
+  itemTypeId: string
   fileExtension: string
   collectionId: string
   isPinned?: boolean
@@ -606,7 +642,7 @@ export type ItemScalarWhereInput = {
   id?: Prisma.StringFilter<"Item"> | string
   title?: Prisma.StringFilter<"Item"> | string
   content?: Prisma.StringFilter<"Item"> | string
-  type?: Prisma.EnumItemTypeFilter<"Item"> | $Enums.ItemType
+  itemTypeId?: Prisma.StringFilter<"Item"> | string
   fileExtension?: Prisma.StringFilter<"Item"> | string
   collectionId?: Prisma.StringFilter<"Item"> | string
   userId?: Prisma.StringFilter<"Item"> | string
@@ -619,11 +655,11 @@ export type ItemCreateWithoutCollectionInput = {
   id?: string
   title: string
   content: string
-  type: $Enums.ItemType
   fileExtension: string
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  itemType: Prisma.ItemTypeCreateNestedOneWithoutItemsInput
   user: Prisma.UserCreateNestedOneWithoutItemsInput
   recentItems?: Prisma.RecentItemCreateNestedManyWithoutItemInput
 }
@@ -632,7 +668,7 @@ export type ItemUncheckedCreateWithoutCollectionInput = {
   id?: string
   title: string
   content: string
-  type: $Enums.ItemType
+  itemTypeId: string
   fileExtension: string
   userId: string
   isPinned?: boolean
@@ -667,16 +703,68 @@ export type ItemUpdateManyWithWhereWithoutCollectionInput = {
   data: Prisma.XOR<Prisma.ItemUpdateManyMutationInput, Prisma.ItemUncheckedUpdateManyWithoutCollectionInput>
 }
 
-export type ItemCreateWithoutRecentItemsInput = {
+export type ItemCreateWithoutItemTypeInput = {
   id?: string
   title: string
   content: string
-  type: $Enums.ItemType
   fileExtension: string
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   collection: Prisma.CollectionCreateNestedOneWithoutItemsInput
+  user: Prisma.UserCreateNestedOneWithoutItemsInput
+  recentItems?: Prisma.RecentItemCreateNestedManyWithoutItemInput
+}
+
+export type ItemUncheckedCreateWithoutItemTypeInput = {
+  id?: string
+  title: string
+  content: string
+  fileExtension: string
+  collectionId: string
+  userId: string
+  isPinned?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  recentItems?: Prisma.RecentItemUncheckedCreateNestedManyWithoutItemInput
+}
+
+export type ItemCreateOrConnectWithoutItemTypeInput = {
+  where: Prisma.ItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.ItemCreateWithoutItemTypeInput, Prisma.ItemUncheckedCreateWithoutItemTypeInput>
+}
+
+export type ItemCreateManyItemTypeInputEnvelope = {
+  data: Prisma.ItemCreateManyItemTypeInput | Prisma.ItemCreateManyItemTypeInput[]
+  skipDuplicates?: boolean
+}
+
+export type ItemUpsertWithWhereUniqueWithoutItemTypeInput = {
+  where: Prisma.ItemWhereUniqueInput
+  update: Prisma.XOR<Prisma.ItemUpdateWithoutItemTypeInput, Prisma.ItemUncheckedUpdateWithoutItemTypeInput>
+  create: Prisma.XOR<Prisma.ItemCreateWithoutItemTypeInput, Prisma.ItemUncheckedCreateWithoutItemTypeInput>
+}
+
+export type ItemUpdateWithWhereUniqueWithoutItemTypeInput = {
+  where: Prisma.ItemWhereUniqueInput
+  data: Prisma.XOR<Prisma.ItemUpdateWithoutItemTypeInput, Prisma.ItemUncheckedUpdateWithoutItemTypeInput>
+}
+
+export type ItemUpdateManyWithWhereWithoutItemTypeInput = {
+  where: Prisma.ItemScalarWhereInput
+  data: Prisma.XOR<Prisma.ItemUpdateManyMutationInput, Prisma.ItemUncheckedUpdateManyWithoutItemTypeInput>
+}
+
+export type ItemCreateWithoutRecentItemsInput = {
+  id?: string
+  title: string
+  content: string
+  fileExtension: string
+  isPinned?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  collection: Prisma.CollectionCreateNestedOneWithoutItemsInput
+  itemType: Prisma.ItemTypeCreateNestedOneWithoutItemsInput
   user: Prisma.UserCreateNestedOneWithoutItemsInput
 }
 
@@ -684,7 +772,7 @@ export type ItemUncheckedCreateWithoutRecentItemsInput = {
   id?: string
   title: string
   content: string
-  type: $Enums.ItemType
+  itemTypeId: string
   fileExtension: string
   collectionId: string
   userId: string
@@ -713,12 +801,12 @@ export type ItemUpdateWithoutRecentItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumItemTypeFieldUpdateOperationsInput | $Enums.ItemType
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   collection?: Prisma.CollectionUpdateOneRequiredWithoutItemsNestedInput
+  itemType?: Prisma.ItemTypeUpdateOneRequiredWithoutItemsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutItemsNestedInput
 }
 
@@ -726,7 +814,7 @@ export type ItemUncheckedUpdateWithoutRecentItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumItemTypeFieldUpdateOperationsInput | $Enums.ItemType
+  itemTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -739,7 +827,7 @@ export type ItemCreateManyUserInput = {
   id?: string
   title: string
   content: string
-  type: $Enums.ItemType
+  itemTypeId: string
   fileExtension: string
   collectionId: string
   isPinned?: boolean
@@ -751,12 +839,12 @@ export type ItemUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumItemTypeFieldUpdateOperationsInput | $Enums.ItemType
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   collection?: Prisma.CollectionUpdateOneRequiredWithoutItemsNestedInput
+  itemType?: Prisma.ItemTypeUpdateOneRequiredWithoutItemsNestedInput
   recentItems?: Prisma.RecentItemUpdateManyWithoutItemNestedInput
 }
 
@@ -764,7 +852,7 @@ export type ItemUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumItemTypeFieldUpdateOperationsInput | $Enums.ItemType
+  itemTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -777,7 +865,7 @@ export type ItemUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumItemTypeFieldUpdateOperationsInput | $Enums.ItemType
+  itemTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -789,7 +877,7 @@ export type ItemCreateManyCollectionInput = {
   id?: string
   title: string
   content: string
-  type: $Enums.ItemType
+  itemTypeId: string
   fileExtension: string
   userId: string
   isPinned?: boolean
@@ -801,11 +889,11 @@ export type ItemUpdateWithoutCollectionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumItemTypeFieldUpdateOperationsInput | $Enums.ItemType
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  itemType?: Prisma.ItemTypeUpdateOneRequiredWithoutItemsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutItemsNestedInput
   recentItems?: Prisma.RecentItemUpdateManyWithoutItemNestedInput
 }
@@ -814,7 +902,7 @@ export type ItemUncheckedUpdateWithoutCollectionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumItemTypeFieldUpdateOperationsInput | $Enums.ItemType
+  itemTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -827,8 +915,58 @@ export type ItemUncheckedUpdateManyWithoutCollectionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumItemTypeFieldUpdateOperationsInput | $Enums.ItemType
+  itemTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ItemCreateManyItemTypeInput = {
+  id?: string
+  title: string
+  content: string
+  fileExtension: string
+  collectionId: string
+  userId: string
+  isPinned?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ItemUpdateWithoutItemTypeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
+  isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  collection?: Prisma.CollectionUpdateOneRequiredWithoutItemsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutItemsNestedInput
+  recentItems?: Prisma.RecentItemUpdateManyWithoutItemNestedInput
+}
+
+export type ItemUncheckedUpdateWithoutItemTypeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
+  collectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recentItems?: Prisma.RecentItemUncheckedUpdateManyWithoutItemNestedInput
+}
+
+export type ItemUncheckedUpdateManyWithoutItemTypeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
+  collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -870,7 +1008,7 @@ export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   title?: boolean
   content?: boolean
-  type?: boolean
+  itemTypeId?: boolean
   fileExtension?: boolean
   collectionId?: boolean
   userId?: boolean
@@ -878,6 +1016,7 @@ export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
+  itemType?: boolean | Prisma.ItemTypeDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   recentItems?: boolean | Prisma.Item$recentItemsArgs<ExtArgs>
   _count?: boolean | Prisma.ItemCountOutputTypeDefaultArgs<ExtArgs>
@@ -887,7 +1026,7 @@ export type ItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   title?: boolean
   content?: boolean
-  type?: boolean
+  itemTypeId?: boolean
   fileExtension?: boolean
   collectionId?: boolean
   userId?: boolean
@@ -895,6 +1034,7 @@ export type ItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
+  itemType?: boolean | Prisma.ItemTypeDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
 
@@ -902,7 +1042,7 @@ export type ItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   title?: boolean
   content?: boolean
-  type?: boolean
+  itemTypeId?: boolean
   fileExtension?: boolean
   collectionId?: boolean
   userId?: boolean
@@ -910,6 +1050,7 @@ export type ItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
+  itemType?: boolean | Prisma.ItemTypeDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
 
@@ -917,7 +1058,7 @@ export type ItemSelectScalar = {
   id?: boolean
   title?: boolean
   content?: boolean
-  type?: boolean
+  itemTypeId?: boolean
   fileExtension?: boolean
   collectionId?: boolean
   userId?: boolean
@@ -926,19 +1067,22 @@ export type ItemSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "content" | "type" | "fileExtension" | "collectionId" | "userId" | "isPinned" | "createdAt" | "updatedAt", ExtArgs["result"]["item"]>
+export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "content" | "itemTypeId" | "fileExtension" | "collectionId" | "userId" | "isPinned" | "createdAt" | "updatedAt", ExtArgs["result"]["item"]>
 export type ItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
+  itemType?: boolean | Prisma.ItemTypeDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   recentItems?: boolean | Prisma.Item$recentItemsArgs<ExtArgs>
   _count?: boolean | Prisma.ItemCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
+  itemType?: boolean | Prisma.ItemTypeDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type ItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
+  itemType?: boolean | Prisma.ItemTypeDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
@@ -946,6 +1090,7 @@ export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "Item"
   objects: {
     collection: Prisma.$CollectionPayload<ExtArgs>
+    itemType: Prisma.$ItemTypePayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
     recentItems: Prisma.$RecentItemPayload<ExtArgs>[]
   }
@@ -953,7 +1098,7 @@ export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     id: string
     title: string
     content: string
-    type: $Enums.ItemType
+    itemTypeId: string
     fileExtension: string
     collectionId: string
     userId: string
@@ -1355,6 +1500,7 @@ readonly fields: ItemFieldRefs;
 export interface Prisma__ItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   collection<T extends Prisma.CollectionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CollectionDefaultArgs<ExtArgs>>): Prisma.Prisma__CollectionClient<runtime.Types.Result.GetResult<Prisma.$CollectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  itemType<T extends Prisma.ItemTypeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ItemTypeDefaultArgs<ExtArgs>>): Prisma.Prisma__ItemTypeClient<runtime.Types.Result.GetResult<Prisma.$ItemTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   recentItems<T extends Prisma.Item$recentItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Item$recentItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RecentItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1389,7 +1535,7 @@ export interface ItemFieldRefs {
   readonly id: Prisma.FieldRef<"Item", 'String'>
   readonly title: Prisma.FieldRef<"Item", 'String'>
   readonly content: Prisma.FieldRef<"Item", 'String'>
-  readonly type: Prisma.FieldRef<"Item", 'ItemType'>
+  readonly itemTypeId: Prisma.FieldRef<"Item", 'String'>
   readonly fileExtension: Prisma.FieldRef<"Item", 'String'>
   readonly collectionId: Prisma.FieldRef<"Item", 'String'>
   readonly userId: Prisma.FieldRef<"Item", 'String'>

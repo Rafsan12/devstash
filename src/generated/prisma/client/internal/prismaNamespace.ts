@@ -389,6 +389,7 @@ export const ModelName = {
   Session: 'Session',
   VerificationToken: 'VerificationToken',
   Collection: 'Collection',
+  ItemType: 'ItemType',
   Item: 'Item',
   RecentItem: 'RecentItem'
 } as const
@@ -406,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "collection" | "item" | "recentItem"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "collection" | "itemType" | "item" | "recentItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -780,6 +781,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ItemType: {
+      payload: Prisma.$ItemTypePayload<ExtArgs>
+      fields: Prisma.ItemTypeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ItemTypeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ItemTypePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ItemTypeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ItemTypePayload>
+        }
+        findFirst: {
+          args: Prisma.ItemTypeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ItemTypePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ItemTypeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ItemTypePayload>
+        }
+        findMany: {
+          args: Prisma.ItemTypeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ItemTypePayload>[]
+        }
+        create: {
+          args: Prisma.ItemTypeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ItemTypePayload>
+        }
+        createMany: {
+          args: Prisma.ItemTypeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ItemTypeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ItemTypePayload>[]
+        }
+        delete: {
+          args: Prisma.ItemTypeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ItemTypePayload>
+        }
+        update: {
+          args: Prisma.ItemTypeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ItemTypePayload>
+        }
+        deleteMany: {
+          args: Prisma.ItemTypeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ItemTypeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ItemTypeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ItemTypePayload>[]
+        }
+        upsert: {
+          args: Prisma.ItemTypeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ItemTypePayload>
+        }
+        aggregate: {
+          args: Prisma.ItemTypeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateItemType>
+        }
+        groupBy: {
+          args: Prisma.ItemTypeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ItemTypeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ItemTypeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ItemTypeCountAggregateOutputType> | number
+        }
+      }
+    }
     Item: {
       payload: Prisma.$ItemPayload<ExtArgs>
       fields: Prisma.ItemFieldRefs
@@ -974,6 +1049,7 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   password: 'password',
+  isPro: 'isPro',
   createdAt: 'createdAt'
 } as const
 
@@ -1028,11 +1104,22 @@ export const CollectionScalarFieldEnum = {
 export type CollectionScalarFieldEnum = (typeof CollectionScalarFieldEnum)[keyof typeof CollectionScalarFieldEnum]
 
 
+export const ItemTypeScalarFieldEnum = {
+  id: 'id',
+  icon: 'icon',
+  color: 'color',
+  isSystem: 'isSystem',
+  createdAt: 'createdAt'
+} as const
+
+export type ItemTypeScalarFieldEnum = (typeof ItemTypeScalarFieldEnum)[keyof typeof ItemTypeScalarFieldEnum]
+
+
 export const ItemScalarFieldEnum = {
   id: 'id',
   title: 'title',
   content: 'content',
-  type: 'type',
+  itemTypeId: 'itemTypeId',
   fileExtension: 'fileExtension',
   collectionId: 'collectionId',
   userId: 'userId',
@@ -1113,6 +1200,13 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -1123,27 +1217,6 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-/**
- * Reference to a field of type 'ItemType'
- */
-export type EnumItemTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ItemType'>
-    
-
-
-/**
- * Reference to a field of type 'ItemType[]'
- */
-export type ListEnumItemTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ItemType[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -1260,6 +1333,7 @@ export type GlobalOmitConfig = {
   session?: Prisma.SessionOmit
   verificationToken?: Prisma.VerificationTokenOmit
   collection?: Prisma.CollectionOmit
+  itemType?: Prisma.ItemTypeOmit
   item?: Prisma.ItemOmit
   recentItem?: Prisma.RecentItemOmit
 }

@@ -9,11 +9,7 @@
 * 🟢 You can import this file directly.
 */
 
-export const ItemType = {
-  markdown: 'markdown',
-  code: 'code',
-  prompt: 'prompt',
-  text: 'text'
-} as const
 
-export type ItemType = (typeof ItemType)[keyof typeof ItemType]
+
+// This file is empty because there are no enums in the schema.
+export {}
