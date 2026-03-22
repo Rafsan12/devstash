@@ -1,5 +1,4 @@
-﻿-- CreateSchema
-CREATE SCHEMA IF NOT EXISTS "public";
+-- CreateSchema
 
 -- CreateEnum
 CREATE TYPE "ItemType" AS ENUM ('markdown', 'code', 'prompt', 'text');
