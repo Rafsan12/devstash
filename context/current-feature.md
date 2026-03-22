@@ -1,6 +1,6 @@
 # Current Feature
 
-Dashboard Collections
+Dashboard Items
 
 ## Status
 
@@ -10,35 +10,35 @@ Completed
 
 ## Goals
 
-- Replace the dashboard's dummy recent collection cards with real database-backed data
-- Fetch collection data from Neon through Prisma instead of `@src/lib/mock-data.ts`
-- Preserve the existing dashboard collection card layout and visual design
-- Prepare collection data and stats for future item rendering without adding collection items yet
-- Keep the implementation modular by introducing collection-specific database access helpers
+- Replace the dashboard's dummy pinned and recent item data with real database-backed data
+- Fetch item data from Neon through Prisma instead of `@src/lib/mock-data.ts`
+- Preserve the existing dashboard item layout and visual design in the main dashboard area
+- Keep the implementation modular by introducing item-specific database access helpers
+- Ensure empty pinned states stay hidden when there are no pinned items
 
 ## Requirements
 
 ### Data Source And Fetching
 
-- Create `src/lib/db/collections.ts` with data fetching functions
-- Fetch collections directly in the dashboard server component
+- Create `src/lib/db/items.ts` with data fetching functions
+- Fetch items directly in the dashboard server component
 - Use Prisma with the Neon database as the source of truth
-- Stop using `@src/lib/mock-data.ts` for the main dashboard collection cards
+- Stop using `@src/lib/mock-data.ts` for pinned and recent dashboard items
 
-### Collection Card Behavior
+### Item Card Behavior
 
-- Keep the existing recent collections card design and current six-card presentation
-- Derive each collection card border color from the most-used content type in that collection
-- Show small icons representing all content types present in the collection
-- Update the collection stats display to use real database data
-- Do not render collection items beneath the cards yet
+- Keep the current pinned and recent item presentation as it exists today
+- Derive each item card icon and border styling from the item type
+- Display item type tags and any other metadata already shown in the current UI
+- Update collection stats display
+- Render nothing in the pinned section when there are no pinned items
 
 ## Notes
 
 - Use the current dashboard UI and screenshot reference as the visual baseline
-- This feature replaces the previous seed-data direction as the active focus
-- The design should remain unchanged while the data source becomes real and scalable
-- Future work will add items beneath the collection cards, but that is explicitly out of scope for now
+- The design should remain unchanged while the item data source becomes real and scalable
+- This feature covers the main dashboard area on the right side, including pinned and recent items
+- The existing UI should be preserved, with only the backing data and related stats becoming database-driven
 
 ## History
 
@@ -56,3 +56,5 @@ Completed
 - Seed Development Data added as the current feature
 - Dashboard Collections added as the current feature
 - Dashboard Collections completed
+- Dashboard Items added as the current feature
+- Dashboard Items completed

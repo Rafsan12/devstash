@@ -1,9 +1,15 @@
-import { DashboardItem } from "@/lib/mock-data";
-import { itemTypeIconMap } from "@/lib/dashboard-utils";
+import { type DashboardItemCardData } from "@/lib/db/items";
+import { ItemTypeIcon, withAlpha } from "./item-type-icon";
 
-export function ItemCard({ item }: { item: DashboardItem }) {
+export function ItemCard({ item }: { item: DashboardItemCardData }) {
   return (
-    <article className="flex flex-col justify-between rounded-[22px] border border-white/8 bg-black/30 p-5 transition hover:bg-white/[0.02]">
+    <article
+      className="flex flex-col justify-between rounded-[22px] border bg-black/30 p-5 transition hover:bg-white/[0.02]"
+      style={{
+        borderColor: withAlpha(item.itemType.color, "52"),
+        boxShadow: `inset 0 1px 0 ${withAlpha(item.itemType.color, "24")}`,
+      }}
+    >
       <div>
         <div className="flex items-start justify-between gap-4">
           <h3 className="text-lg font-semibold text-white">{item.title}</h3>
@@ -18,13 +24,28 @@ export function ItemCard({ item }: { item: DashboardItem }) {
       <div className="mt-6 flex items-center justify-between text-sm text-zinc-500">
         <div className="flex gap-2">
           {item.tags.slice(0, 2).map((tag) => (
-            <span key={tag} className="rounded-md bg-white/5 px-2 py-1 text-xs">
+            <span
+              key={tag}
+              className="rounded-md border px-2 py-1 text-xs uppercase tracking-[0.14em]"
+              style={{
+                borderColor: withAlpha(item.itemType.color, "40"),
+                backgroundColor: withAlpha(item.itemType.color, "14"),
+                color: item.itemType.color,
+              }}
+            >
               {tag}
             </span>
           ))}
         </div>
-        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-white/5 bg-white/5 text-[10px] font-semibold text-sky-200">
-          {itemTypeIconMap[item.itemTypeId]}
+        <span
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border"
+          style={{
+            borderColor: withAlpha(item.itemType.color, "5c"),
+            backgroundColor: withAlpha(item.itemType.color, "14"),
+            color: item.itemType.color,
+          }}
+        >
+          <ItemTypeIcon icon={item.itemType.icon} />
         </span>
       </div>
     </article>
