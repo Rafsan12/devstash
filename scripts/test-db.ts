@@ -67,6 +67,10 @@ async function main() {
 
   assertCondition(Boolean(demoUser), `Demo user ${DEMO_USER_EMAIL} was not found.`);
 
+  if (!demoUser) {
+    return;
+  }
+
   const itemTypes = await prisma.itemType.findMany({
     include: {
       _count: {

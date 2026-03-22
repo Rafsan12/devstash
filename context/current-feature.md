@@ -1,98 +1,44 @@
 # Current Feature
 
-Seed Development Data
+Dashboard Collections
 
 ## Status
 
 <!-- Not Started|In Progress|Completed -->
 
-Not Started
+Completed
 
 ## Goals
 
-- Create a `prisma/seed.ts` script for development and demo data
-- Seed a demo user with the required profile and authentication fields
-- Seed the system item types with Lucide icon names and colors
-- Seed sample collections and items that reflect realistic DevStash usage
-- Make the existing seed setup safe to overwrite with the new dataset
+- Replace the dashboard's dummy recent collection cards with real database-backed data
+- Fetch collection data from Neon through Prisma instead of `@src/lib/mock-data.ts`
+- Preserve the existing dashboard collection card layout and visual design
+- Prepare collection data and stats for future item rendering without adding collection items yet
+- Keep the implementation modular by introducing collection-specific database access helpers
 
-## Seed Requirements
+## Requirements
 
-### Demo User
+### Data Source And Fetching
 
-- Email: `demo@devstash.io`
-- Name: `Demo User`
-- Password: `12345678` hashed with `bcryptjs` using 12 rounds
-- `isPro: false`
-- `emailVerified`: current date
+- Create `src/lib/db/collections.ts` with data fetching functions
+- Fetch collections directly in the dashboard server component
+- Use Prisma with the Neon database as the source of truth
+- Stop using `@src/lib/mock-data.ts` for the main dashboard collection cards
 
-### System Item Types
+### Collection Card Behavior
 
-All item types should be seeded with `isSystem: true`.
-
-| Name      | Icon         | Color   |
-| --------- | ------------ | ------- |
-| `snippet` | `Code`       | `#3b82f6` |
-| `prompt`  | `Sparkles`   | `#8b5cf6` |
-| `command` | `Terminal`   | `#f97316` |
-| `note`    | `StickyNote` | `#fde047` |
-| `file`    | `File`       | `#6b7280` |
-| `image`   | `Image`      | `#ec4899` |
-| `link`    | `Link`       | `#10b981` |
-
-### Collections And Items
-
-#### React Patterns
-
-Description: Reusable React patterns and hooks
-
-- 3 `snippet` items written in TypeScript
-- Cover custom hooks such as `useDebounce` and `useLocalStorage`
-- Cover component patterns such as context providers and compound components
-- Include utility-focused examples
-
-#### AI Workflows
-
-Description: AI prompts and workflow automations
-
-- 3 `prompt` items
-- Cover code review prompts
-- Cover documentation generation
-- Cover refactoring assistance
-
-#### DevOps
-
-Description: Infrastructure and deployment resources
-
-- 1 `snippet` item for Docker or CI/CD config
-- 1 `command` item for deployment scripts
-- 2 `link` items using real documentation URLs
-
-#### Terminal Commands
-
-Description: Useful shell commands for everyday development
-
-- 4 `command` items
-- Cover Git operations
-- Cover Docker commands
-- Cover process management
-- Cover package manager utilities
-
-#### Design Resources
-
-Description: UI/UX resources and references
-
-- 4 `link` items using real URLs
-- Include CSS or Tailwind references
-- Include component libraries
-- Include design systems
-- Include icon libraries
+- Keep the existing recent collections card design and current six-card presentation
+- Derive each collection card border color from the most-used content type in that collection
+- Show small icons representing all content types present in the collection
+- Update the collection stats display to use real database data
+- Do not render collection items beneath the cards yet
 
 ## Notes
 
-- This feature replaces the previous seed direction and can overwrite the current seed file contents
-- Seed data should feel polished enough for local demos, screenshots, and onboarding
-- Use deterministic values where practical so reseeding remains predictable
+- Use the current dashboard UI and screenshot reference as the visual baseline
+- This feature replaces the previous seed-data direction as the active focus
+- The design should remain unchanged while the data source becomes real and scalable
+- Future work will add items beneath the collection cards, but that is explicitly out of scope for now
 
 ## History
 
@@ -108,3 +54,5 @@ Description: UI/UX resources and references
 - Dashboard UI Phase 3 completed
 - Prisma + Neon PostgreSQL Setup started
 - Seed Development Data added as the current feature
+- Dashboard Collections added as the current feature
+- Dashboard Collections completed
