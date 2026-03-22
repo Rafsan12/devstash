@@ -27,6 +27,50 @@ export type DashboardStats = {
   recentItems: number;
 };
 
+export type DashboardSidebarItemType = {
+  id: string;
+  name: string;
+  icon: string;
+  count: number;
+  href: string;
+};
+
+export type DashboardSidebarUser = {
+  name: string;
+  email: string;
+  avatarLabel: string;
+};
+
+const itemTypeRouteMap: Record<string, string> = {
+  snippet: "snippets",
+  prompt: "prompts",
+  command: "commands",
+  note: "notes",
+  file: "files",
+  image: "images",
+  link: "links",
+};
+
+const itemTypeLabelMap: Record<string, string> = {
+  snippet: "Snippets",
+  prompt: "Prompts",
+  command: "Commands",
+  note: "Notes",
+  file: "Files",
+  image: "Images",
+  link: "Links",
+};
+
+const itemTypeSortOrder: Record<string, number> = {
+  snippet: 0,
+  prompt: 1,
+  command: 2,
+  note: 3,
+  file: 4,
+  image: 5,
+  link: 6,
+};
+
 function createItemDescription(content: string) {
   const normalizedContent = content.replace(/\s+/g, " ").trim();
 
@@ -207,5 +251,88 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     totalCollections,
     pinnedItems,
     recentItems,
+  };
+}
+
+export async function getDashboardSidebarItemTypes(): Promise<DashboardSidebarItemType[]> {
+  const demoUser = await getDemoUser();
+
+  if (!demoUser) {
+    return [];
+  }
+
+  const [systemItemTypes, items] = await Promise.all([
+    db.itemType.findMany({
+      where: {
+        isSystem: true,
+      },
+      select: {
+        id: true,
+        icon: true,
+      },
+    }),
+    db.item.findMany({
+      where: {
+        userId: demoUser.id,
+      },
+      select: {
+        itemTypeId: true,
+      },
+    }),
+  ]);
+
+  const countMap = new Map<string, number>();
+
+  for (const item of items) {
+    countMap.set(item.itemTypeId, (countMap.get(item.itemTypeId) ?? 0) + 1);
+  }
+
+  return systemItemTypes
+    .map((itemType) => ({
+      id: itemType.id,
+      name: itemTypeLabelMap[itemType.id] ?? itemType.id,
+      icon: itemType.icon,
+      count: countMap.get(itemType.id) ?? 0,
+      href: `/items/${itemTypeRouteMap[itemType.id] ?? itemType.id}`,
+    }))
+    .sort((left, right) => {
+      const leftOrder = itemTypeSortOrder[left.id] ?? Number.MAX_SAFE_INTEGER;
+      const rightOrder = itemTypeSortOrder[right.id] ?? Number.MAX_SAFE_INTEGER;
+
+      if (leftOrder !== rightOrder) {
+        return leftOrder - rightOrder;
+      }
+
+      return left.name.localeCompare(right.name);
+    });
+}
+
+export async function getDashboardSidebarUser(): Promise<DashboardSidebarUser | null> {
+  const demoUser = await db.user.findUnique({
+    where: {
+      email: DEMO_USER_EMAIL,
+    },
+    select: {
+      name: true,
+      email: true,
+    },
+  });
+
+  if (!demoUser) {
+    return null;
+  }
+
+  const displayName = demoUser.name ?? "Demo User";
+  const avatarLabel = displayName
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+
+  return {
+    name: displayName,
+    email: demoUser.email ?? DEMO_USER_EMAIL,
+    avatarLabel: avatarLabel || "DU",
   };
 }
