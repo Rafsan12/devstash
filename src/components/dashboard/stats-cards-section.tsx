@@ -1,14 +1,13 @@
-import { mockDashboardData } from "@/lib/mock-data";
-import { favoriteCollections } from "@/lib/dashboard-utils";
+import { type DashboardStats } from "@/lib/db/items";
 import { StatCard } from "./stat-card";
 
-export function StatsCardsSection() {
+export function StatsCardsSection({ stats }: { stats: DashboardStats }) {
   return (
     <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-      <StatCard label="Total Items" value={mockDashboardData.items.length.toString()} />
-      <StatCard label="Collections" value={mockDashboardData.collections.length.toString()} />
-      <StatCard label="Pinned Items" value={mockDashboardData.items.filter((i) => i.isPinned).length.toString()} />
-      <StatCard label="Favorite Collections" value={favoriteCollections.length.toString()} />
+      <StatCard label="Total Items" value={stats.totalItems.toString()} />
+      <StatCard label="Collections" value={stats.totalCollections.toString()} />
+      <StatCard label="Pinned Items" value={stats.pinnedItems.toString()} />
+      <StatCard label="Recent Items" value={stats.recentItems.toString()} />
     </div>
   );
 }
