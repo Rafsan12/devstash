@@ -10,7 +10,7 @@ import {
 } from "@/lib/db/items";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { ItemTypeIcon, withAlpha } from "./item-type-icon";
 
 export function DashboardShell({
@@ -26,27 +26,10 @@ export function DashboardShell({
   sidebarItemTypes: DashboardSidebarItemType[];
   user: DashboardSidebarUser | null;
 }) {
-  const [isDesktop, setIsDesktop] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(false);
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 1024px)");
-
-    const updateLayout = (event?: MediaQueryListEvent) => {
-      const desktop = event ? event.matches : mediaQuery.matches;
-      setIsDesktop(desktop);
-      setIsSidebarOpen(desktop);
-    };
-
-    updateLayout();
-    mediaQuery.addEventListener("change", updateLayout);
-
-    return () => {
-      mediaQuery.removeEventListener("change", updateLayout);
-    };
-  }, []);
-
-  const sidebarExpanded = isDesktop ? isSidebarOpen : true;
+  const sidebarExpanded = !isDesktopSidebarCollapsed;
   const displayUser = user ?? {
     name: "Demo User",
     email: "demo@devstash.io",
@@ -57,11 +40,11 @@ export function DashboardShell({
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.12),_transparent_28%),linear-gradient(180deg,_#09090b_0%,_#050507_100%)] text-white">
       <div className="mx-auto flex min-h-screen w-full max-w-[1600px] flex-col px-4 py-4 sm:px-6 lg:px-8">
         <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-black/40 shadow-2xl shadow-black/30 backdrop-blur">
-          {!isDesktop && isSidebarOpen ? (
+          {isMobileSidebarOpen ? (
             <button
               aria-label="Close sidebar overlay"
               className="absolute inset-0 z-20 bg-black/60 lg:hidden"
-              onClick={() => setIsSidebarOpen(false)}
+              onClick={() => setIsMobileSidebarOpen(false)}
               type="button"
             />
           ) : null}
@@ -70,12 +53,9 @@ export function DashboardShell({
             <aside
               className={cn(
                 "absolute inset-y-0 left-0 z-30 flex border-r border-white/10 bg-[#07070a] transition-[width,transform] duration-300 lg:static lg:translate-x-0",
-                isDesktop
-                  ? sidebarExpanded
-                    ? "w-[290px]"
-                    : "w-[88px]"
-                  : "w-[290px]",
-                !isDesktop && !isSidebarOpen && "-translate-x-full",
+                sidebarExpanded ? "lg:w-[290px]" : "lg:w-[88px]",
+                isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full",
+                "w-[290px] lg:translate-x-0",
               )}
             >
               <div className="flex h-full w-full flex-col">
@@ -200,13 +180,18 @@ export function DashboardShell({
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                   <div className="flex items-center gap-3">
                     <Button
-                      aria-label={
-                        isDesktop && isSidebarOpen
-                          ? "Collapse sidebar"
-                          : "Open sidebar"
-                      }
-                      className="shrink-0"
-                      onClick={() => setIsSidebarOpen((current) => !current)}
+                      aria-label="Open sidebar"
+                      className="shrink-0 lg:hidden"
+                      onClick={() => setIsMobileSidebarOpen(true)}
+                      size="icon"
+                      variant="outline"
+                    >
+                      <DrawerIcon />
+                    </Button>
+                    <Button
+                      aria-label={sidebarExpanded ? "Collapse sidebar" : "Expand sidebar"}
+                      className="hidden shrink-0 lg:inline-flex"
+                      onClick={() => setIsDesktopSidebarCollapsed((current) => !current)}
                       size="icon"
                       variant="outline"
                     >

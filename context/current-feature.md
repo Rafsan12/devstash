@@ -30,3 +30,5 @@
 - Stats & Sidebar completed
 - Add Pro Badge to Sidebar added as the current feature
 - Add Pro Badge to Sidebar completed
+- Dark Mode Default Theme added as the current feature
+- Dark Mode Default Theme completed

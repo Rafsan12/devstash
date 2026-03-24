@@ -1,8 +1,7 @@
 import "server-only";
 
 import { db } from "@/lib/db";
-
-const DEMO_USER_EMAIL = "demo@devstash.io";
+import { DEMO_USER_EMAIL, type DashboardUserRecord } from "@/lib/db/dashboard-user";
 
 type DashboardItemTypeSummary = {
   id: string;
@@ -85,17 +84,6 @@ function createItemTags(itemTypeId: string, fileExtension: string, collectionNam
   return [itemTypeId, fileExtension, collectionName].filter(Boolean);
 }
 
-async function getDemoUser() {
-  return db.user.findUnique({
-    where: {
-      email: DEMO_USER_EMAIL,
-    },
-    select: {
-      id: true,
-    },
-  });
-}
-
 function mapDashboardItem(item: {
   id: string;
   title: string;
@@ -119,16 +107,14 @@ function mapDashboardItem(item: {
   };
 }
 
-export async function getPinnedDashboardItems(): Promise<DashboardItemCardData[]> {
-  const demoUser = await getDemoUser();
-
-  if (!demoUser) {
+export async function getPinnedDashboardItems(userId: string | null): Promise<DashboardItemCardData[]> {
+  if (!userId) {
     return [];
   }
 
   const items = await db.item.findMany({
     where: {
-      userId: demoUser.id,
+      userId,
       isPinned: true,
     },
     orderBy: [
@@ -165,17 +151,16 @@ export async function getPinnedDashboardItems(): Promise<DashboardItemCardData[]
 }
 
 export async function getRecentDashboardItems(
+  userId: string | null,
   limit = 10,
 ): Promise<DashboardItemCardData[]> {
-  const demoUser = await getDemoUser();
-
-  if (!demoUser) {
+  if (!userId) {
     return [];
   }
 
   const recentItems = await db.recentItem.findMany({
     where: {
-      userId: demoUser.id,
+      userId,
     },
     take: limit,
     orderBy: {
@@ -210,10 +195,8 @@ export async function getRecentDashboardItems(
   return recentItems.map((recentItem) => mapDashboardItem(recentItem.item));
 }
 
-export async function getDashboardStats(): Promise<DashboardStats> {
-  const demoUser = await getDemoUser();
-
-  if (!demoUser) {
+export async function getDashboardStats(userId: string | null): Promise<DashboardStats> {
+  if (!userId) {
     return {
       totalItems: 0,
       totalCollections: 0,
@@ -225,23 +208,23 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const [totalItems, totalCollections, pinnedItems, recentItems] = await Promise.all([
     db.item.count({
       where: {
-        userId: demoUser.id,
+        userId,
       },
     }),
     db.collection.count({
       where: {
-        userId: demoUser.id,
+        userId,
       },
     }),
     db.item.count({
       where: {
-        userId: demoUser.id,
+        userId,
         isPinned: true,
       },
     }),
     db.recentItem.count({
       where: {
-        userId: demoUser.id,
+        userId,
       },
     }),
   ]);
@@ -254,14 +237,14 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   };
 }
 
-export async function getDashboardSidebarItemTypes(): Promise<DashboardSidebarItemType[]> {
-  const demoUser = await getDemoUser();
-
-  if (!demoUser) {
+export async function getDashboardSidebarItemTypes(
+  userId: string | null,
+): Promise<DashboardSidebarItemType[]> {
+  if (!userId) {
     return [];
   }
 
-  const [systemItemTypes, items] = await Promise.all([
+  const [systemItemTypes, itemCounts] = await Promise.all([
     db.itemType.findMany({
       where: {
         isSystem: true,
@@ -271,21 +254,20 @@ export async function getDashboardSidebarItemTypes(): Promise<DashboardSidebarIt
         icon: true,
       },
     }),
-    db.item.findMany({
+    db.item.groupBy({
+      by: ["itemTypeId"],
       where: {
-        userId: demoUser.id,
+        userId,
       },
-      select: {
+      _count: {
         itemTypeId: true,
       },
     }),
   ]);
 
-  const countMap = new Map<string, number>();
-
-  for (const item of items) {
-    countMap.set(item.itemTypeId, (countMap.get(item.itemTypeId) ?? 0) + 1);
-  }
+  const countMap = new Map(
+    itemCounts.map((item) => [item.itemTypeId, item._count.itemTypeId]),
+  );
 
   return systemItemTypes
     .map((itemType) => ({
@@ -307,22 +289,14 @@ export async function getDashboardSidebarItemTypes(): Promise<DashboardSidebarIt
     });
 }
 
-export async function getDashboardSidebarUser(): Promise<DashboardSidebarUser | null> {
-  const demoUser = await db.user.findUnique({
-    where: {
-      email: DEMO_USER_EMAIL,
-    },
-    select: {
-      name: true,
-      email: true,
-    },
-  });
-
-  if (!demoUser) {
+export function getDashboardSidebarUser(
+  user: DashboardUserRecord | null,
+): DashboardSidebarUser | null {
+  if (!user) {
     return null;
   }
 
-  const displayName = demoUser.name ?? "Demo User";
+  const displayName = user.name ?? "Demo User";
   const avatarLabel = displayName
     .split(" ")
     .filter(Boolean)
@@ -332,7 +306,7 @@ export async function getDashboardSidebarUser(): Promise<DashboardSidebarUser | 
 
   return {
     name: displayName,
-    email: demoUser.email ?? DEMO_USER_EMAIL,
+    email: user.email ?? DEMO_USER_EMAIL,
     avatarLabel: avatarLabel || "DU",
   };
 }
