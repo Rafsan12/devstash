@@ -6,7 +6,8 @@ import { cn } from "@/lib/utils";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -29,6 +30,15 @@ export function SignInForm({
   const [error, setError] = useState(initialError ?? "");
   const [isPending, setIsPending] = useState(false);
   const [isGitHubPending, setIsGitHubPending] = useState(false);
+
+  useEffect(() => {
+    if (registrationSuccess) {
+      toast.success("Registration complete", {
+        id: "register-success",
+        description: "You can now sign in with your new account.",
+      });
+    }
+  }, [registrationSuccess]);
 
   async function handleCredentialsSignIn(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -79,12 +89,6 @@ export function SignInForm({
           Access your collections, notes, prompts, and snippets.
         </p>
       </div>
-
-      {registrationSuccess ? (
-        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
-          Registration complete. Sign in with your new account.
-        </div>
-      ) : null}
 
       {error ? (
         <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
