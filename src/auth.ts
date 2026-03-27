@@ -57,6 +57,7 @@ const providers = authConfig.providers.map((provider) => {
         name: user.name,
         email: user.email,
         image: user.image,
+        emailVerified: user.emailVerified,
       };
     },
   });
@@ -66,6 +67,22 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db as Parameters<typeof PrismaAdapter>[0]),
   session: { strategy: "jwt" },
   callbacks: {
+    signIn({ user, account }) {
+      if (
+        account?.provider === "credentials" &&
+        user.email &&
+        !(user as { emailVerified?: Date | null }).emailVerified
+      ) {
+        const redirectParams = new URLSearchParams({
+          error: "EmailNotVerified",
+          email: user.email,
+        });
+
+        return `/sign-in?${redirectParams.toString()}`;
+      }
+
+      return true;
+    },
     jwt({ token, user }) {
       if (user?.id) {
         token.sub = user.id;

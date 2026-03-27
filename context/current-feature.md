@@ -2,7 +2,7 @@
 
 ## Status
 
-Not Started
+Complete
 
 ## Goals
 
@@ -40,3 +40,4 @@ Not Started
 - Auth Credentials - Email/Password Provider completed
 - Auth UI - Sign In, Register & Sign Out added as the current feature
 - Auth UI - Sign In, Register & Sign Out completed
+- Email Verification on Register completed

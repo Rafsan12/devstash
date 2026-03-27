@@ -4,6 +4,10 @@ import { SignInForm } from "@/components/auth/sign-in-form";
 import { redirect } from "next/navigation";
 
 function mapAuthError(error?: string) {
+  if (error === "EmailNotVerified") {
+    return "Verify your email before signing in. Check your inbox for the link.";
+  }
+
   if (error === "CredentialsSignin") {
     return "Invalid email or password.";
   }

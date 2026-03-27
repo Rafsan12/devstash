@@ -2,6 +2,11 @@ import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
+import {
+  createEmailVerificationToken,
+  resolveAppUrl,
+  sendVerificationEmail,
+} from "@/lib/email-verification";
 
 type RegisterPayload = {
   name?: unknown;
@@ -80,9 +85,40 @@ export async function POST(request: Request) {
     },
   });
 
+  try {
+    const { rawToken } = await createEmailVerificationToken(email);
+    const verificationUrl = new URL("/verify-email", resolveAppUrl(request.headers.get("origin")));
+
+    verificationUrl.searchParams.set("email", email);
+    verificationUrl.searchParams.set("token", rawToken);
+
+    await sendVerificationEmail({
+      email,
+      name,
+      verificationUrl: verificationUrl.toString(),
+    });
+  } catch (error) {
+    await db.verificationToken.deleteMany({
+      where: { identifier: email },
+    });
+    await db.user.delete({
+      where: { id: user.id },
+    });
+
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unable to send the verification email.",
+      },
+      { status: 500 },
+    );
+  }
+
   return NextResponse.json(
     {
-      message: "User registered successfully.",
+      message: "User registered successfully. Please verify your email.",
       user,
     },
     { status: 201 },

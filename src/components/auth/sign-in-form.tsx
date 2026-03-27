@@ -33,9 +33,9 @@ export function SignInForm({
 
   useEffect(() => {
     if (registrationSuccess) {
-      toast.success("Registration complete", {
+      toast.success("Email verified", {
         id: "register-success",
-        description: "You can now sign in with your new account.",
+        description: "Your account is ready. Sign in with your credentials.",
       });
     }
   }, [registrationSuccess]);
@@ -64,6 +64,17 @@ export function SignInForm({
     });
 
     setIsPending(false);
+
+    if (result?.url) {
+      const nextUrl = new URL(result.url, window.location.origin);
+      const nextError = nextUrl.searchParams.get("error");
+
+      if (nextUrl.pathname === "/sign-in" && nextError) {
+        router.push(nextUrl.toString());
+        router.refresh();
+        return;
+      }
+    }
 
     if (!result || result.error) {
       setError("Invalid email or password.");

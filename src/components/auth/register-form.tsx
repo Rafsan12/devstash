@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -74,42 +75,45 @@ export function RegisterForm() {
     }
 
     const redirectParams = new URLSearchParams({
-      registered: "1",
+      sent: "1",
       email: formData.email,
     });
 
-    router.push(`/sign-in?${redirectParams.toString()}`);
+    router.push(`/verify-email?${redirectParams.toString()}`);
     router.refresh();
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-semibold text-white">Create account</h2>
+    <div className="space-y-8">
+      <div className="animate-fade-in-up">
+        <h2 className="text-3xl font-semibold text-white tracking-tight">Create account</h2>
         <p className="mt-2 text-sm leading-6 text-zinc-400">
           Set up a workspace for your notes, files, commands, prompts, and snippets.
+          We&apos;ll send a verification link before your first sign-in.
         </p>
       </div>
 
       {error ? (
-        <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+        <div className="animate-fade-in-up rounded-2xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
           {error}
         </div>
       ) : null}
 
-      <form className="space-y-4" onSubmit={handleSubmit}>
-        <Field label="Name">
+      <form className="space-y-5" onSubmit={handleSubmit}>
+        <Field className="animate-fade-in-up delay-75" label="Name">
           <Input
             autoComplete="name"
+            className="h-11 bg-black/20 focus-visible:ring-sky-500/50 focus-visible:border-sky-500/50 transition-all border-white/5"
             onChange={(event) => updateField("name", event.target.value)}
             placeholder="Your display name"
             value={formData.name}
           />
         </Field>
 
-        <Field label="Email">
+        <Field className="animate-fade-in-up delay-150" label="Email">
           <Input
             autoComplete="email"
+            className="h-11 bg-black/20 focus-visible:ring-sky-500/50 focus-visible:border-sky-500/50 transition-all border-white/5"
             onChange={(event) => updateField("email", event.target.value)}
             placeholder="you@devstash.io"
             type="email"
@@ -117,9 +121,10 @@ export function RegisterForm() {
           />
         </Field>
 
-        <Field label="Password">
+        <Field className="animate-fade-in-up delay-200" label="Password">
           <Input
             autoComplete="new-password"
+            className="h-11 bg-black/20 focus-visible:ring-sky-500/50 focus-visible:border-sky-500/50 transition-all border-white/5"
             onChange={(event) => updateField("password", event.target.value)}
             placeholder="Create a password"
             type="password"
@@ -127,9 +132,10 @@ export function RegisterForm() {
           />
         </Field>
 
-        <Field label="Confirm password">
+        <Field className="animate-fade-in-up delay-225" label="Confirm password">
           <Input
             autoComplete="new-password"
+            className="h-11 bg-black/20 focus-visible:ring-sky-500/50 focus-visible:border-sky-500/50 transition-all border-white/5"
             onChange={(event) => updateField("confirmPassword", event.target.value)}
             placeholder="Repeat your password"
             type="password"
@@ -137,19 +143,21 @@ export function RegisterForm() {
           />
         </Field>
 
-        <Button
-          className="h-11 w-full justify-center text-sm font-semibold"
-          disabled={isPending}
-          type="submit"
-          variant="premium"
-        >
-          {isPending ? "Creating account..." : "Create account"}
-        </Button>
+        <div className="animate-fade-in-up delay-300 pt-2">
+          <Button
+            className="h-11 w-full justify-center text-sm font-semibold shadow-xl shadow-sky-500/10 transition-all hover:shadow-sky-500/20 active:scale-[0.98]"
+            disabled={isPending}
+            type="submit"
+            variant="premium"
+          >
+            {isPending ? "Creating account..." : "Create account"}
+          </Button>
+        </div>
       </form>
 
-      <p className="text-sm text-zinc-400">
+      <p className="animate-fade-in-up delay-300 text-sm text-zinc-400">
         Already have an account?{" "}
-        <Link className="font-medium text-sky-300 transition hover:text-sky-200" href="/sign-in">
+        <Link className="font-medium text-sky-300 transition-colors hover:text-sky-200" href="/sign-in">
           Sign in
         </Link>
       </p>
@@ -160,12 +168,14 @@ export function RegisterForm() {
 function Field({
   label,
   children,
+  className,
 }: {
   label: string;
   children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <label className="block space-y-2">
+    <label className={cn("block space-y-2", className)}>
       <span className="text-sm font-medium text-zinc-200">{label}</span>
       {children}
     </label>
