@@ -1,5 +1,6 @@
 "use client";
 
+import { SidebarAccountMenu } from "@/components/auth/sidebar-account-menu";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,11 +31,6 @@ export function DashboardShell({
   const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(false);
 
   const sidebarExpanded = !isDesktopSidebarCollapsed;
-  const displayUser = user ?? {
-    name: "Demo User",
-    email: "demo@devstash.io",
-    avatarLabel: "DU",
-  };
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.12),_transparent_28%),linear-gradient(180deg,_#09090b_0%,_#050507_100%)] text-white">
@@ -151,26 +147,9 @@ export function DashboardShell({
                 </div>
 
                 <div className="border-t border-white/10 p-4">
-                  <div
-                    className={cn(
-                      "flex items-center rounded-2xl border border-white/10 bg-white/[0.03]",
-                      sidebarExpanded ? "gap-3 px-3 py-3" : "justify-center px-2 py-3",
-                    )}
-                  >
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-sm font-semibold text-zinc-950">
-                      {displayUser.avatarLabel}
-                    </div>
-                    {sidebarExpanded ? (
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-medium text-white">
-                          {displayUser.name}
-                        </p>
-                        <p className="truncate text-sm text-zinc-500">
-                          {displayUser.email}
-                        </p>
-                      </div>
-                    ) : null}
-                  </div>
+                  {user ? (
+                    <SidebarAccountMenu sidebarExpanded={sidebarExpanded} user={user} />
+                  ) : null}
                 </div>
               </div>
             </aside>

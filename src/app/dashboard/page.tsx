@@ -4,7 +4,7 @@ import { RecentCollectionsSection } from "@/components/dashboard/recent-collecti
 import { RecentItemsSection } from "@/components/dashboard/recent-items-section";
 import { StatsCardsSection } from "@/components/dashboard/stats-cards-section";
 import { getFavoriteSidebarCollections, getRecentDashboardCollections } from "@/lib/db/collections";
-import { getDemoDashboardUser } from "@/lib/db/dashboard-user";
+import { getAuthenticatedDashboardUser } from "@/lib/db/dashboard-user";
 import {
   getDashboardSidebarItemTypes,
   getDashboardSidebarUser,
@@ -16,8 +16,8 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-  const demoUser = await getDemoDashboardUser();
-  const userId = demoUser?.id ?? null;
+  const authenticatedUser = await getAuthenticatedDashboardUser();
+  const userId = authenticatedUser?.id ?? null;
 
   const [
     stats,
@@ -48,7 +48,7 @@ export default async function DashboardPage() {
       favoriteCollections={favoriteCollections}
       recentCollections={sidebarRecentCollections}
       sidebarItemTypes={sidebarItemTypes}
-      user={getDashboardSidebarUser(demoUser)}
+      user={getDashboardSidebarUser(authenticatedUser)}
     >
       <section className="flex-1 space-y-8 px-4 py-6 sm:px-6">
         <StatsCardsSection stats={stats} />

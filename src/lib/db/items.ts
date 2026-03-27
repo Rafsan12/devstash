@@ -37,7 +37,7 @@ export type DashboardSidebarItemType = {
 export type DashboardSidebarUser = {
   name: string;
   email: string;
-  avatarLabel: string;
+  image: string | null;
 };
 
 const itemTypeRouteMap: Record<string, string> = {
@@ -297,16 +297,10 @@ export function getDashboardSidebarUser(
   }
 
   const displayName = user.name ?? "Demo User";
-  const avatarLabel = displayName
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
 
   return {
     name: displayName,
     email: user.email ?? DEMO_USER_EMAIL,
-    avatarLabel: avatarLabel || "DU",
+    image: user.image,
   };
 }
