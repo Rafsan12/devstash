@@ -11,7 +11,11 @@ function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-export function RegisterForm() {
+export function RegisterForm({
+  emailVerificationEnabled,
+}: {
+  emailVerificationEnabled: boolean;
+}) {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
@@ -64,7 +68,7 @@ export function RegisterForm() {
     });
 
     const result = (await response.json().catch(() => null)) as
-      | { error?: string }
+      | { error?: string; requiresEmailVerification?: boolean }
       | null;
 
     setIsPending(false);
@@ -74,12 +78,22 @@ export function RegisterForm() {
       return;
     }
 
-    const redirectParams = new URLSearchParams({
-      sent: "1",
-      email: formData.email,
-    });
+    if (result?.requiresEmailVerification) {
+      const redirectParams = new URLSearchParams({
+        sent: "1",
+        email: formData.email,
+      });
 
-    router.push(`/verify-email?${redirectParams.toString()}`);
+      router.push(`/verify-email?${redirectParams.toString()}`);
+    } else {
+      const redirectParams = new URLSearchParams({
+        registered: "1",
+        email: formData.email,
+      });
+
+      router.push(`/sign-in?${redirectParams.toString()}`);
+    }
+
     router.refresh();
   }
 
@@ -88,8 +102,10 @@ export function RegisterForm() {
       <div className="animate-fade-in-up">
         <h2 className="text-3xl font-semibold text-white tracking-tight">Create account</h2>
         <p className="mt-2 text-sm leading-6 text-zinc-400">
-          Set up a workspace for your notes, files, commands, prompts, and snippets.
-          We&apos;ll send a verification link before your first sign-in.
+          Set up a workspace for your notes, files, commands, prompts, and snippets.{" "}
+          {emailVerificationEnabled
+            ? "We&apos;ll send a verification link before your first sign-in."
+            : "You can sign in right away after creating your account."}
         </p>
       </div>
 

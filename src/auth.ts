@@ -6,6 +6,18 @@ import Credentials from "next-auth/providers/credentials";
 import authConfig from "@/auth.config";
 import { db } from "@/lib/db";
 
+const ENABLED_VALUES = new Set(["1", "true", "yes", "on"]);
+
+function isEmailVerificationEnabled() {
+  const rawValue = process.env.EMAIL_VERIFICATION_ENABLED;
+
+  if (rawValue === undefined) {
+    return true;
+  }
+
+  return ENABLED_VALUES.has(rawValue.trim().toLowerCase());
+}
+
 const providers = authConfig.providers.map((provider) => {
   if (typeof provider === "function") {
     return provider;
@@ -69,6 +81,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   callbacks: {
     signIn({ user, account }) {
       if (
+        isEmailVerificationEnabled() &&
         account?.provider === "credentials" &&
         user.email &&
         !(user as { emailVerified?: Date | null }).emailVerified

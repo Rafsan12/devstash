@@ -8,6 +8,18 @@ import { verifyEmailAddress } from "@/lib/email-verification";
 
 type VerifyEmailStatus = "sent" | "success" | "invalid" | "expired" | "missing";
 
+const ENABLED_VALUES = new Set(["1", "true", "yes", "on"]);
+
+function isEmailVerificationEnabled() {
+  const rawValue = process.env.EMAIL_VERIFICATION_ENABLED;
+
+  if (rawValue === undefined) {
+    return true;
+  }
+
+  return ENABLED_VALUES.has(rawValue.trim().toLowerCase());
+}
+
 function getContent(status: VerifyEmailStatus, email?: string) {
   if (status === "sent") {
     return {
@@ -88,6 +100,10 @@ export default async function VerifyEmailPage({
 
   if (session?.user) {
     redirect("/dashboard");
+  }
+
+  if (!isEmailVerificationEnabled()) {
+    redirect("/sign-in?registered=1");
   }
 
   const resolvedSearchParams = await searchParams;

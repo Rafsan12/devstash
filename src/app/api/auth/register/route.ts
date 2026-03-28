@@ -1,12 +1,12 @@
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
-import { db } from "@/lib/db";
 import {
   createEmailVerificationToken,
   resolveAppUrl,
   sendVerificationEmail,
 } from "@/lib/email-verification";
+import { db } from "@/lib/db";
 
 type RegisterPayload = {
   name?: unknown;
@@ -16,6 +16,17 @@ type RegisterPayload = {
 };
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const ENABLED_VALUES = new Set(["1", "true", "yes", "on"]);
+
+function isEmailVerificationEnabled() {
+  const rawValue = process.env.EMAIL_VERIFICATION_ENABLED;
+
+  if (rawValue === undefined) {
+    return true;
+  }
+
+  return ENABLED_VALUES.has(rawValue.trim().toLowerCase());
+}
 
 export async function POST(request: Request) {
   let payload: RegisterPayload;
@@ -71,11 +82,13 @@ export async function POST(request: Request) {
   }
 
   const hashedPassword = await bcrypt.hash(password, 12);
+  const emailVerificationEnabled = isEmailVerificationEnabled();
 
   const user = await db.user.create({
     data: {
       name,
       email,
+      emailVerified: emailVerificationEnabled ? null : new Date(),
       password: hashedPassword,
     },
     select: {
@@ -85,40 +98,45 @@ export async function POST(request: Request) {
     },
   });
 
-  try {
-    const { rawToken } = await createEmailVerificationToken(email);
-    const verificationUrl = new URL("/verify-email", resolveAppUrl(request.headers.get("origin")));
+  if (emailVerificationEnabled) {
+    try {
+      const { rawToken } = await createEmailVerificationToken(email);
+      const verificationUrl = new URL("/verify-email", resolveAppUrl(request.headers.get("origin")));
 
-    verificationUrl.searchParams.set("email", email);
-    verificationUrl.searchParams.set("token", rawToken);
+      verificationUrl.searchParams.set("email", email);
+      verificationUrl.searchParams.set("token", rawToken);
 
-    await sendVerificationEmail({
-      email,
-      name,
-      verificationUrl: verificationUrl.toString(),
-    });
-  } catch (error) {
-    await db.verificationToken.deleteMany({
-      where: { identifier: email },
-    });
-    await db.user.delete({
-      where: { id: user.id },
-    });
+      await sendVerificationEmail({
+        email,
+        name,
+        verificationUrl: verificationUrl.toString(),
+      });
+    } catch (error) {
+      await db.verificationToken.deleteMany({
+        where: { identifier: email },
+      });
+      await db.user.delete({
+        where: { id: user.id },
+      });
 
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Unable to send the verification email.",
-      },
-      { status: 500 },
-    );
+      return NextResponse.json(
+        {
+          error:
+            error instanceof Error
+              ? error.message
+              : "Unable to send the verification email.",
+        },
+        { status: 500 },
+      );
+    }
   }
 
   return NextResponse.json(
     {
-      message: "User registered successfully. Please verify your email.",
+      message: emailVerificationEnabled
+        ? "User registered successfully. Please verify your email."
+        : "User registered successfully. You can sign in now.",
+      requiresEmailVerification: emailVerificationEnabled,
       user,
     },
     { status: 201 },

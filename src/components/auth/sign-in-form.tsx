@@ -33,7 +33,7 @@ export function SignInForm({
 
   useEffect(() => {
     if (registrationSuccess) {
-      toast.success("Email verified", {
+      toast.success("Account ready", {
         id: "register-success",
         description: "Your account is ready. Sign in with your credentials.",
       });

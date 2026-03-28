@@ -7,6 +7,17 @@ type ResendVerificationPayload = {
 };
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const ENABLED_VALUES = new Set(["1", "true", "yes", "on"]);
+
+function isEmailVerificationEnabled() {
+  const rawValue = process.env.EMAIL_VERIFICATION_ENABLED;
+
+  if (rawValue === undefined) {
+    return true;
+  }
+
+  return ENABLED_VALUES.has(rawValue.trim().toLowerCase());
+}
 
 export async function POST(request: Request) {
   let payload: ResendVerificationPayload;
@@ -34,6 +45,13 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "A valid email address is required." },
       { status: 400 },
+    );
+  }
+
+  if (!isEmailVerificationEnabled()) {
+    return NextResponse.json(
+      { error: "Email verification is currently disabled. You can sign in without verifying." },
+      { status: 403 },
     );
   }
 
