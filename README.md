@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🗃️ DevStash
 
-## Getting Started
+> **A developer-first knowledge workspace.**  
+> Think of it as Notion + filesystem + a markdown IDE — where every note is a searchable, organized knowledge file.
 
-First, run the development server:
+## 🌟 Vision
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+DevStash is a minimal, keyboard-driven knowledge workspace built *for developers, by developers*. Notes behave like files (`.md`, `.ts`, etc.) but are organized like a structured database — fast to write, easy to search, pleasant to use.
+
+- ⚡ **Speed-first**
+- 🖤 **Minimal dark UI**
+- ⌨️ **Keyboard-driven workflow**
+- 🗂️ **File-like note structure**
+
+---
+
+## 🚀 Features
+
+- **Authentication**: Secure email/password login and session management.
+- **Collections**: Group notes logically in smart folders.
+- **Items**: Create notes with specific file types (Markdown, Code, Prompts, Text).
+- **Markdown Editor**: Rich editor integration for seamless documentation.
+- **Search**: Fast global search across titles, content, and tags.
+- **Organization**: Pin important notes and track recently visited items.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js](https://nextjs.org/) (App Router)
+- **Language**: [TypeScript](https://www.typescriptlang.org/) (Strict Mode)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Components**: [shadcn/ui](https://ui.shadcn.com/)
+- **Database**: [PostgreSQL](https://www.postgresql.org/)
+- **ORM**: [Prisma](https://www.prisma.io/)
+
+---
+
+## 💻 Getting Started
+
+### Prerequisites
+
+Make sure you have Node.js and npm installed. You'll also need a running PostgreSQL database.
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Rafsan12/devstash.git
+   cd devstash
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   Create a `.env` file in the root directory and add your database and authentication configuration:
+   ```env
+   DATABASE_URL="postgresql://user:password@localhost:5432/devstash"
+   # Add other required environment variables (e.g., authentication secrets)
+   ```
+
+4. Run database migrations:
+   ```bash
+   npx prisma migrate dev
+   ```
+
+5. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📦 Scripts
 
-## Learn More
+- `npm run dev` — Start the development server
+- `npm run build` — Build the application for production
+- `npm run start` — Start the production build
+- `npm run lint` — Run ESLint to catch issues
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🤝 Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Contributions are welcome! Please open an issue or submit a pull request if you'd like to improve DevStash. Ensure you follow the project's coding style and architecture guidelines (refer to `/context/project-overview.md` and `AGENTS.md` for details).
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*DevStash — Every note is a searchable, organized knowledge file.*
