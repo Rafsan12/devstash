@@ -1,13 +1,16 @@
 # Current Feature
 
 ## Status
-Not Started
+
+Complete
 
 ## Goals
-<!-- Add feature goals here -->
+
+<!-- Add goals here -->
 
 ## Notes
-<!-- Add context or implementation notes here -->
+
+<!-- Add notes here -->
 
 ## History
 
@@ -39,6 +42,3 @@ Not Started
 - Auth UI - Sign In, Register & Sign Out completed
 - Email Verification on Register completed
 - Toggle Email Verification completed
-- **Forgot Password**: Added forgot password capabilities reusing the VerificationToken model securely with a suffix to prevent cross-authentication bugs. Implemented `(auth)/forgot-password` to email tokens via Resend, and `(auth)/reset-password` to securely validate and set new passwords.
-- Profile Page added as the current feature
-- Profile Page completed

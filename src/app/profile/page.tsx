@@ -1,45 +1,83 @@
-import { auth } from "@/auth";
-import { UserAvatar } from "@/components/auth/user-avatar";
-import Link from "next/link";
+import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { getFavoriteSidebarCollections, getRecentDashboardCollections } from "@/lib/db/collections";
+import { getAuthenticatedDashboardUser } from "@/lib/db/dashboard-user";
+import { getDashboardSidebarItemTypes, getDashboardSidebarUser, getDashboardStats } from "@/lib/db/items";
+import { ProfileHeader } from "@/components/profile/profile-header";
+import { UsageStatsCard } from "@/components/profile/usage-stats-card";
+import { AccountActions } from "@/components/profile/account-actions";
+import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Profile | DevStash",
+  description: "Manage your DevStash account and view your usage statistics.",
+};
 
 export default async function ProfilePage() {
-  const session = await auth();
+  const authenticatedUser = await getAuthenticatedDashboardUser();
+  const userId = authenticatedUser?.id;
 
-  if (!session?.user) {
+  if (!userId) {
     redirect("/sign-in");
   }
 
-  const name = session.user.name ?? "DevStash User";
-  const email = session.user.email ?? "No email available";
+  const [
+    userRecord,
+    stats,
+    sidebarItemTypes,
+    recentCollections,
+    favoriteCollections,
+  ] = await Promise.all([
+    db.user.findUnique({
+      where: { id: userId },
+      include: { accounts: true },
+    }),
+    getDashboardStats(userId),
+    getDashboardSidebarItemTypes(userId),
+    getRecentDashboardCollections(userId),
+    getFavoriteSidebarCollections(userId),
+  ]);
+
+  if (!userRecord) {
+    redirect("/sign-in");
+  }
+
+  const sidebarRecentCollections = recentCollections.slice(0, 3).map((collection) => ({
+    id: collection.id,
+    name: collection.name,
+    description: collection.description,
+    itemCount: collection.itemCount,
+    dominantTypeColor: collection.dominantTypeColor,
+  }));
+
+  const isEmailUser = !!userRecord.password;
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-6 py-10 text-white">
-      <div className="w-full max-w-xl rounded-[28px] border border-white/10 bg-black/40 p-8 shadow-2xl shadow-black/30 backdrop-blur">
-        <div className="flex items-center gap-4">
-          <UserAvatar className="h-16 w-16 text-lg" image={session.user.image} name={name} />
-          <div>
-            <p className="text-sm uppercase tracking-[0.28em] text-zinc-500">Profile</p>
-            <h1 className="mt-2 text-3xl font-semibold text-white">{name}</h1>
-            <p className="mt-2 text-sm text-zinc-400">{email}</p>
-          </div>
-        </div>
-
-        <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-          <p className="text-sm font-medium text-white">Account summary</p>
-          <p className="mt-3 text-sm leading-7 text-zinc-400">
-            This profile page is the account entry point for the new auth UI. We can expand
-            it later with preferences, security controls, and connected providers.
+    <DashboardShell
+      favoriteCollections={favoriteCollections}
+      recentCollections={sidebarRecentCollections}
+      sidebarItemTypes={sidebarItemTypes}
+      user={getDashboardSidebarUser(authenticatedUser)}
+    >
+      <div className="flex flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
+        <div>
+          <h1 className="text-3xl font-semibold text-white">Profile</h1>
+          <p className="mt-2 text-sm leading-6 text-zinc-400">
+            Manage your account settings and view your usage statistics.
           </p>
         </div>
 
-        <Link
-          className="mt-8 inline-flex h-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 px-5 text-sm font-medium text-white transition hover:bg-white/10"
-          href="/dashboard"
-        >
-          Back to dashboard
-        </Link>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          <div className="space-y-8">
+            <ProfileHeader user={userRecord} />
+            <AccountActions isEmailUser={isEmailUser} />
+          </div>
+          <div>
+            <UsageStatsCard stats={stats} itemTypes={sidebarItemTypes} />
+          </div>
+        </div>
       </div>
-    </main>
+    </DashboardShell>
   );
 }

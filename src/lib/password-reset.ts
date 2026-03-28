@@ -116,13 +116,18 @@ export async function sendPasswordResetEmail({
     }),
   });
 
-  const result = (await response.json().catch(() => null)) as
-    | { error?: { message?: string } }
-    | null;
+  const textResult = await response.text();
+  let result;
+  try {
+    result = JSON.parse(textResult);
+  } catch {
+    result = null;
+  }
 
   if (!response.ok) {
+    console.error("[Resend API Error]", response.status, textResult);
     throw new Error(
-      result?.error?.message ?? "Failed to send password reset email.",
+      result?.message ?? result?.error?.message ?? `Failed to send password reset email. Status: ${response.status}`,
     );
   }
 }
