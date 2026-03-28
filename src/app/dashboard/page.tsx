@@ -13,7 +13,6 @@ import {
   getRecentDashboardItems,
 } from "@/lib/db/items";
 
-export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
   const authenticatedUser = await getAuthenticatedDashboardUser();

@@ -1,5 +1,6 @@
 import "server-only";
 
+import { Prisma } from "@/generated/prisma/client/client";
 import { db } from "@/lib/db";
 import { DEMO_USER_EMAIL, type DashboardUserRecord } from "@/lib/db/dashboard-user";
 
@@ -70,11 +71,29 @@ const itemTypeSortOrder: Record<string, number> = {
   link: 6,
 };
 
-function createItemDescription(content: string) {
-  const normalizedContent = content.replace(/\s+/g, " ").trim();
+const DASHBOARD_ITEM_PREVIEW_LENGTH = 180;
+
+type DashboardItemQueryRow = {
+  id: string;
+  title: string;
+  description: string | null;
+  itemTypeId: string;
+  fileExtension: string;
+  isPinned: boolean;
+  collectionName: string;
+  itemTypeIcon: string;
+  itemTypeColor: string;
+};
+
+function createItemDescription(contentPreview: string | null) {
+  const normalizedContent = (contentPreview ?? "").replace(/\s+/g, " ").trim();
 
   if (!normalizedContent) {
     return "No content yet.";
+  }
+
+  if (normalizedContent.length > DASHBOARD_ITEM_PREVIEW_LENGTH) {
+    return `${normalizedContent.slice(0, DASHBOARD_ITEM_PREVIEW_LENGTH).trimEnd()}...`;
   }
 
   return normalizedContent;
@@ -84,25 +103,18 @@ function createItemTags(itemTypeId: string, fileExtension: string, collectionNam
   return [itemTypeId, fileExtension, collectionName].filter(Boolean);
 }
 
-function mapDashboardItem(item: {
-  id: string;
-  title: string;
-  content: string;
-  itemTypeId: string;
-  fileExtension: string;
-  isPinned: boolean;
-  collection: {
-    name: string;
-  };
-  itemType: DashboardItemTypeSummary;
-}): DashboardItemCardData {
+function mapDashboardItem(item: DashboardItemQueryRow): DashboardItemCardData {
   return {
     id: item.id,
     title: item.title,
-    description: createItemDescription(item.content),
+    description: createItemDescription(item.description),
     itemTypeId: item.itemTypeId,
-    itemType: item.itemType,
-    tags: createItemTags(item.itemTypeId, item.fileExtension, item.collection.name),
+    itemType: {
+      id: item.itemTypeId,
+      icon: item.itemTypeIcon,
+      color: item.itemTypeColor,
+    },
+    tags: createItemTags(item.itemTypeId, item.fileExtension, item.collectionName),
     isPinned: item.isPinned,
   };
 }
@@ -112,40 +124,24 @@ export async function getPinnedDashboardItems(userId: string | null): Promise<Da
     return [];
   }
 
-  const items = await db.item.findMany({
-    where: {
-      userId,
-      isPinned: true,
-    },
-    orderBy: [
-      {
-        updatedAt: "desc",
-      },
-      {
-        title: "asc",
-      },
-    ],
-    select: {
-      id: true,
-      title: true,
-      content: true,
-      itemTypeId: true,
-      fileExtension: true,
-      isPinned: true,
-      collection: {
-        select: {
-          name: true,
-        },
-      },
-      itemType: {
-        select: {
-          id: true,
-          icon: true,
-          color: true,
-        },
-      },
-    },
-  });
+  const items = await db.$queryRaw<DashboardItemQueryRow[]>(Prisma.sql`
+    SELECT
+      item.id,
+      item.title,
+      LEFT(TRIM(REGEXP_REPLACE(item.content, '\s+', ' ', 'g')), ${DASHBOARD_ITEM_PREVIEW_LENGTH + 1}) AS description,
+      item."itemTypeId",
+      item."fileExtension",
+      item."isPinned",
+      collection.name AS "collectionName",
+      item_type.icon AS "itemTypeIcon",
+      item_type.color AS "itemTypeColor"
+    FROM "Item" AS item
+    INNER JOIN "Collection" AS collection ON collection.id = item."collectionId"
+    INNER JOIN "ItemType" AS item_type ON item_type.id = item."itemTypeId"
+    WHERE item."userId" = ${userId}
+      AND item."isPinned" = true
+    ORDER BY item."updatedAt" DESC, item.title ASC
+  `);
 
   return items.map(mapDashboardItem);
 }
@@ -158,41 +154,27 @@ export async function getRecentDashboardItems(
     return [];
   }
 
-  const recentItems = await db.recentItem.findMany({
-    where: {
-      userId,
-    },
-    take: limit,
-    orderBy: {
-      visitedAt: "desc",
-    },
-    select: {
-      item: {
-        select: {
-          id: true,
-          title: true,
-          content: true,
-          itemTypeId: true,
-          fileExtension: true,
-          isPinned: true,
-          collection: {
-            select: {
-              name: true,
-            },
-          },
-          itemType: {
-            select: {
-              id: true,
-              icon: true,
-              color: true,
-            },
-          },
-        },
-      },
-    },
-  });
+  const recentItems = await db.$queryRaw<DashboardItemQueryRow[]>(Prisma.sql`
+    SELECT
+      item.id,
+      item.title,
+      LEFT(TRIM(REGEXP_REPLACE(item.content, '\s+', ' ', 'g')), ${DASHBOARD_ITEM_PREVIEW_LENGTH + 1}) AS description,
+      item."itemTypeId",
+      item."fileExtension",
+      item."isPinned",
+      collection.name AS "collectionName",
+      item_type.icon AS "itemTypeIcon",
+      item_type.color AS "itemTypeColor"
+    FROM "RecentItem" AS recent_item
+    INNER JOIN "Item" AS item ON item.id = recent_item."itemId"
+    INNER JOIN "Collection" AS collection ON collection.id = item."collectionId"
+    INNER JOIN "ItemType" AS item_type ON item_type.id = item."itemTypeId"
+    WHERE recent_item."userId" = ${userId}
+    ORDER BY recent_item."visitedAt" DESC
+    LIMIT ${limit}
+  `);
 
-  return recentItems.map((recentItem) => mapDashboardItem(recentItem.item));
+  return recentItems.map(mapDashboardItem);
 }
 
 export async function getDashboardStats(userId: string | null): Promise<DashboardStats> {

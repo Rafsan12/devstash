@@ -14,10 +14,8 @@ export type SidebarAccountUser = {
 };
 
 export function SidebarAccountMenu({
-  sidebarExpanded,
   user,
 }: {
-  sidebarExpanded: boolean;
   user: SidebarAccountUser;
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,12 +37,7 @@ export function SidebarAccountMenu({
         />
       ) : null}
 
-      <div
-        className={cn(
-          "relative z-20 flex items-center rounded-2xl border border-white/10 bg-white/[0.03]",
-          sidebarExpanded ? "gap-3 px-3 py-3" : "justify-center px-2 py-3",
-        )}
-      >
+      <div className="relative z-20 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-3 lg:peer-checked/desktop:justify-center lg:peer-checked/desktop:px-2">
         <Link
           aria-label="Open profile"
           className="shrink-0"
@@ -54,24 +47,27 @@ export function SidebarAccountMenu({
           <UserAvatar className="h-11 w-11" image={user.image} name={user.name} />
         </Link>
 
-        {sidebarExpanded ? (
-          <>
-            <Link className="min-w-0 flex-1" href="/profile" onClick={() => setIsOpen(false)}>
-              <p className="truncate text-sm font-medium text-white">{user.name}</p>
-              <p className="truncate text-sm text-zinc-500">{user.email}</p>
-            </Link>
-            <Button
-              aria-expanded={isOpen}
-              aria-label="Toggle account menu"
-              className="h-9 w-9 shrink-0"
-              onClick={() => setIsOpen((current) => !current)}
-              size="icon"
-              variant="ghost"
-            >
-              <ChevronUpIcon className={cn("transition-transform", isOpen ? "rotate-180" : "")} />
-            </Button>
-          </>
-        ) : (
+        <div className="min-w-0 flex-1 lg:peer-checked/desktop:hidden">
+          <Link className="block" href="/profile" onClick={() => setIsOpen(false)}>
+            <p className="truncate text-sm font-medium text-white">{user.name}</p>
+            <p className="truncate text-sm text-zinc-500">{user.email}</p>
+          </Link>
+        </div>
+
+        <div className="lg:peer-checked/desktop:hidden">
+          <Button
+            aria-expanded={isOpen}
+            aria-label="Toggle account menu"
+            className="h-9 w-9 shrink-0"
+            onClick={() => setIsOpen((current) => !current)}
+            size="icon"
+            variant="ghost"
+          >
+            <ChevronUpIcon className={cn("transition-transform", isOpen ? "rotate-180" : "")} />
+          </Button>
+        </div>
+
+        <div className="hidden lg:peer-checked/desktop:block">
           <Button
             aria-expanded={isOpen}
             aria-label="Toggle account menu"
@@ -80,7 +76,7 @@ export function SidebarAccountMenu({
             size="icon"
             variant="ghost"
           />
-        )}
+        </div>
       </div>
 
       {isOpen ? (

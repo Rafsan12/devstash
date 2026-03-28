@@ -31,6 +31,14 @@ type DashboardRecentCollectionWithActivity = DashboardRecentCollection & {
   lastActivityAt: Date;
 };
 
+type GroupedCollectionTypeCount = {
+  collectionId: string;
+  itemTypeId: string;
+  count: number;
+  icon: string;
+  color: string;
+};
+
 function compareTypeSummaries(
   left: DashboardCollectionTypeSummary,
   right: DashboardCollectionTypeSummary,
@@ -46,35 +54,75 @@ function mapCollectionsById<T extends { id: string }>(collections: T[]) {
   return new Map(collections.map((collection) => [collection.id, collection]));
 }
 
-function buildCollectionTypeSummaries(
-  items: Array<{
-    itemTypeId: string;
-    itemType: {
-      id: string;
-      icon: string;
-      color: string;
-    };
-  }>,
-) {
-  const typeMap = new Map<string, DashboardCollectionTypeSummary>();
+function buildCollectionTypeSummaries(items: GroupedCollectionTypeCount[]) {
+  return items
+    .map((item) => ({
+      id: item.itemTypeId,
+      icon: item.icon,
+      color: item.color,
+      count: item.count,
+    }))
+    .sort(compareTypeSummaries);
+}
 
-  for (const item of items) {
-    const existingType = typeMap.get(item.itemTypeId);
+async function getCollectionTypeCounts(
+  userId: string,
+  collectionIds: string[],
+): Promise<Map<string, GroupedCollectionTypeCount[]>> {
+  if (collectionIds.length === 0) {
+    return new Map();
+  }
 
-    if (existingType) {
-      existingType.count += 1;
+  const groupedCounts = await db.item.groupBy({
+    by: ["collectionId", "itemTypeId"],
+    where: {
+      userId,
+      collectionId: {
+        in: collectionIds,
+      },
+    },
+    _count: {
+      itemTypeId: true,
+    },
+  });
+
+  const itemTypeIds = [...new Set(groupedCounts.map((entry) => entry.itemTypeId))];
+  const itemTypes = itemTypeIds.length > 0
+    ? await db.itemType.findMany({
+        where: {
+          id: {
+            in: itemTypeIds,
+          },
+        },
+        select: {
+          id: true,
+          icon: true,
+          color: true,
+        },
+      })
+    : [];
+  const itemTypesById = new Map(itemTypes.map((itemType) => [itemType.id, itemType]));
+  const countsByCollection = new Map<string, GroupedCollectionTypeCount[]>();
+
+  for (const entry of groupedCounts) {
+    const itemType = itemTypesById.get(entry.itemTypeId);
+
+    if (!itemType) {
       continue;
     }
 
-    typeMap.set(item.itemTypeId, {
-      id: item.itemType.id,
-      icon: item.itemType.icon,
-      color: item.itemType.color,
-      count: 1,
+    const collectionCounts = countsByCollection.get(entry.collectionId) ?? [];
+    collectionCounts.push({
+      collectionId: entry.collectionId,
+      itemTypeId: entry.itemTypeId,
+      count: entry._count.itemTypeId,
+      icon: itemType.icon,
+      color: itemType.color,
     });
+    countsByCollection.set(entry.collectionId, collectionCounts);
   }
 
-  return [...typeMap.values()].sort(compareTypeSummaries);
+  return countsByCollection;
 }
 
 export async function getRecentDashboardCollections(
@@ -137,36 +185,41 @@ export async function getRecentDashboardCollections(
     return [];
   }
 
-  const collections = await db.collection.findMany({
-    where: {
-      id: {
-        in: selectedCollectionIds,
-      },
-    },
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      createdAt: true,
-      items: {
-        select: {
-          updatedAt: true,
-          itemTypeId: true,
-          itemType: {
-            select: {
-              id: true,
-              icon: true,
-              color: true,
-            },
-          },
+  const [collections, collectionTotals, collectionTypeCounts] = await Promise.all([
+    db.collection.findMany({
+      where: {
+        id: {
+          in: selectedCollectionIds,
         },
       },
-    },
-  });
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        createdAt: true,
+      },
+    }),
+    db.item.groupBy({
+      by: ["collectionId"],
+      where: {
+        userId,
+        collectionId: {
+          in: selectedCollectionIds,
+        },
+      },
+      _count: {
+        _all: true,
+      },
+    }),
+    getCollectionTypeCounts(userId, selectedCollectionIds),
+  ]);
 
   const collectionsById = mapCollectionsById(collections);
   const recentActivityById = new Map(
     recentCollectionActivity.map((entry) => [entry.collectionId, entry._max.updatedAt]),
+  );
+  const collectionTotalsById = new Map(
+    collectionTotals.map((entry) => [entry.collectionId, entry._count._all]),
   );
 
   return selectedCollectionIds
@@ -177,14 +230,14 @@ export async function getRecentDashboardCollections(
         return null;
       }
 
-      const types = buildCollectionTypeSummaries(collection.items);
+      const types = buildCollectionTypeSummaries(collectionTypeCounts.get(collection.id) ?? []);
       const fallbackLastActivityAt = recentActivityById.get(collection.id) ?? collection.createdAt;
 
       return {
         id: collection.id,
         name: collection.name,
         description: collection.description ?? "No description yet.",
-        itemCount: collection.items.length,
+        itemCount: collectionTotalsById.get(collection.id) ?? 0,
         typeCount: types.length,
         dominantTypeColor: types[0]?.color ?? "#27272a",
         types,
@@ -259,46 +312,12 @@ export async function getFavoriteSidebarCollections(
   }
 
   const favoriteCollectionIds = collections.map((collection) => collection.id);
-  const items = await db.item.findMany({
-    where: {
-      userId,
-      collectionId: {
-        in: favoriteCollectionIds,
-      },
-    },
-    select: {
-      collectionId: true,
-      itemTypeId: true,
-      itemType: {
-        select: {
-          color: true,
-        },
-      },
-    },
-  });
-
-  const typeCountsByCollection = new Map<string, Map<string, { color: string; count: number }>>();
-
-  for (const item of items) {
-    const collectionTypeCounts =
-      typeCountsByCollection.get(item.collectionId) ?? new Map<string, { color: string; count: number }>();
-    const existingType = collectionTypeCounts.get(item.itemTypeId);
-
-    if (existingType) {
-      existingType.count += 1;
-    } else {
-      collectionTypeCounts.set(item.itemTypeId, {
-        color: item.itemType.color,
-        count: 1,
-      });
-    }
-
-    typeCountsByCollection.set(item.collectionId, collectionTypeCounts);
-  }
+  const typeCountsByCollection = await getCollectionTypeCounts(userId, favoriteCollectionIds);
 
   return collections.map((collection) => {
-    const dominantTypeColor = [...(typeCountsByCollection.get(collection.id)?.values() ?? [])]
-      .sort((left, right) => right.count - left.count)[0]?.color ?? "#27272a";
+    const dominantTypeColor = buildCollectionTypeSummaries(
+      typeCountsByCollection.get(collection.id) ?? [],
+    )[0]?.color ?? "#27272a";
 
     return {
       id: collection.id,
