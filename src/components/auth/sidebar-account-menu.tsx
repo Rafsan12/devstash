@@ -15,8 +15,10 @@ export type SidebarAccountUser = {
 
 export function SidebarAccountMenu({
   user,
+  isDesktopCollapsed,
 }: {
   user: SidebarAccountUser;
+  isDesktopCollapsed?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
@@ -37,7 +39,10 @@ export function SidebarAccountMenu({
         />
       ) : null}
 
-      <div className="relative z-20 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-3 lg:peer-checked/desktop:justify-center lg:peer-checked/desktop:px-2">
+      <div className={cn(
+        "relative z-20 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-3",
+        isDesktopCollapsed && "lg:justify-center lg:px-2"
+      )}>
         <Link
           aria-label="Open profile"
           className="shrink-0"
@@ -47,14 +52,14 @@ export function SidebarAccountMenu({
           <UserAvatar className="h-11 w-11" image={user.image} name={user.name} />
         </Link>
 
-        <div className="min-w-0 flex-1 lg:peer-checked/desktop:hidden">
+        <div className={cn("min-w-0 flex-1", isDesktopCollapsed && "lg:hidden")}>
           <Link className="block" href="/profile" onClick={() => setIsOpen(false)}>
             <p className="truncate text-sm font-medium text-white">{user.name}</p>
             <p className="truncate text-sm text-zinc-500">{user.email}</p>
           </Link>
         </div>
 
-        <div className="lg:peer-checked/desktop:hidden">
+        <div className={cn(isDesktopCollapsed && "lg:hidden")}>
           <Button
             aria-expanded={isOpen}
             aria-label="Toggle account menu"
@@ -67,7 +72,7 @@ export function SidebarAccountMenu({
           </Button>
         </div>
 
-        <div className="hidden lg:peer-checked/desktop:block">
+        <div className={cn("hidden", isDesktopCollapsed && "lg:block")}>
           <Button
             aria-expanded={isOpen}
             aria-label="Toggle account menu"
