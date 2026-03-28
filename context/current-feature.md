@@ -1,4 +1,4 @@
-# Current Feature: Toggle Email Verification
+# Current Feature
 
 ## Status
 
@@ -6,15 +6,11 @@ Complete
 
 ## Goals
 
-- Add a single toggle that enables or disables the email verification requirement.
-- When disabled, let new users register and sign in without receiving a verification email.
-- Keep verification-specific routes and messaging aligned with the toggle state.
-- Document the toggle in the example environment configuration.
+<!-- Add goals here -->
 
 ## Notes
 
-- Use an environment variable so local development can disable the verification flow until a Resend domain is available.
-- Keep the enabled path working as-is when the toggle is turned on.
+<!-- Add notes here -->
 
 ## History
 
