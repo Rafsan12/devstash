@@ -118,7 +118,18 @@ export function SignInForm({
           />
         </Field>
 
-        <Field label="Password">
+        <Field 
+          label="Password"
+          action={
+            <Link 
+              className="text-xs font-medium text-sky-300 hover:text-sky-200 transition" 
+              href="/forgot-password"
+              tabIndex={-1}
+            >
+              Forgot Password?
+            </Link>
+          }
+        >
           <Input
             autoComplete="current-password"
             onChange={(event) => setPassword(event.target.value)}
@@ -167,13 +178,18 @@ export function SignInForm({
 function Field({
   label,
   children,
+  action,
 }: {
   label: string;
   children: React.ReactNode;
+  action?: React.ReactNode;
 }) {
   return (
     <label className="block space-y-2">
-      <span className="text-sm font-medium text-zinc-200">{label}</span>
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-medium text-zinc-200">{label}</span>
+        {action}
+      </div>
       {children}
     </label>
   );
