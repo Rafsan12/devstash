@@ -15,11 +15,13 @@ function isValidEmail(email: string) {
 
 export function SignInForm({
   callbackUrl,
+  initialCode,
   initialError,
   registrationEmail,
   registrationSuccess,
 }: {
   callbackUrl: string;
+  initialCode?: string;
   initialError?: string;
   registrationEmail?: string;
   registrationSuccess?: boolean;
@@ -28,6 +30,7 @@ export function SignInForm({
   const [email, setEmail] = useState(registrationEmail ?? "");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(initialError ?? "");
+  const [errorCode, setErrorCode] = useState(initialCode ?? "");
   const [isPending, setIsPending] = useState(false);
   const [isGitHubPending, setIsGitHubPending] = useState(false);
 
@@ -55,6 +58,7 @@ export function SignInForm({
 
     setIsPending(true);
     setError("");
+    setErrorCode("");
 
     const result = await signIn("credentials", {
       email,
@@ -77,6 +81,19 @@ export function SignInForm({
     }
 
     if (!result || result.error) {
+      if (result?.code === "rate_limited" || result?.status === 429) {
+        const nextError = "Too many sign-in attempts. Please wait a few minutes and try again.";
+
+        setErrorCode("rate_limited");
+        setError(nextError);
+        toast.error("Too many attempts", {
+          id: "sign-in-rate-limited",
+          description: nextError,
+        });
+        return;
+      }
+
+      setErrorCode("credentials");
       setError("Invalid email or password.");
       return;
     }
@@ -111,7 +128,13 @@ export function SignInForm({
         <Field label="Email">
           <Input
             autoComplete="email"
-            onChange={(event) => setEmail(event.target.value)}
+            onChange={(event) => {
+              setEmail(event.target.value);
+
+              if (errorCode === "rate_limited") {
+                setErrorCode("");
+              }
+            }}
             placeholder="you@devstash.io"
             type="email"
             value={email}
@@ -132,7 +155,13 @@ export function SignInForm({
         >
           <Input
             autoComplete="current-password"
-            onChange={(event) => setPassword(event.target.value)}
+            onChange={(event) => {
+              setPassword(event.target.value);
+
+              if (errorCode === "rate_limited") {
+                setErrorCode("");
+              }
+            }}
             placeholder="Enter your password"
             type="password"
             value={password}

@@ -1,8 +1,18 @@
 import { resetUserPassword } from "@/lib/password-reset";
+import { checkRateLimit, createRateLimitResponse } from "@/lib/rate-limit";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
+    const rateLimit = await checkRateLimit({
+      policy: "authResetPassword",
+      request: req,
+    });
+
+    if (!rateLimit.success) {
+      return createRateLimitResponse(rateLimit);
+    }
+
     const { email, token, password } = await req.json();
 
     if (!email || typeof email !== "string" || !token || typeof token !== "string") {

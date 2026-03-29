@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { issueVerificationEmail } from "@/lib/email-verification";
+import { checkRateLimit, createRateLimitResponse } from "@/lib/rate-limit";
 
 type ResendVerificationPayload = {
   email?: unknown;
@@ -46,6 +47,16 @@ export async function POST(request: Request) {
       { error: "A valid email address is required." },
       { status: 400 },
     );
+  }
+
+  const rateLimit = await checkRateLimit({
+    policy: "authResendVerification",
+    request,
+    identifier: email,
+  });
+
+  if (!rateLimit.success) {
+    return createRateLimitResponse(rateLimit);
   }
 
   if (!isEmailVerificationEnabled()) {

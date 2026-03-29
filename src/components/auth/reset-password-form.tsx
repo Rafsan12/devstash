@@ -72,9 +72,18 @@ export function ResetPasswordForm({
       });
 
       const data = await response.json();
+      const nextError = data.error || data.message || "Failed to reset password.";
 
       if (!response.ok) {
-        setError(data.message || "Failed to reset password.");
+        setError(nextError);
+
+        if (response.status === 429) {
+          toast.error("Too many attempts", {
+            id: "reset-password-rate-limited",
+            description: nextError,
+          });
+        }
+
         setIsPending(false);
         return;
       }

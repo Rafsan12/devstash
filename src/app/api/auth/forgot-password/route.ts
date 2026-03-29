@@ -1,8 +1,18 @@
 import { issuePasswordReset } from "@/lib/password-reset";
+import { checkRateLimit, createRateLimitResponse } from "@/lib/rate-limit";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
+    const rateLimit = await checkRateLimit({
+      policy: "authForgotPassword",
+      request: req,
+    });
+
+    if (!rateLimit.success) {
+      return createRateLimitResponse(rateLimit);
+    }
+
     const { email } = await req.json();
 
     if (!email || typeof email !== "string") {
@@ -12,7 +22,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // We intentionally don't return whether the user was found to prevent email enumeration.
     await issuePasswordReset(email, req.headers.get("origin"));
 
     return NextResponse.json(

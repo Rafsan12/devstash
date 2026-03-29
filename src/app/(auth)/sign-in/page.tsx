@@ -3,9 +3,13 @@ import { AuthShell } from "@/components/auth/auth-shell";
 import { SignInForm } from "@/components/auth/sign-in-form";
 import { redirect } from "next/navigation";
 
-function mapAuthError(error?: string) {
+function mapAuthError(error?: string, code?: string) {
   if (error === "EmailNotVerified") {
     return "Verify your email before signing in. Check your inbox for the link.";
+  }
+
+  if (error === "CredentialsSignin" && code === "rate_limited") {
+    return "Too many sign-in attempts. Please wait a few minutes and try again.";
   }
 
   if (error === "CredentialsSignin") {
@@ -41,6 +45,9 @@ export default async function SignInPage({
   const errorCode = typeof resolvedSearchParams.error === "string"
     ? resolvedSearchParams.error
     : undefined;
+  const authCode = typeof resolvedSearchParams.code === "string"
+    ? resolvedSearchParams.code
+    : undefined;
   const registrationEmail = typeof resolvedSearchParams.email === "string"
     ? resolvedSearchParams.email
     : undefined;
@@ -54,7 +61,8 @@ export default async function SignInPage({
     >
       <SignInForm
         callbackUrl={callbackUrl}
-        initialError={mapAuthError(errorCode)}
+        initialCode={authCode}
+        initialError={mapAuthError(errorCode, authCode)}
         registrationEmail={registrationEmail}
         registrationSuccess={registrationSuccess}
       />

@@ -7,6 +7,7 @@ import {
   sendVerificationEmail,
 } from "@/lib/email-verification";
 import { db } from "@/lib/db";
+import { checkRateLimit, createRateLimitResponse } from "@/lib/rate-limit";
 
 type RegisterPayload = {
   name?: unknown;
@@ -29,6 +30,15 @@ function isEmailVerificationEnabled() {
 }
 
 export async function POST(request: Request) {
+  const rateLimit = await checkRateLimit({
+    policy: "authRegister",
+    request,
+  });
+
+  if (!rateLimit.success) {
+    return createRateLimitResponse(rateLimit);
+  }
+
   let payload: RegisterPayload;
 
   try {

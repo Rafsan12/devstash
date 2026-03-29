@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -74,7 +75,16 @@ export function RegisterForm({
     setIsPending(false);
 
     if (!response.ok) {
-      setError(result?.error ?? "Unable to create your account.");
+      const nextError = result?.error ?? "Unable to create your account.";
+
+      setError(nextError);
+
+      if (response.status === 429) {
+        toast.error("Too many attempts", {
+          id: "register-rate-limited",
+          description: nextError,
+        });
+      }
       return;
     }
 

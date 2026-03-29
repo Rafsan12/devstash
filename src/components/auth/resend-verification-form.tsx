@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -55,7 +56,17 @@ export function ResendVerificationForm({
     setIsPending(false);
 
     if (!response.ok) {
-      setError(result?.error ?? "Unable to resend the verification email.");
+      const nextError = result?.error ?? "Unable to resend the verification email.";
+
+      setError(nextError);
+
+      if (response.status === 429) {
+        toast.error("Too many attempts", {
+          id: "resend-verification-rate-limited",
+          description: nextError,
+        });
+      }
+
       return;
     }
 
