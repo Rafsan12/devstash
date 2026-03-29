@@ -1,35 +1,14 @@
-import Link from "next/link";
-
-const itemTypeContent: Record<string, { title: string; description: string }> = {
-  snippets: {
-    title: "Snippets",
-    description: "Browse reusable code snippets for the dashboard workspace.",
-  },
-  prompts: {
-    title: "Prompts",
-    description: "Browse saved AI prompts and prompt templates.",
-  },
-  commands: {
-    title: "Commands",
-    description: "Browse frequently used terminal and git commands.",
-  },
-  notes: {
-    title: "Notes",
-    description: "Browse markdown notes and written references.",
-  },
-  files: {
-    title: "Files",
-    description: "Browse context files and stored reference documents.",
-  },
-  images: {
-    title: "Images",
-    description: "Browse visual references and saved images.",
-  },
-  links: {
-    title: "Links",
-    description: "Browse saved URLs and useful external references.",
-  },
-};
+import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { ItemCard } from "@/components/dashboard/item-card";
+import { getFavoriteSidebarCollections, getRecentDashboardCollections } from "@/lib/db/collections";
+import { getAuthenticatedDashboardUser } from "@/lib/db/dashboard-user";
+import {
+  getDashboardSidebarItemTypes,
+  getDashboardSidebarUser,
+  getDashboardItemsByType,
+  getItemTypeIdFromRoute,
+} from "@/lib/db/items";
+import { notFound } from "next/navigation";
 
 export default async function ItemTypePage({
   params,
@@ -37,31 +16,66 @@ export default async function ItemTypePage({
   params: Promise<{ type: string }>;
 }) {
   const { type } = await params;
-  const content = itemTypeContent[type] ?? {
-    title: "Items",
-    description: "Browse dashboard items by type.",
-  };
+  const itemTypeId = getItemTypeIdFromRoute(type);
+
+  if (!itemTypeId) {
+    notFound();
+  }
+
+  const authenticatedUser = await getAuthenticatedDashboardUser();
+  const userId = authenticatedUser?.id ?? null;
+
+  const [
+    recentCollections,
+    sidebarItemTypes,
+    favoriteCollections,
+    items,
+  ] = await Promise.all([
+    getRecentDashboardCollections(userId),
+    getDashboardSidebarItemTypes(userId),
+    getFavoriteSidebarCollections(userId),
+    getDashboardItemsByType(userId, itemTypeId),
+  ]);
+
+  const sidebarRecentCollections = recentCollections.slice(0, 3).map((collection) => ({
+    id: collection.id,
+    name: collection.name,
+    description: collection.description,
+    itemCount: collection.itemCount,
+    dominantTypeColor: collection.dominantTypeColor,
+  }));
+
+  const itemTypeData = sidebarItemTypes.find((t) => t.id === itemTypeId);
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-black px-6 text-white">
-      <div className="w-full max-w-2xl rounded-[28px] border border-white/10 bg-white/[0.03] p-8 shadow-2xl shadow-black/30">
-        <p className="text-sm uppercase tracking-[0.28em] text-zinc-500">DevStash</p>
-        <h1 className="mt-4 text-4xl font-semibold">{content.title}</h1>
-        <p className="mt-4 max-w-xl text-base leading-7 text-zinc-400">
-          {content.description}
-        </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link
-            className="inline-flex h-11 items-center justify-center rounded-xl bg-white px-5 text-sm font-medium text-black transition hover:bg-zinc-100"
-            href="/dashboard"
-          >
-            Back to dashboard
-          </Link>
-          <span className="inline-flex h-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] px-5 text-sm text-zinc-400">
-            Placeholder route for phase 2 navigation
-          </span>
+    <DashboardShell
+      favoriteCollections={favoriteCollections}
+      recentCollections={sidebarRecentCollections}
+      sidebarItemTypes={sidebarItemTypes}
+      user={getDashboardSidebarUser(authenticatedUser)}
+    >
+      <section className="flex-1 space-y-8 px-4 py-6 sm:px-6">
+        <div>
+          <h2 className="text-xl font-semibold text-white">
+            {itemTypeData?.name ?? type}
+          </h2>
+          <p className="mt-1 text-sm text-zinc-400">
+            Browse and manage your {itemTypeData?.name.toLowerCase() ?? type}.
+          </p>
         </div>
-      </div>
-    </main>
+
+        {items.length > 0 ? (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+            {items.map((item) => (
+              <ItemCard item={item} key={item.id} />
+            ))}
+          </div>
+        ) : (
+          <div className="flex h-64 items-center justify-center rounded-[28px] border border-dashed border-white/10 bg-white/[0.02]">
+            <p className="text-sm text-zinc-500">No items found.</p>
+          </div>
+        )}
+      </section>
+    </DashboardShell>
   );
 }

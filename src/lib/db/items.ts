@@ -119,6 +119,41 @@ function mapDashboardItem(item: DashboardItemQueryRow): DashboardItemCardData {
   };
 }
 
+export function getItemTypeIdFromRoute(route: string): string | null {
+  const entry = Object.entries(itemTypeRouteMap).find(([_, r]) => r === route);
+  return entry ? entry[0] : null;
+}
+
+export async function getDashboardItemsByType(
+  userId: string | null,
+  itemTypeId: string,
+): Promise<DashboardItemCardData[]> {
+  if (!userId) {
+    return [];
+  }
+
+  const items = await db.$queryRaw<DashboardItemQueryRow[]>(Prisma.sql`
+    SELECT
+      item.id,
+      item.title,
+      LEFT(TRIM(REGEXP_REPLACE(item.content, '\s+', ' ', 'g')), ${DASHBOARD_ITEM_PREVIEW_LENGTH + 1}) AS description,
+      item."itemTypeId",
+      item."fileExtension",
+      item."isPinned",
+      collection.name AS "collectionName",
+      item_type.icon AS "itemTypeIcon",
+      item_type.color AS "itemTypeColor"
+    FROM "Item" AS item
+    INNER JOIN "Collection" AS collection ON collection.id = item."collectionId"
+    INNER JOIN "ItemType" AS item_type ON item_type.id = item."itemTypeId"
+    WHERE item."userId" = ${userId}
+      AND item."itemTypeId" = ${itemTypeId}
+    ORDER BY item."updatedAt" DESC, item.title ASC
+  `);
+
+  return items.map(mapDashboardItem);
+}
+
 export async function getPinnedDashboardItems(userId: string | null): Promise<DashboardItemCardData[]> {
   if (!userId) {
     return [];

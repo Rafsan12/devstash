@@ -13,6 +13,9 @@ Complete
 
 <!-- Keep this updated. Earliest to latest -->
 
+- Items List View added as the current feature
+- Items List View completed
+
 - Initial Next.js app setup from Create Next App
 - Initial Next.js setup and Tailwind setup committed in `8e45554`
 - Project setup and boilerplate cleanup
