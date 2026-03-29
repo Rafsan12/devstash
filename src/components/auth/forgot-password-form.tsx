@@ -31,9 +31,18 @@ export function ForgotPasswordForm() {
       });
 
       const data = await response.json();
+      const nextError = data.error || data.message || "Failed to request password reset.";
 
       if (!response.ok) {
-        setError(data.message || "Failed to request password reset.");
+        setError(nextError);
+
+        if (response.status === 429) {
+          toast.error("Too many attempts", {
+            id: "forgot-password-rate-limited",
+            description: nextError,
+          });
+        }
+
         setIsPending(false);
         return;
       }
