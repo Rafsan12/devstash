@@ -107,12 +107,14 @@ export default async function VerifyEmailPage({
   }
 
   const resolvedSearchParams = await searchParams;
-  const email = typeof resolvedSearchParams.email === "string"
-    ? resolvedSearchParams.email
-    : undefined;
-  const token = typeof resolvedSearchParams.token === "string"
-    ? resolvedSearchParams.token
-    : undefined;
+  const email =
+    typeof resolvedSearchParams.email === "string"
+      ? resolvedSearchParams.email
+      : undefined;
+  const token =
+    typeof resolvedSearchParams.token === "string"
+      ? resolvedSearchParams.token
+      : undefined;
   const isSent = resolvedSearchParams.sent === "1";
 
   let status: VerifyEmailStatus = "missing";
@@ -132,7 +134,7 @@ export default async function VerifyEmailPage({
       title={content.title}
     >
       <div className="space-y-6">
-        <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4 text-sm leading-7 text-zinc-300">
+        <div className="rounded-2xl border border-white/10 bg-white/4 px-5 py-4 text-sm leading-7 text-zinc-300">
           {content.body}
         </div>
 
@@ -143,11 +145,16 @@ export default async function VerifyEmailPage({
           {content.primaryLabel}
         </Link>
 
-        {content.canResend ? <ResendVerificationForm initialEmail={email} /> : null}
+        {content.canResend ? (
+          <ResendVerificationForm initialEmail={email} />
+        ) : null}
 
         <p className="text-center text-sm text-zinc-400">
           Need a different account?{" "}
-          <Link className="font-medium text-sky-300 transition hover:text-sky-200" href="/register">
+          <Link
+            className="font-medium text-sky-300 transition hover:text-sky-200"
+            href="/register"
+          >
             Create a new one
           </Link>
         </p>
