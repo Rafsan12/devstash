@@ -11,6 +11,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "db:format": "prisma format --schema=prisma/schema",
     "db:generate": "prisma generate --schema=prisma/schema",
     "db:migrate": "prisma migrate dev --schema=prisma/schema",
@@ -44,6 +46,7 @@
     "prisma": "^7.5.0",
     "tailwindcss": "^4",
     "tsx": "^4.20.6",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.2"
   }
 }

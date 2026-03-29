@@ -117,6 +117,8 @@ Do NOT edit:
 - `npm run build` → production build
 - `npm run start` → run production build
 - `npm run lint` → run ESLint
+- `npm run test` → run vitest (single run)
+- `npm run test:watch` → run vitest in watch mode
 
 Always run commands from the project root.
 
@@ -124,12 +126,13 @@ Always run commands from the project root.
 
 ## Testing Guidelines
 
-- No test runner configured yet
-- Minimum validation:
+- **Runner**: Vitest (node environment)
+- **Scope**: Server actions and utilities only — do NOT test React components
+- **Convention**: `*.test.ts` co-located next to the source file
+- Minimum validation before commit:
+  - `npm run test`
   - `npm run lint`
   - `npm run build`
-- Future tests:
-  - use `.test.ts` / `.test.tsx`
 
 ---
 
