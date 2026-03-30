@@ -1,7 +1,9 @@
 # Current Feature
 
+None
+
 ## Status
-Not Started
+Complete
 
 ## Goals
 <!-- Add feature goals here -->
@@ -13,7 +15,6 @@ Not Started
 
 <!-- Keep this updated. Earliest to latest -->
 
-- Items List View added as the current feature
 - Items List View completed
 - Initial Next.js app setup from Create Next App
 - Initial Next.js setup and Tailwind setup committed in `8e45554`
@@ -44,6 +45,7 @@ Not Started
 - **Forgot Password**: Added forgot password capabilities reusing the VerificationToken model securely with a suffix to prevent cross-authentication bugs. Implemented `(auth)/forgot-password` to email tokens via Resend, and `(auth)/reset-password` to securely validate and set new passwords.
 - Profile Page added as the current feature
 - Profile Page completed
-- Rate Limiting for Auth completed: added Upstash-backed auth rate limiting across credentials sign-in, register, forgot-password, reset-password, and resend-verification flows, with shared `429` handling, frontend toasts, and fail-open safety when trusted IP headers are unavailable.
+- Rate Limiting for Auth completed: added Upstash-backed auth rate limiting across credentials sign-in, register, forgot-password, register, and resend-verification flows, with shared `429` handling, frontend toasts, and fail-open safety when trusted IP headers are unavailable.
 - Item Drawer completed
 - Item Drawer Edit Mode completed: Implemented a new server action `updateItem` with Zod validation and updated the UI in `item-drawer.tsx` to support inline editing of Title, Content, and File Extension. Unit tests added for both the DB layer and server actions.
+- **Delete Item Functionality**: Implemented secure item deletion with a Shadcn UI `AlertDialog` for confirmation and `sonner` toasts for success/error feedback. Refactored the dashboard to use a new `deleteItem` server action while maintaining the existing API route.

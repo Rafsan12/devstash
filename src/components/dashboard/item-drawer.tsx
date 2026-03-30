@@ -9,6 +9,17 @@ import {
   SheetDescription,
   SheetClose,
 } from "@/components/ui/sheet";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { ItemTypeIcon, withAlpha } from "@/components/dashboard/item-type-icon";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -207,13 +218,34 @@ function DrawerContent({
         />
         <ActionButton icon="edit" label="Edit" onClick={onEdit} />
         <div className="flex-1" />
-        <ActionButton
-          disabled={isMutating}
-          icon="trash"
-          label={isMutating ? "Working..." : "Delete"}
-          onClick={onDelete}
-          variant="danger"
-        />
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <ActionButton
+              disabled={isMutating}
+              icon="trash"
+              label={isMutating ? "Working..." : "Delete"}
+              onClick={() => {}}
+              variant="danger"
+            />
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Item</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete &quot;{item.title}&quot;? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-red-500 text-white hover:bg-red-600 border-0"
+                onClick={onDelete}
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
 
       <section>

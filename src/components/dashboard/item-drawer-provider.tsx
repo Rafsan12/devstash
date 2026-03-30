@@ -2,7 +2,7 @@
 
 import { type DashboardItemCardData, type ItemDetail } from "@/lib/db/items";
 import { ItemDrawer, type EditFormData } from "@/components/dashboard/item-drawer";
-import { updateItem } from "@/actions/items";
+import { deleteItem, updateItem } from "@/actions/items";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useState, useCallback, type ReactNode } from "react";
@@ -84,20 +84,14 @@ export function ItemDrawerProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    const confirmed = window.confirm(`Delete "${item.title}"?`);
-    if (!confirmed) {
-      return;
-    }
-
     setIsMutating(true);
 
     try {
-      const response = await fetch(`/api/items/${item.id}`, {
-        method: "DELETE",
-      });
+      const result = await deleteItem(item.id);
 
-      if (!response.ok) {
-        throw new Error("Failed to delete item.");
+      if (!result.success) {
+        toast.error(result.error);
+        return;
       }
 
       setOpen(false);

@@ -7,12 +7,14 @@ vi.mock("@/auth", () => ({
   auth: () => mockAuth(),
 }));
 
+const mockDeleteItemById = vi.fn();
 const mockUpdateItemById = vi.fn();
 vi.mock("@/lib/db/items", () => ({
+  deleteItemById: (...args: unknown[]) => mockDeleteItemById(...args),
   updateItemById: (...args: unknown[]) => mockUpdateItemById(...args),
 }));
 
-import { updateItem } from "./items";
+import { deleteItem, updateItem } from "./items";
 
 const sampleItemDetail = {
   id: "item-1",
@@ -113,5 +115,49 @@ describe("updateItem server action", () => {
       content: "",
       fileExtension: "",
     });
+  });
+});
+
+describe("deleteItem server action", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns error when user is not authenticated", async () => {
+    mockAuth.mockResolvedValueOnce(null);
+
+    const result = await deleteItem("item-1");
+
+    expect(result).toEqual({ success: false, error: "Unauthorized." });
+    expect(mockDeleteItemById).not.toHaveBeenCalled();
+  });
+
+  it("returns error when item is not found or not owned by user", async () => {
+    mockAuth.mockResolvedValueOnce({ user: { id: "user-1" } });
+    mockDeleteItemById.mockResolvedValueOnce(false);
+
+    const result = await deleteItem("item-1");
+
+    expect(result).toEqual({ success: false, error: "Item not found." });
+    expect(mockDeleteItemById).toHaveBeenCalledWith("user-1", "item-1");
+  });
+
+  it("returns success when item is deleted successfully", async () => {
+    mockAuth.mockResolvedValueOnce({ user: { id: "user-1" } });
+    mockDeleteItemById.mockResolvedValueOnce(true);
+
+    const result = await deleteItem("item-1");
+
+    expect(result).toEqual({ success: true });
+    expect(mockDeleteItemById).toHaveBeenCalledWith("user-1", "item-1");
+  });
+
+  it("returns error when db operation fails", async () => {
+    mockAuth.mockResolvedValueOnce({ user: { id: "user-1" } });
+    mockDeleteItemById.mockRejectedValueOnce(new Error("DB error"));
+
+    const result = await deleteItem("item-1");
+
+    expect(result).toEqual({ success: false, error: "Something went wrong." });
   });
 });
