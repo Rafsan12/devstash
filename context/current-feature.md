@@ -1,15 +1,27 @@
 # Current Feature
 
-None
+Item Create
 
 ## Status
-Complete
+In Progress
 
 ## Goals
-<!-- Add feature goals here -->
+- [ ] Implement `createItem` function in `src/lib/db/items.ts`.
+- [ ] Implement `createItem` server action in `src/actions/items.ts` with Zod validation.
+- [ ] Create a "New Item" modal component using Shadcn UI `Dialog`.
+- [ ] Implement dynamic form fields based on item type (snippet, prompt, command, note, link).
+- [ ] Integrate "New Item" button in `DashboardShell` to open the modal.
+- [ ] Show success/error toasts and refresh dashboard after item creation.
 
 ## Notes
-<!-- Add context or implementation notes here -->
+- Modal should be built with Shadcn UI `Dialog` and `Select` components.
+- Form fields must adapt to the selected item type:
+  - All: title (required), description, tags, collection (required).
+  - snippet/command: content, file extension.
+  - prompt/note: content.
+  - link: URL (required).
+- Use `sonner` for toast notifications.
+- Ensure proper validation errors are displayed.
 
 ## History
 

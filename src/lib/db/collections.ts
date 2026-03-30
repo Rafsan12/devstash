@@ -328,3 +328,49 @@ export async function getFavoriteSidebarCollections(
     };
   });
 }
+
+export async function getAllCollections(userId: string | null): Promise<DashboardSidebarCollection[]> {
+  if (!userId) {
+    return [];
+  }
+
+  const collections = await db.collection.findMany({
+    where: {
+      userId,
+    },
+    orderBy: {
+      name: "asc",
+    },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      _count: {
+        select: {
+          items: true,
+        },
+      },
+    },
+  });
+
+  if (collections.length === 0) {
+    return [];
+  }
+
+  const collectionIds = collections.map((collection) => collection.id);
+  const typeCountsByCollection = await getCollectionTypeCounts(userId, collectionIds);
+
+  return collections.map((collection) => {
+    const dominantTypeColor = buildCollectionTypeSummaries(
+      typeCountsByCollection.get(collection.id) ?? [],
+    )[0]?.color ?? "#27272a";
+
+    return {
+      id: collection.id,
+      name: collection.name,
+      description: collection.description ?? "No description yet.",
+      itemCount: collection._count.items,
+      dominantTypeColor,
+    };
+  });
+}

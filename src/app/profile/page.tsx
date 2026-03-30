@@ -1,5 +1,5 @@
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
-import { getFavoriteSidebarCollections, getRecentDashboardCollections } from "@/lib/db/collections";
+import { getAllCollections, getFavoriteSidebarCollections, getRecentDashboardCollections } from "@/lib/db/collections";
 import { getAuthenticatedDashboardUser } from "@/lib/db/dashboard-user";
 import { getDashboardSidebarItemTypes, getDashboardSidebarUser, getDashboardStats } from "@/lib/db/items";
 import { ProfileHeader } from "@/components/profile/profile-header";
@@ -28,6 +28,7 @@ export default async function ProfilePage() {
     sidebarItemTypes,
     recentCollections,
     favoriteCollections,
+    allCollections,
   ] = await Promise.all([
     db.user.findUnique({
       where: { id: userId },
@@ -37,6 +38,7 @@ export default async function ProfilePage() {
     getDashboardSidebarItemTypes(userId),
     getRecentDashboardCollections(userId),
     getFavoriteSidebarCollections(userId),
+    getAllCollections(userId),
   ]);
 
   if (!userRecord) {
@@ -55,6 +57,7 @@ export default async function ProfilePage() {
 
   return (
     <DashboardShell
+      allCollections={allCollections}
       favoriteCollections={favoriteCollections}
       recentCollections={sidebarRecentCollections}
       sidebarItemTypes={sidebarItemTypes}

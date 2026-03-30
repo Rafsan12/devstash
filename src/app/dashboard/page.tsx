@@ -4,7 +4,7 @@ import { PinnedItemsSection } from "@/components/dashboard/pinned-items-section"
 import { RecentCollectionsSection } from "@/components/dashboard/recent-collections-section";
 import { RecentItemsSection } from "@/components/dashboard/recent-items-section";
 import { StatsCardsSection } from "@/components/dashboard/stats-cards-section";
-import { getFavoriteSidebarCollections, getRecentDashboardCollections } from "@/lib/db/collections";
+import { getAllCollections, getFavoriteSidebarCollections, getRecentDashboardCollections } from "@/lib/db/collections";
 import { getAuthenticatedDashboardUser } from "@/lib/db/dashboard-user";
 import {
   getDashboardSidebarItemTypes,
@@ -25,6 +25,7 @@ export default async function DashboardPage() {
     recentItems,
     sidebarItemTypes,
     favoriteCollections,
+    allCollections,
   ] = await Promise.all([
     getDashboardStats(userId),
     getPinnedDashboardItems(userId),
@@ -32,6 +33,7 @@ export default async function DashboardPage() {
     getRecentDashboardItems(userId),
     getDashboardSidebarItemTypes(userId),
     getFavoriteSidebarCollections(userId),
+    getAllCollections(userId),
   ]);
 
   const sidebarRecentCollections = recentCollections.slice(0, 3).map((collection) => ({
@@ -45,6 +47,7 @@ export default async function DashboardPage() {
   return (
     <ItemDrawerProvider>
       <DashboardShell
+        allCollections={allCollections}
         favoriteCollections={favoriteCollections}
         recentCollections={sidebarRecentCollections}
         sidebarItemTypes={sidebarItemTypes}

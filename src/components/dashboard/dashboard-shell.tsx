@@ -2,6 +2,8 @@
 
 import { SidebarAccountMenu } from "@/components/auth/sidebar-account-menu";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { type DashboardSidebarCollection } from "@/lib/db/collections";
 import {
@@ -12,18 +14,21 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { ItemTypeIcon, withAlpha } from "./item-type-icon";
+import { CreateItemModal } from "./create-item-modal";
 
 export function DashboardShell({
   children,
   favoriteCollections,
   recentCollections,
   sidebarItemTypes,
+  allCollections,
   user,
 }: {
   children: ReactNode;
   favoriteCollections: DashboardSidebarCollection[];
   recentCollections: DashboardSidebarCollection[];
   sidebarItemTypes: DashboardSidebarItemType[];
+  allCollections: DashboardSidebarCollection[];
   user: DashboardSidebarUser | null;
 }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -198,20 +203,17 @@ export function DashboardShell({
                       />
                     </div>
                     <div className="flex items-center gap-3">
-                      <button
-                        className="group inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-sky-400/30 bg-sky-400/10 px-6 font-semibold tracking-wide text-sky-100 shadow-[0_0_15px_rgba(56,189,248,0.1)] transition-all duration-300 ease-out hover:border-sky-400/50 hover:bg-sky-400/20 hover:shadow-[0_0_20px_rgba(56,189,248,0.2)]"
-                        type="button"
+                      <Button
+                        variant="premium-outline"
+                        className="px-6"
                       >
-                        <PlusIcon className="mr-2 h-4 w-4 transition-transform group-hover:rotate-90" />
+                        <Plus className="mr-2 h-4 w-4 transition-transform duration-300 group-hover:rotate-90 group-active:scale-90" />
                         New Collection
-                      </button>
-                      <button
-                        className="group inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl border-0 bg-[linear-gradient(135deg,#3b82f6_0%,#8b5cf6_100%)] px-6 font-semibold tracking-wide text-white shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(139,92,246,0.5)]"
-                        type="button"
-                      >
-                        <PlusIcon className="mr-2 h-4 w-4 transition-transform group-hover:rotate-90" />
-                        New Item
-                      </button>
+                      </Button>
+                      <CreateItemModal
+                        collections={allCollections}
+                        itemTypes={sidebarItemTypes}
+                      />
                     </div>
                   </div>
                 </div>
@@ -350,22 +352,4 @@ function SearchIcon() {
   );
 }
 
-function PlusIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden="true"
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M12 4v16m8-8H4"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-      />
-    </svg>
-  );
-}
+

@@ -187,6 +187,52 @@ export type UpdateItemData = {
   fileExtension: string;
 };
 
+export type CreateItemData = {
+  title: string;
+  content: string;
+  itemTypeId: string;
+  collectionId: string;
+  fileExtension?: string;
+};
+
+export async function createItem(userId: string, data: CreateItemData): Promise<ItemDetail> {
+  const item = await db.item.create({
+    data: {
+      userId,
+      title: data.title,
+      content: data.content,
+      itemTypeId: data.itemTypeId,
+      collectionId: data.collectionId,
+      fileExtension: data.fileExtension ?? "",
+    },
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      itemTypeId: true,
+      fileExtension: true,
+      isPinned: true,
+      createdAt: true,
+      updatedAt: true,
+      itemType: {
+        select: {
+          id: true,
+          icon: true,
+          color: true,
+        },
+      },
+      collection: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  return mapItemDetail(item);
+}
+
 export async function updateItemById(
   userId: string,
   itemId: string,

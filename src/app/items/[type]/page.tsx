@@ -4,7 +4,7 @@ import {
   ClickableItemCard,
   ItemDrawerProvider,
 } from "@/components/dashboard/item-drawer-provider";
-import { getFavoriteSidebarCollections, getRecentDashboardCollections } from "@/lib/db/collections";
+import { getAllCollections, getFavoriteSidebarCollections, getRecentDashboardCollections } from "@/lib/db/collections";
 import { getAuthenticatedDashboardUser } from "@/lib/db/dashboard-user";
 import {
   getDashboardSidebarItemTypes,
@@ -33,11 +33,13 @@ export default async function ItemTypePage({
     recentCollections,
     sidebarItemTypes,
     favoriteCollections,
+    allCollections,
     items,
   ] = await Promise.all([
     getRecentDashboardCollections(userId),
     getDashboardSidebarItemTypes(userId),
     getFavoriteSidebarCollections(userId),
+    getAllCollections(userId),
     getDashboardItemsByType(userId, itemTypeId),
   ]);
 
@@ -54,6 +56,7 @@ export default async function ItemTypePage({
   return (
     <ItemDrawerProvider>
       <DashboardShell
+        allCollections={allCollections}
         favoriteCollections={favoriteCollections}
         recentCollections={sidebarRecentCollections}
         sidebarItemTypes={sidebarItemTypes}

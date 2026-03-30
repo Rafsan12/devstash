@@ -10,6 +10,7 @@ const { mockDb } = vi.hoisted(() => ({
       deleteMany: vi.fn(),
       count: vi.fn(),
       groupBy: vi.fn(),
+      create: vi.fn(),
     },
     collection: {
       count: vi.fn(),
@@ -40,6 +41,7 @@ import {
   getItemTypeIdFromRoute,
   toggleItemPinned,
   updateItemById,
+  createItem,
 } from "./items";
 
 const sampleDate = new Date("2026-03-30T10:00:00.000Z");
@@ -229,6 +231,45 @@ describe("items db helpers", () => {
           fileExtension: ".ts",
         },
       }),
+    );
+  });
+});
+
+describe("createItem db helper", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("creates an item and returns mapped ItemDetail", async () => {
+    mockDb.item.create.mockResolvedValueOnce(sampleItemRecord);
+
+    const result = await createItem("user-1", {
+      title: "Debug Prompt",
+      content: "  First line\nSecond line  ",
+      itemTypeId: "prompt",
+      collectionId: "collection-1",
+      fileExtension: ".prompt",
+    });
+
+    expect(result).toEqual(
+      expect.objectContaining({
+        id: "item-1",
+        title: "Debug Prompt",
+        itemTypeId: "prompt",
+      })
+    );
+
+    expect(mockDb.item.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: {
+          userId: "user-1",
+          title: "Debug Prompt",
+          content: "  First line\nSecond line  ",
+          itemTypeId: "prompt",
+          collectionId: "collection-1",
+          fileExtension: ".prompt",
+        },
+      })
     );
   });
 });

@@ -9,12 +9,19 @@ vi.mock("@/auth", () => ({
 
 const mockDeleteItemById = vi.fn();
 const mockUpdateItemById = vi.fn();
+const mockCreateItem = vi.fn();
 vi.mock("@/lib/db/items", () => ({
   deleteItemById: (...args: unknown[]) => mockDeleteItemById(...args),
   updateItemById: (...args: unknown[]) => mockUpdateItemById(...args),
+  createItem: (...args: unknown[]) => mockCreateItem(...args),
 }));
 
-import { deleteItem, updateItem } from "./items";
+const mockRevalidatePath = vi.fn();
+vi.mock("next/cache", () => ({
+  revalidatePath: (...args: unknown[]) => mockRevalidatePath(...args),
+}));
+
+import { createItemAction, deleteItem, updateItem } from "./items";
 
 const sampleItemDetail = {
   id: "item-1",
@@ -159,5 +166,74 @@ describe("deleteItem server action", () => {
     const result = await deleteItem("item-1");
 
     expect(result).toEqual({ success: false, error: "Something went wrong." });
+  });
+});
+
+describe("createItemAction server action", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns error when user is not authenticated", async () => {
+    mockAuth.mockResolvedValueOnce(null);
+
+    const result = await createItemAction({
+      title: "New Item",
+      itemTypeId: "snippet",
+      collectionId: "col-1",
+    });
+
+    expect(result).toEqual({ success: false, error: "Unauthorized." });
+    expect(mockCreateItem).not.toHaveBeenCalled();
+  });
+
+  it("returns validation error for missing title", async () => {
+    mockAuth.mockResolvedValueOnce({ user: { id: "user-1" } });
+
+    const result = await createItemAction({
+      title: "",
+      itemTypeId: "snippet",
+      collectionId: "col-1",
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBe("Title is required");
+  });
+
+  it("returns validation error for missing URL on link type", async () => {
+    mockAuth.mockResolvedValueOnce({ user: { id: "user-1" } });
+
+    const result = await createItemAction({
+      title: "My Link",
+      itemTypeId: "link",
+      collectionId: "col-1",
+      content: "   ",
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error).toBe("URL is required for links");
+  });
+
+  it("returns success and revalidates paths on successful creation", async () => {
+    mockAuth.mockResolvedValueOnce({ user: { id: "user-1" } });
+    mockCreateItem.mockResolvedValueOnce(sampleItemDetail);
+
+    const result = await createItemAction({
+      title: "New Snippet",
+      content: "console.log()",
+      itemTypeId: "snippet",
+      collectionId: "col-1",
+      fileExtension: ".ts",
+    });
+
+    expect(result).toEqual({ success: true, data: sampleItemDetail });
+    expect(mockCreateItem).toHaveBeenCalledWith("user-1", {
+      title: "New Snippet",
+      content: "console.log()",
+      itemTypeId: "snippet",
+      collectionId: "col-1",
+      fileExtension: ".ts",
+    });
+    expect(mockRevalidatePath).toHaveBeenCalledWith("/dashboard");
   });
 });
