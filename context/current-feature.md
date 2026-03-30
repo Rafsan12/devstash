@@ -1,27 +1,15 @@
 # Current Feature
 
-Item Create
+Not Started
 
 ## Status
-In Progress
+Not Started
 
 ## Goals
-- [ ] Implement `createItem` function in `src/lib/db/items.ts`.
-- [ ] Implement `createItem` server action in `src/actions/items.ts` with Zod validation.
-- [ ] Create a "New Item" modal component using Shadcn UI `Dialog`.
-- [ ] Implement dynamic form fields based on item type (snippet, prompt, command, note, link).
-- [ ] Integrate "New Item" button in `DashboardShell` to open the modal.
-- [ ] Show success/error toasts and refresh dashboard after item creation.
+- [ ] 
 
 ## Notes
-- Modal should be built with Shadcn UI `Dialog` and `Select` components.
-- Form fields must adapt to the selected item type:
-  - All: title (required), description, tags, collection (required).
-  - snippet/command: content, file extension.
-  - prompt/note: content.
-  - link: URL (required).
-- Use `sonner` for toast notifications.
-- Ensure proper validation errors are displayed.
+- 
 
 ## History
 
@@ -61,3 +49,5 @@ In Progress
 - Item Drawer completed
 - Item Drawer Edit Mode completed: Implemented a new server action `updateItem` with Zod validation and updated the UI in `item-drawer.tsx` to support inline editing of Title, Content, and File Extension. Unit tests added for both the DB layer and server actions.
 - **Delete Item Functionality**: Implemented secure item deletion with a Shadcn UI `AlertDialog` for confirmation and `sonner` toasts for success/error feedback. Refactored the dashboard to use a new `deleteItem` server action while maintaining the existing API route.
+- **Item Create Feature**: Implemented a dynamic "New Item" modal with Zod-validated server actions, supporting multiple item types (snippets, prompts, commands, notes, and links). Standardized the dashboard header with refined premium buttons and smooth icon animations.
+
