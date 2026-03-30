@@ -1,4 +1,5 @@
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { ItemDrawerProvider } from "@/components/dashboard/item-drawer-provider";
 import { PinnedItemsSection } from "@/components/dashboard/pinned-items-section";
 import { RecentCollectionsSection } from "@/components/dashboard/recent-collections-section";
 import { RecentItemsSection } from "@/components/dashboard/recent-items-section";
@@ -12,7 +13,6 @@ import {
   getPinnedDashboardItems,
   getRecentDashboardItems,
 } from "@/lib/db/items";
-
 
 export default async function DashboardPage() {
   const authenticatedUser = await getAuthenticatedDashboardUser();
@@ -43,18 +43,20 @@ export default async function DashboardPage() {
   }));
 
   return (
-    <DashboardShell
-      favoriteCollections={favoriteCollections}
-      recentCollections={sidebarRecentCollections}
-      sidebarItemTypes={sidebarItemTypes}
-      user={getDashboardSidebarUser(authenticatedUser)}
-    >
-      <section className="flex-1 space-y-8 px-4 py-6 sm:px-6">
-        <StatsCardsSection stats={stats} />
-        <PinnedItemsSection items={pinnedItems} />
-        <RecentCollectionsSection collections={recentCollections} />
-        <RecentItemsSection items={recentItems} />
-      </section>
-    </DashboardShell>
+    <ItemDrawerProvider>
+      <DashboardShell
+        favoriteCollections={favoriteCollections}
+        recentCollections={sidebarRecentCollections}
+        sidebarItemTypes={sidebarItemTypes}
+        user={getDashboardSidebarUser(authenticatedUser)}
+      >
+        <section className="flex-1 space-y-8 px-4 py-6 sm:px-6">
+          <StatsCardsSection stats={stats} />
+          <PinnedItemsSection items={pinnedItems} />
+          <RecentCollectionsSection collections={recentCollections} />
+          <RecentItemsSection items={recentItems} />
+        </section>
+      </DashboardShell>
+    </ItemDrawerProvider>
   );
 }

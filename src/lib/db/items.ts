@@ -20,6 +20,167 @@ export type DashboardItemCardData = {
   isPinned: boolean;
 };
 
+export type ItemDetail = {
+  id: string;
+  title: string;
+  content: string;
+  itemTypeId: string;
+  fileExtension: string;
+  isPinned: boolean;
+  createdAt: string;
+  updatedAt: string;
+  itemType: {
+    id: string;
+    icon: string;
+    color: string;
+  };
+  collection: {
+    id: string;
+    name: string;
+  };
+  tags: string[];
+};
+
+function mapItemDetail(item: {
+  id: string;
+  title: string;
+  content: string;
+  itemTypeId: string;
+  fileExtension: string;
+  isPinned: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  itemType: {
+    id: string;
+    icon: string;
+    color: string;
+  };
+  collection: {
+    id: string;
+    name: string;
+  };
+}): ItemDetail {
+  return {
+    id: item.id,
+    title: item.title,
+    content: item.content,
+    itemTypeId: item.itemTypeId,
+    fileExtension: item.fileExtension,
+    isPinned: item.isPinned,
+    createdAt: item.createdAt.toISOString(),
+    updatedAt: item.updatedAt.toISOString(),
+    itemType: item.itemType,
+    collection: item.collection,
+    tags: [item.itemTypeId, item.fileExtension, item.collection.name].filter(Boolean),
+  };
+}
+
+export async function getItemById(
+  userId: string,
+  itemId: string,
+): Promise<ItemDetail | null> {
+  const item = await db.item.findFirst({
+    where: {
+      id: itemId,
+      userId,
+    },
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      itemTypeId: true,
+      fileExtension: true,
+      isPinned: true,
+      createdAt: true,
+      updatedAt: true,
+      itemType: {
+        select: {
+          id: true,
+          icon: true,
+          color: true,
+        },
+      },
+      collection: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  if (!item) {
+    return null;
+  }
+
+  return mapItemDetail(item);
+}
+
+export async function toggleItemPinned(
+  userId: string,
+  itemId: string,
+): Promise<ItemDetail | null> {
+  const existingItem = await db.item.findFirst({
+    where: {
+      id: itemId,
+      userId,
+    },
+    select: {
+      id: true,
+      isPinned: true,
+    },
+  });
+
+  if (!existingItem) {
+    return null;
+  }
+
+  const updatedItem = await db.item.update({
+    where: {
+      id: existingItem.id,
+    },
+    data: {
+      isPinned: !existingItem.isPinned,
+    },
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      itemTypeId: true,
+      fileExtension: true,
+      isPinned: true,
+      createdAt: true,
+      updatedAt: true,
+      itemType: {
+        select: {
+          id: true,
+          icon: true,
+          color: true,
+        },
+      },
+      collection: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  return mapItemDetail(updatedItem);
+}
+
+export async function deleteItemById(userId: string, itemId: string): Promise<boolean> {
+  const deleted = await db.item.deleteMany({
+    where: {
+      id: itemId,
+      userId,
+    },
+  });
+
+  return deleted.count > 0;
+}
+
 export type DashboardStats = {
   totalItems: number;
   totalCollections: number;
@@ -120,7 +281,7 @@ function mapDashboardItem(item: DashboardItemQueryRow): DashboardItemCardData {
 }
 
 export function getItemTypeIdFromRoute(route: string): string | null {
-  const entry = Object.entries(itemTypeRouteMap).find(([_, r]) => r === route);
+  const entry = Object.entries(itemTypeRouteMap).find(([, r]) => r === route);
   return entry ? entry[0] : null;
 }
 

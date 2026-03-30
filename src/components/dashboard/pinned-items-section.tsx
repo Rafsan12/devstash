@@ -1,5 +1,6 @@
 import { type DashboardItemCardData } from "@/lib/db/items";
 import { ItemCard } from "./item-card";
+import { ClickableItemCard } from "./item-drawer-provider";
 
 export function PinnedItemsSection({ items }: { items: DashboardItemCardData[] }) {
   if (items.length === 0) {
@@ -11,7 +12,9 @@ export function PinnedItemsSection({ items }: { items: DashboardItemCardData[] }
       <h2 className="mb-4 text-xl font-semibold text-white">Pinned Items</h2>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {items.map((item) => (
-          <ItemCard key={item.id} item={item} />
+          <ClickableItemCard item={item} key={item.id}>
+            <ItemCard item={item} />
+          </ClickableItemCard>
         ))}
       </div>
     </section>
