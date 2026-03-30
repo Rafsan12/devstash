@@ -46,3 +46,4 @@ Complete
 - Profile Page added as the current feature
 - Profile Page completed
 - Rate Limiting for Auth completed: added Upstash-backed auth rate limiting across credentials sign-in, register, forgot-password, reset-password, and resend-verification flows, with shared `429` handling, frontend toasts, and fail-open safety when trusted IP headers are unavailable.
+- Item Drawer completed

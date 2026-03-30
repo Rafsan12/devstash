@@ -1,5 +1,9 @@
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { ItemCard } from "@/components/dashboard/item-card";
+import {
+  ClickableItemCard,
+  ItemDrawerProvider,
+} from "@/components/dashboard/item-drawer-provider";
 import { getFavoriteSidebarCollections, getRecentDashboardCollections } from "@/lib/db/collections";
 import { getAuthenticatedDashboardUser } from "@/lib/db/dashboard-user";
 import {
@@ -48,34 +52,38 @@ export default async function ItemTypePage({
   const itemTypeData = sidebarItemTypes.find((t) => t.id === itemTypeId);
 
   return (
-    <DashboardShell
-      favoriteCollections={favoriteCollections}
-      recentCollections={sidebarRecentCollections}
-      sidebarItemTypes={sidebarItemTypes}
-      user={getDashboardSidebarUser(authenticatedUser)}
-    >
-      <section className="flex-1 space-y-8 px-4 py-6 sm:px-6">
-        <div>
-          <h2 className="text-xl font-semibold text-white">
-            {itemTypeData?.name ?? type}
-          </h2>
-          <p className="mt-1 text-sm text-zinc-400">
-            Browse and manage your {itemTypeData?.name.toLowerCase() ?? type}.
-          </p>
-        </div>
+    <ItemDrawerProvider>
+      <DashboardShell
+        favoriteCollections={favoriteCollections}
+        recentCollections={sidebarRecentCollections}
+        sidebarItemTypes={sidebarItemTypes}
+        user={getDashboardSidebarUser(authenticatedUser)}
+      >
+        <section className="flex-1 space-y-8 px-4 py-6 sm:px-6">
+          <div>
+            <h2 className="text-xl font-semibold text-white">
+              {itemTypeData?.name ?? type}
+            </h2>
+            <p className="mt-1 text-sm text-zinc-400">
+              Browse and manage your {itemTypeData?.name.toLowerCase() ?? type}.
+            </p>
+          </div>
 
-        {items.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-            {items.map((item) => (
-              <ItemCard item={item} key={item.id} />
-            ))}
-          </div>
-        ) : (
-          <div className="flex h-64 items-center justify-center rounded-[28px] border border-dashed border-white/10 bg-white/[0.02]">
-            <p className="text-sm text-zinc-500">No items found.</p>
-          </div>
-        )}
-      </section>
-    </DashboardShell>
+          {items.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+              {items.map((item) => (
+                <ClickableItemCard item={item} key={item.id}>
+                  <ItemCard item={item} />
+                </ClickableItemCard>
+              ))}
+            </div>
+          ) : (
+            <div className="flex h-64 items-center justify-center rounded-[28px] border border-dashed border-white/10 bg-white/[0.02]">
+              <p className="text-sm text-zinc-500">No items found.</p>
+            </div>
+          )}
+        </section>
+      </DashboardShell>
+    </ItemDrawerProvider>
   );
 }
