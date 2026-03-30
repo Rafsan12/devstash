@@ -1,7 +1,8 @@
 "use client";
 
 import { type DashboardItemCardData, type ItemDetail } from "@/lib/db/items";
-import { ItemDrawer } from "@/components/dashboard/item-drawer";
+import { ItemDrawer, type EditFormData } from "@/components/dashboard/item-drawer";
+import { updateItem } from "@/actions/items";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useState, useCallback, type ReactNode } from "react";
@@ -28,11 +29,13 @@ export function ItemDrawerProvider({ children }: { children: ReactNode }) {
   const [item, setItem] = useState<ItemDetail | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isMutating, setIsMutating] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const openItem = useCallback(async (itemId: string) => {
     setOpen(true);
     setIsLoading(true);
     setItem(null);
+    setIsEditing(false);
 
     try {
       const response = await fetch(`/api/items/${itemId}`);
@@ -99,6 +102,7 @@ export function ItemDrawerProvider({ children }: { children: ReactNode }) {
 
       setOpen(false);
       setItem(null);
+      setIsEditing(false);
       router.refresh();
       toast.success("Item deleted.");
     } catch (error) {
@@ -109,15 +113,61 @@ export function ItemDrawerProvider({ children }: { children: ReactNode }) {
     }
   }, [item, router]);
 
+  const handleEdit = useCallback(() => {
+    setIsEditing(true);
+  }, []);
+
+  const handleCancelEdit = useCallback(() => {
+    setIsEditing(false);
+  }, []);
+
+  const handleSave = useCallback(async (formData: EditFormData) => {
+    if (!item) {
+      return;
+    }
+
+    setIsMutating(true);
+
+    try {
+      const result = await updateItem(item.id, formData);
+
+      if (!result.success) {
+        toast.error(result.error);
+        return;
+      }
+
+      setItem(result.data);
+      setIsEditing(false);
+      router.refresh();
+      toast.success("Item updated.");
+    } catch (error) {
+      console.error("[item-drawer save error]", error);
+      toast.error("Unable to save the item right now.");
+    } finally {
+      setIsMutating(false);
+    }
+  }, [item, router]);
+
+  const handleOpenChange = useCallback((nextOpen: boolean) => {
+    setOpen(nextOpen);
+    if (!nextOpen) {
+      setIsEditing(false);
+    }
+  }, []);
+
   return (
     <ItemDrawerContext.Provider value={{ openItem }}>
       {children}
       <ItemDrawer
+        isEditing={isEditing}
         isLoading={isLoading}
         isMutating={isMutating}
         item={item}
+        onCancelEdit={handleCancelEdit}
         onDelete={handleDelete}
-        onOpenChange={setOpen}
+        onEdit={handleEdit}
+        onOpenChange={handleOpenChange}
+        onSave={handleSave}
         onTogglePin={handleTogglePin}
         open={open}
       />

@@ -39,6 +39,7 @@ import {
   getItemById,
   getItemTypeIdFromRoute,
   toggleItemPinned,
+  updateItemById,
 } from "./items";
 
 const sampleDate = new Date("2026-03-30T10:00:00.000Z");
@@ -178,4 +179,57 @@ describe("items db helpers", () => {
       image: null,
     });
   });
+
+  it("returns null from updateItemById when the item does not exist", async () => {
+    mockDb.item.findFirst.mockResolvedValueOnce(null);
+
+    await expect(
+      updateItemById("user-1", "missing", {
+        title: "Updated",
+        content: "New content",
+        fileExtension: ".ts",
+      }),
+    ).resolves.toBeNull();
+
+    expect(mockDb.item.update).not.toHaveBeenCalled();
+  });
+
+  it("updates the item and returns mapped ItemDetail", async () => {
+    mockDb.item.findFirst.mockResolvedValueOnce({ id: "item-1" });
+
+    const updatedRecord = {
+      ...sampleItemRecord,
+      title: "Updated Title",
+      content: "New content",
+      fileExtension: ".ts",
+    };
+    mockDb.item.update.mockResolvedValueOnce(updatedRecord);
+
+    const result = await updateItemById("user-1", "item-1", {
+      title: "Updated Title",
+      content: "New content",
+      fileExtension: ".ts",
+    });
+
+    expect(result).toEqual(
+      expect.objectContaining({
+        id: "item-1",
+        title: "Updated Title",
+        content: "New content",
+        fileExtension: ".ts",
+      }),
+    );
+
+    expect(mockDb.item.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: "item-1" },
+        data: {
+          title: "Updated Title",
+          content: "New content",
+          fileExtension: ".ts",
+        },
+      }),
+    );
+  });
 });
+

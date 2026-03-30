@@ -1,13 +1,27 @@
-# Current Feature
+# Current Feature — Item Drawer Edit Mode
 
 ## Status
-Complete
+In Progress
 
 ## Goals
-<!-- Add feature goals here -->
+
+- Edit button in drawer action bar toggles into inline edit mode
+- Action bar replaced with Save / Cancel buttons in edit mode
+- All common fields editable: Title, Description, Tags
+- Type-specific fields editable: Content, Language, URL (shown conditionally)
+- Zod-validated server action `updateItem` with `{ success, data, error }` pattern
+- Query function `updateItem` in `lib/db/items.ts` with tag disconnect/reconnect
+- Toast on save success/error, `router.refresh()` after save
+- Cancel discards changes and returns to view mode
 
 ## Notes
-<!-- Add context or implementation notes here -->
+
+- Spec: `context/features/item-drawer-edit-spec.md`
+- No form library — controlled inputs with local state
+- Disable Save when title is empty (client-side UX guard)
+- Content textarea is plain text (no code editor yet)
+- Non-editable in edit mode: item type, collections, dates
+- Tag input is comma-separated text → array on save
 
 ## History
 
@@ -15,7 +29,6 @@ Complete
 
 - Items List View added as the current feature
 - Items List View completed
-
 - Initial Next.js app setup from Create Next App
 - Initial Next.js setup and Tailwind setup committed in `8e45554`
 - Project setup and boilerplate cleanup
@@ -47,3 +60,4 @@ Complete
 - Profile Page completed
 - Rate Limiting for Auth completed: added Upstash-backed auth rate limiting across credentials sign-in, register, forgot-password, reset-password, and resend-verification flows, with shared `429` handling, frontend toasts, and fail-open safety when trusted IP headers are unavailable.
 - Item Drawer completed
+- Item Drawer Edit Mode added as the current feature

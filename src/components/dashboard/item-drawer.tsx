@@ -11,25 +11,42 @@ import {
 } from "@/components/ui/sheet";
 import { ItemTypeIcon, withAlpha } from "@/components/dashboard/item-type-icon";
 import { toast } from "sonner";
+import { useState } from "react";
+
+type EditFormData = {
+  title: string;
+  content: string;
+  fileExtension: string;
+};
 
 type ItemDrawerProps = {
   item: ItemDetail | null;
   isLoading: boolean;
   isMutating: boolean;
+  isEditing: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onDelete: () => void;
   onTogglePin: () => void;
+  onEdit: () => void;
+  onCancelEdit: () => void;
+  onSave: (data: EditFormData) => void;
 };
+
+export type { EditFormData };
 
 export function ItemDrawer({
   item,
   isLoading,
   isMutating,
+  isEditing,
   open,
   onOpenChange,
   onDelete,
   onTogglePin,
+  onEdit,
+  onCancelEdit,
+  onSave,
 }: ItemDrawerProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -37,12 +54,22 @@ export function ItemDrawer({
         {isLoading ? (
           <DrawerSkeleton />
         ) : item ? (
-          <DrawerContent
-            isMutating={isMutating}
-            item={item}
-            onDelete={onDelete}
-            onTogglePin={onTogglePin}
-          />
+          isEditing ? (
+            <DrawerEditContent
+              isMutating={isMutating}
+              item={item}
+              onCancel={onCancelEdit}
+              onSave={onSave}
+            />
+          ) : (
+            <DrawerContent
+              isMutating={isMutating}
+              item={item}
+              onDelete={onDelete}
+              onEdit={onEdit}
+              onTogglePin={onTogglePin}
+            />
+          )
         ) : null}
       </SheetContent>
     </Sheet>
@@ -85,11 +112,13 @@ function DrawerContent({
   item,
   isMutating,
   onDelete,
+  onEdit,
   onTogglePin,
 }: {
   item: ItemDetail;
   isMutating: boolean;
   onDelete: () => void;
+  onEdit: () => void;
   onTogglePin: () => void;
 }) {
   const formattedCreated = new Date(item.createdAt).toLocaleDateString("en-US", {
@@ -115,10 +144,6 @@ function DrawerContent({
       console.error("[item-drawer copy error]", error);
       toast.error("Unable to copy the item content.");
     }
-  };
-
-  const handleEditClick = () => {
-    toast.info("Editing will arrive with item CRUD.");
   };
 
   return (
@@ -180,7 +205,7 @@ function DrawerContent({
           label="Copy"
           onClick={handleCopyClick}
         />
-        <ActionButton icon="edit" label="Edit" onClick={handleEditClick} />
+        <ActionButton icon="edit" label="Edit" onClick={onEdit} />
         <div className="flex-1" />
         <ActionButton
           disabled={isMutating}
@@ -242,6 +267,193 @@ function DrawerContent({
         </dl>
       </section>
     </div>
+  );
+}
+
+function DrawerEditContent({
+  item,
+  isMutating,
+  onCancel,
+  onSave,
+}: {
+  item: ItemDetail;
+  isMutating: boolean;
+  onCancel: () => void;
+  onSave: (data: EditFormData) => void;
+}) {
+  const [title, setTitle] = useState(item.title);
+  const [content, setContent] = useState(item.content);
+  const [fileExtension, setFileExtension] = useState(item.fileExtension);
+
+  const isTitleEmpty = title.trim().length === 0;
+
+  const handleSave = () => {
+    if (isTitleEmpty) return;
+    onSave({ title: title.trim(), content, fileExtension: fileExtension.trim() });
+  };
+
+  const formattedCreated = new Date(item.createdAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  const formattedUpdated = new Date(item.updatedAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  return (
+    <div className="flex flex-col gap-6">
+      <SheetHeader>
+        <div className="flex items-start gap-3">
+          <span
+            className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border"
+            style={{
+              borderColor: withAlpha(item.itemType.color, "5c"),
+              backgroundColor: withAlpha(item.itemType.color, "14"),
+              color: item.itemType.color,
+            }}
+          >
+            <ItemTypeIcon icon={item.itemType.icon} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <SheetTitle className="truncate">Edit Item</SheetTitle>
+            <SheetDescription className="sr-only">
+              Editing {item.title}
+            </SheetDescription>
+            <div className="mt-1 flex flex-wrap gap-1.5">
+              <span
+                className="rounded-md border px-2 py-0.5 text-xs font-medium uppercase tracking-wider"
+                style={{
+                  borderColor: withAlpha(item.itemType.color, "40"),
+                  backgroundColor: withAlpha(item.itemType.color, "14"),
+                  color: item.itemType.color,
+                }}
+              >
+                {item.itemTypeId}
+              </span>
+            </div>
+          </div>
+        </div>
+      </SheetHeader>
+
+      {/* Save / Cancel bar */}
+      <div className="flex items-center gap-2 border-y border-white/10 py-2">
+        <button
+          className="flex items-center gap-1.5 rounded-lg bg-emerald-500/15 px-3 py-1.5 text-xs font-medium text-emerald-400 transition hover:bg-emerald-500/25 disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={isTitleEmpty || isMutating}
+          onClick={handleSave}
+          type="button"
+        >
+          {isMutating ? (
+            <svg aria-hidden="true" className="h-3.5 w-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" fill="currentColor" />
+            </svg>
+          ) : (
+            <svg aria-hidden="true" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24">
+              <path d="M20 6 9 17l-5-5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+            </svg>
+          )}
+          {isMutating ? "Saving..." : "Save"}
+        </button>
+        <button
+          className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-zinc-400 transition hover:bg-white/[0.06] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={isMutating}
+          onClick={onCancel}
+          type="button"
+        >
+          <svg aria-hidden="true" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24">
+            <path d="M18 6 6 18M6 6l12 12" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+          </svg>
+          Cancel
+        </button>
+      </div>
+
+      {/* Editable fields */}
+      <section>
+        <EditLabel htmlFor="edit-title" required>Title</EditLabel>
+        <input
+          autoFocus
+          className="mt-1.5 w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-white/20 focus:bg-white/[0.06]"
+          id="edit-title"
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Item title"
+          type="text"
+          value={title}
+        />
+        {isTitleEmpty && (
+          <p className="mt-1 text-xs text-red-400">Title is required.</p>
+        )}
+      </section>
+
+      <section>
+        <EditLabel htmlFor="edit-content">Content</EditLabel>
+        <textarea
+          className="mt-1.5 w-full resize-y rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 font-mono text-xs leading-5 text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-white/20 focus:bg-white/[0.06]"
+          id="edit-content"
+          onChange={(e) => setContent(e.target.value)}
+          placeholder="Item content"
+          rows={10}
+          value={content}
+        />
+      </section>
+
+      <section>
+        <EditLabel htmlFor="edit-file-extension">File Extension</EditLabel>
+        <input
+          className="mt-1.5 w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-white/20 focus:bg-white/[0.06]"
+          id="edit-file-extension"
+          onChange={(e) => setFileExtension(e.target.value)}
+          placeholder="e.g. .ts, .py, .md"
+          type="text"
+          value={fileExtension}
+        />
+      </section>
+
+      {/* Read-only sections */}
+      <section>
+        <SectionLabel icon="collection">Collections</SectionLabel>
+        <span className="mt-2 inline-block rounded-md border border-white/10 bg-white/[0.03] px-2.5 py-1 text-xs text-zinc-300">
+          {item.collection.name}
+        </span>
+      </section>
+
+      <section>
+        <SectionLabel icon="details">Details</SectionLabel>
+        <dl className="mt-2 space-y-2 text-sm">
+          <div className="flex justify-between">
+            <dt className="text-zinc-500">Created</dt>
+            <dd className="text-zinc-300">{formattedCreated}</dd>
+          </div>
+          <div className="flex justify-between">
+            <dt className="text-zinc-500">Updated</dt>
+            <dd className="text-zinc-300">{formattedUpdated}</dd>
+          </div>
+        </dl>
+      </section>
+    </div>
+  );
+}
+
+function EditLabel({
+  children,
+  htmlFor,
+  required,
+}: {
+  children: React.ReactNode;
+  htmlFor: string;
+  required?: boolean;
+}) {
+  return (
+    <label
+      className="flex items-center gap-1 text-xs font-medium uppercase tracking-wider text-zinc-500"
+      htmlFor={htmlFor}
+    >
+      {children}
+      {required && <span className="text-red-400">*</span>}
+    </label>
   );
 }
 

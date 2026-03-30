@@ -181,6 +181,64 @@ export async function deleteItemById(userId: string, itemId: string): Promise<bo
   return deleted.count > 0;
 }
 
+export type UpdateItemData = {
+  title: string;
+  content: string;
+  fileExtension: string;
+};
+
+export async function updateItemById(
+  userId: string,
+  itemId: string,
+  data: UpdateItemData,
+): Promise<ItemDetail | null> {
+  const existing = await db.item.findFirst({
+    where: {
+      id: itemId,
+      userId,
+    },
+    select: { id: true },
+  });
+
+  if (!existing) {
+    return null;
+  }
+
+  const updatedItem = await db.item.update({
+    where: { id: existing.id },
+    data: {
+      title: data.title,
+      content: data.content,
+      fileExtension: data.fileExtension,
+    },
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      itemTypeId: true,
+      fileExtension: true,
+      isPinned: true,
+      createdAt: true,
+      updatedAt: true,
+      itemType: {
+        select: {
+          id: true,
+          icon: true,
+          color: true,
+        },
+      },
+      collection: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  return mapItemDetail(updatedItem);
+}
+
 export type DashboardStats = {
   totalItems: number;
   totalCollections: number;
