@@ -38,18 +38,20 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const collectionSelectKey = collections.map((collection) => collection.id).join("|") || "empty";
 
   // Form state
   const [itemTypeId, setItemTypeId] = useState<string>("snippet");
-  const [collectionId, setCollectionId] = useState<string>(collections[0]?.id || "");
+  const [collectionId, setCollectionId] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [fileExtension, setFileExtension] = useState("");
   const selectedCollectionId = collections.some((collection) => collection.id === collectionId)
     ? collectionId
-    : (collections[0]?.id ?? "");
+    : "";
 
   const resetForm = () => {
+    setCollectionId("");
     setTitle("");
     setContent("");
     setFileExtension("");
@@ -147,7 +149,11 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
               </div>
               <div className="space-y-2">
                 <Label htmlFor="collection">Collection</Label>
-                <Select value={selectedCollectionId} onValueChange={setCollectionId}>
+                <Select
+                  key={collectionSelectKey}
+                  value={selectedCollectionId}
+                  onValueChange={setCollectionId}
+                >
                   <SelectTrigger id="collection" disabled={collections.length === 0}>
                     <SelectValue placeholder="Select collection" />
                   </SelectTrigger>
