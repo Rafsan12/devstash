@@ -45,6 +45,9 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [fileExtension, setFileExtension] = useState("");
+  const selectedCollectionId = collections.some((collection) => collection.id === collectionId)
+    ? collectionId
+    : (collections[0]?.id ?? "");
 
   const resetForm = () => {
     setTitle("");
@@ -68,7 +71,7 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
       return;
     }
 
-    if (!collectionId) {
+    if (!selectedCollectionId) {
       toast.error("Please select a collection");
       return;
     }
@@ -84,7 +87,7 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
           title: title.trim(),
           content: content.trim(),
           itemTypeId,
-          collectionId,
+          collectionId: selectedCollectionId,
           fileExtension: fileExtension.trim(),
         });
 
@@ -144,16 +147,22 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
               </div>
               <div className="space-y-2">
                 <Label htmlFor="collection">Collection</Label>
-                <Select value={collectionId} onValueChange={setCollectionId}>
-                  <SelectTrigger id="collection">
+                <Select value={selectedCollectionId} onValueChange={setCollectionId}>
+                  <SelectTrigger id="collection" disabled={collections.length === 0}>
                     <SelectValue placeholder="Select collection" />
                   </SelectTrigger>
                   <SelectContent>
-                    {collections.map((col) => (
-                      <SelectItem key={col.id} value={col.id}>
-                        {col.name}
-                      </SelectItem>
-                    ))}
+                    {collections.length === 0 ? (
+                      <div className="px-2 py-2 text-sm text-zinc-400">
+                        No collections available
+                      </div>
+                    ) : (
+                      collections.map((col) => (
+                        <SelectItem key={col.id} value={col.id}>
+                          {col.name}
+                        </SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
               </div>
