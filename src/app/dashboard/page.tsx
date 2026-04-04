@@ -4,7 +4,12 @@ import { PinnedItemsSection } from "@/components/dashboard/pinned-items-section"
 import { RecentCollectionsSection } from "@/components/dashboard/recent-collections-section";
 import { RecentItemsSection } from "@/components/dashboard/recent-items-section";
 import { StatsCardsSection } from "@/components/dashboard/stats-cards-section";
-import { getAllCollections, getFavoriteSidebarCollections, getRecentDashboardCollections } from "@/lib/db/collections";
+import {
+  ensureStarterCollection,
+  getAllCollections,
+  getFavoriteSidebarCollections,
+  getRecentDashboardCollections,
+} from "@/lib/db/collections";
 import { getAuthenticatedDashboardUser } from "@/lib/db/dashboard-user";
 import {
   getDashboardSidebarItemTypes,
@@ -17,6 +22,8 @@ import {
 export default async function DashboardPage() {
   const authenticatedUser = await getAuthenticatedDashboardUser();
   const userId = authenticatedUser?.id ?? null;
+
+  await ensureStarterCollection(userId);
 
   const [
     stats,

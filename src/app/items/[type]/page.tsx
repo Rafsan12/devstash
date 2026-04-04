@@ -4,7 +4,12 @@ import {
   ClickableItemCard,
   ItemDrawerProvider,
 } from "@/components/dashboard/item-drawer-provider";
-import { getAllCollections, getFavoriteSidebarCollections, getRecentDashboardCollections } from "@/lib/db/collections";
+import {
+  ensureStarterCollection,
+  getAllCollections,
+  getFavoriteSidebarCollections,
+  getRecentDashboardCollections,
+} from "@/lib/db/collections";
 import { getAuthenticatedDashboardUser } from "@/lib/db/dashboard-user";
 import {
   getDashboardSidebarItemTypes,
@@ -28,6 +33,8 @@ export default async function ItemTypePage({
 
   const authenticatedUser = await getAuthenticatedDashboardUser();
   const userId = authenticatedUser?.id ?? null;
+
+  await ensureStarterCollection(userId);
 
   const [
     recentCollections,

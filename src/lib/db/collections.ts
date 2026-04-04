@@ -2,6 +2,9 @@ import "server-only";
 
 import { db } from "@/lib/db";
 
+const DEFAULT_COLLECTION_NAME = "General";
+const DEFAULT_COLLECTION_DESCRIPTION = "Your starter collection for notes, snippets, and links.";
+
 type DashboardCollectionTypeSummary = {
   id: string;
   icon: string;
@@ -123,6 +126,36 @@ async function getCollectionTypeCounts(
   }
 
   return countsByCollection;
+}
+
+export async function ensureStarterCollection(userId: string | null) {
+  if (!userId) {
+    return null;
+  }
+
+  const existingCollection = await db.collection.findFirst({
+    where: {
+      userId,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (existingCollection) {
+    return existingCollection;
+  }
+
+  return db.collection.create({
+    data: {
+      name: DEFAULT_COLLECTION_NAME,
+      description: DEFAULT_COLLECTION_DESCRIPTION,
+      userId,
+    },
+    select: {
+      id: true,
+    },
+  });
 }
 
 export async function getRecentDashboardCollections(

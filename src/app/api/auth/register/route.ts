@@ -7,6 +7,7 @@ import {
   sendVerificationEmail,
 } from "@/lib/email-verification";
 import { db } from "@/lib/db";
+import { ensureStarterCollection } from "@/lib/db/collections";
 import { checkRateLimit, createRateLimitResponse } from "@/lib/rate-limit";
 
 type RegisterPayload = {
@@ -107,6 +108,8 @@ export async function POST(request: Request) {
       email: true,
     },
   });
+
+  await ensureStarterCollection(user.id);
 
   if (emailVerificationEnabled) {
     try {

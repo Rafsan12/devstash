@@ -1,5 +1,10 @@
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
-import { getAllCollections, getFavoriteSidebarCollections, getRecentDashboardCollections } from "@/lib/db/collections";
+import {
+  ensureStarterCollection,
+  getAllCollections,
+  getFavoriteSidebarCollections,
+  getRecentDashboardCollections,
+} from "@/lib/db/collections";
 import { getAuthenticatedDashboardUser } from "@/lib/db/dashboard-user";
 import { getDashboardSidebarItemTypes, getDashboardSidebarUser, getDashboardStats } from "@/lib/db/items";
 import { ProfileHeader } from "@/components/profile/profile-header";
@@ -21,6 +26,8 @@ export default async function ProfilePage() {
   if (!userId) {
     redirect("/sign-in");
   }
+
+  await ensureStarterCollection(userId);
 
   const [
     userRecord,
