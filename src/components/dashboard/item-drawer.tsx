@@ -20,6 +20,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { CodeEditor, isCodeEditorItemType } from "@/components/dashboard/code-editor";
 import { ItemTypeIcon, withAlpha } from "@/components/dashboard/item-type-icon";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -132,6 +133,7 @@ function DrawerContent({
   onEdit: () => void;
   onTogglePin: () => void;
 }) {
+  const isCodeItem = isCodeEditorItemType(item.itemTypeId);
   const formattedCreated = new Date(item.createdAt).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -257,9 +259,20 @@ function DrawerContent({
 
       <section>
         <SectionLabel>Content</SectionLabel>
-        <pre className="mt-2 max-h-80 overflow-auto rounded-xl border border-white/10 bg-white/[0.02] p-4 font-mono text-xs leading-5 text-zinc-300">
-          <code>{item.content}</code>
-        </pre>
+        <div className="mt-2">
+          {isCodeItem ? (
+            <CodeEditor
+              fileExtension={item.fileExtension}
+              itemTypeId={item.itemTypeId}
+              readOnly
+              value={item.content}
+            />
+          ) : (
+            <pre className="max-h-80 overflow-auto rounded-xl border border-white/10 bg-white/[0.02] p-4 font-mono text-xs leading-5 text-zinc-300">
+              <code>{item.content}</code>
+            </pre>
+          )}
+        </div>
       </section>
 
       {item.tags.length > 0 && (
@@ -316,6 +329,7 @@ function DrawerEditContent({
   const [title, setTitle] = useState(item.title);
   const [content, setContent] = useState(item.content);
   const [fileExtension, setFileExtension] = useState(item.fileExtension);
+  const isCodeItem = isCodeEditorItemType(item.itemTypeId);
 
   const isTitleEmpty = title.trim().length === 0;
 
@@ -422,14 +436,26 @@ function DrawerEditContent({
 
       <section>
         <EditLabel htmlFor="edit-content">Content</EditLabel>
-        <textarea
-          className="mt-1.5 w-full resize-y rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 font-mono text-xs leading-5 text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-white/20 focus:bg-white/[0.06]"
-          id="edit-content"
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="Item content"
-          rows={10}
-          value={content}
-        />
+        <div className="mt-1.5">
+          {isCodeItem ? (
+            <CodeEditor
+              fileExtension={fileExtension}
+              itemTypeId={item.itemTypeId}
+              onChange={setContent}
+              placeholder="Item content"
+              value={content}
+            />
+          ) : (
+            <textarea
+              className="w-full resize-y rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 font-mono text-xs leading-5 text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-white/20 focus:bg-white/[0.06]"
+              id="edit-content"
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Item content"
+              rows={10}
+              value={content}
+            />
+          )}
+        </div>
       </section>
 
       <section>

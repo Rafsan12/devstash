@@ -26,6 +26,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { createItemAction } from "@/actions/items";
+import { CodeEditor, isCodeEditorItemType } from "@/components/dashboard/code-editor";
 import { type DashboardSidebarCollection } from "@/lib/db/collections";
 import { type DashboardSidebarItemType } from "@/lib/db/items";
 
@@ -103,7 +104,7 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
     });
   };
 
-  const isSnippetOrCommand = itemTypeId === "snippet" || itemTypeId === "command";
+  const isSnippetOrCommand = isCodeEditorItemType(itemTypeId);
   const isPromptOrNote = itemTypeId === "prompt" || itemTypeId === "note";
   const isLink = itemTypeId === "link";
 
@@ -170,12 +171,12 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
               <div className="grid grid-cols-4 gap-4">
                 <div className="col-span-3 space-y-2">
                   <Label htmlFor="content">Content</Label>
-                  <Textarea
-                    id="content"
+                  <CodeEditor
+                    itemTypeId={itemTypeId}
+                    fileExtension={fileExtension}
+                    onChange={setContent}
                     placeholder="Paste your code or command here..."
-                    className="h-32"
                     value={content}
-                    onChange={(e) => setContent(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">

@@ -1,15 +1,25 @@
-# Current Feature
-
-Not Started
+# Current Feature: Code Editor
 
 ## Status
-Not Started
+In Progress
 
 ## Goals
-- [ ] 
+- [x] Create a `CodeEditor` component using Monaco Editor with a dark theme
+- [x] Replace `Textarea` with `CodeEditor` for snippets and commands only
+- [x] Keep `Textarea` for notes, prompts, and other non-code item types
+- [x] Add macOS-style window dots at the top of the editor
+- [x] Add a quick copy button in the editor header
+- [x] Show the current language in the editor header next to the copy action
+- [x] Support both display (read-only) and edit modes
+- [x] Make the editor height fluid with a max height of 400px and a themed scrollbar
 
 ## Notes
-- 
+- Loaded from `context/features/code-editor-spec.md`
+- Scope is specifically for snippet and command item experiences
+- The code editor should preserve the existing non-code editing flow for notes, prompts, and related item types
+- Added `@monaco-editor/react` and a shared `CodeEditor` component for both create and drawer flows
+- Language labels are inferred from file extension with item-type fallbacks for snippets and commands
+- Validation completed with `npm.cmd run lint` and `npm.cmd run build`
 
 ## History
 
@@ -50,4 +60,3 @@ Not Started
 - Item Drawer Edit Mode completed: Implemented a new server action `updateItem` with Zod validation and updated the UI in `item-drawer.tsx` to support inline editing of Title, Content, and File Extension. Unit tests added for both the DB layer and server actions.
 - **Delete Item Functionality**: Implemented secure item deletion with a Shadcn UI `AlertDialog` for confirmation and `sonner` toasts for success/error feedback. Refactored the dashboard to use a new `deleteItem` server action while maintaining the existing API route.
 - **Item Create Feature**: Implemented a dynamic "New Item" modal with Zod-validated server actions, supporting multiple item types (snippets, prompts, commands, notes, and links). Standardized the dashboard header with refined premium buttons and smooth icon animations.
-
