@@ -38,24 +38,19 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const collectionSelectKey = collections.map((collection) => collection.id).join("|") || "empty";
+  const defaultCollectionId = collections[0]?.id ?? "";
 
   // Form state
   const [itemTypeId, setItemTypeId] = useState<string>("snippet");
-  const [collectionId, setCollectionId] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [fileExtension, setFileExtension] = useState("");
-  const selectedCollectionId = collections.some((collection) => collection.id === collectionId)
-    ? collectionId
-    : "";
 
   const resetForm = () => {
-    setCollectionId("");
     setTitle("");
     setContent("");
     setFileExtension("");
-    // Keep itemTypeId and collectionId as they are likely to be reused
+    // Keep itemTypeId as it is likely to be reused
   };
 
   const handleOpenChange = (newOpen: boolean) => {
@@ -73,8 +68,8 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
       return;
     }
 
-    if (!selectedCollectionId) {
-      toast.error("Please select a collection");
+    if (!defaultCollectionId) {
+      toast.error("No collection is available yet");
       return;
     }
 
@@ -89,7 +84,7 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
           title: title.trim(),
           content: content.trim(),
           itemTypeId,
-          collectionId: selectedCollectionId,
+          collectionId: defaultCollectionId,
           fileExtension: fileExtension.trim(),
         });
 
@@ -129,49 +124,22 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="type">Item Type</Label>
-                <Select value={itemTypeId} onValueChange={setItemTypeId}>
-                  <SelectTrigger id="type">
-                    <SelectValue placeholder="Select type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {itemTypes
-                      .filter((t) => ["snippet", "prompt", "command", "note", "link"].includes(t.id))
-                      .map((type) => (
-                        <SelectItem key={type.id} value={type.id}>
-                          {type.name}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="collection">Collection</Label>
-                <Select
-                  key={collectionSelectKey}
-                  value={selectedCollectionId}
-                  onValueChange={setCollectionId}
-                >
-                  <SelectTrigger id="collection" disabled={collections.length === 0}>
-                    <SelectValue placeholder="Select collection" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {collections.length === 0 ? (
-                      <div className="px-2 py-2 text-sm text-zinc-400">
-                        No collections available
-                      </div>
-                    ) : (
-                      collections.map((col) => (
-                        <SelectItem key={col.id} value={col.id}>
-                          {col.name}
-                        </SelectItem>
-                      ))
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="type">Item Type</Label>
+              <Select value={itemTypeId} onValueChange={setItemTypeId}>
+                <SelectTrigger id="type">
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {itemTypes
+                    .filter((t) => ["snippet", "prompt", "command", "note", "link"].includes(t.id))
+                    .map((type) => (
+                      <SelectItem key={type.id} value={type.id}>
+                        {type.name}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">
