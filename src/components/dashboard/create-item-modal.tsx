@@ -24,9 +24,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { createItemAction } from "@/actions/items";
 import { CodeEditor, isCodeEditorItemType } from "@/components/dashboard/code-editor";
+import { MarkdownEditor, isMarkdownEditorItemType } from "@/components/dashboard/markdown-editor";
 import { type DashboardSidebarCollection } from "@/lib/db/collections";
 import { type DashboardSidebarItemType } from "@/lib/db/items";
 
@@ -105,7 +105,7 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
   };
 
   const isSnippetOrCommand = isCodeEditorItemType(itemTypeId);
-  const isPromptOrNote = itemTypeId === "prompt" || itemTypeId === "note";
+  const isPromptOrNote = isMarkdownEditorItemType(itemTypeId);
   const isLink = itemTypeId === "link";
 
   return (
@@ -195,12 +195,10 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
             {isPromptOrNote && (
               <div className="space-y-2">
                 <Label htmlFor="content">Content</Label>
-                <Textarea
-                  id="content"
-                  placeholder="Enter your prompt or note here..."
-                  className="h-40"
+                <MarkdownEditor
                   value={content}
-                  onChange={(e) => setContent(e.target.value)}
+                  onChange={setContent}
+                  placeholder="Enter your prompt or note here..."
                 />
               </div>
             )}

@@ -21,6 +21,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { CodeEditor, isCodeEditorItemType } from "@/components/dashboard/code-editor";
+import { MarkdownEditor, isMarkdownEditorItemType } from "@/components/dashboard/markdown-editor";
 import { ItemTypeIcon, withAlpha } from "@/components/dashboard/item-type-icon";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -134,6 +135,7 @@ function DrawerContent({
   onTogglePin: () => void;
 }) {
   const isCodeItem = isCodeEditorItemType(item.itemTypeId);
+  const isMarkdownItem = isMarkdownEditorItemType(item.itemTypeId);
   const formattedCreated = new Date(item.createdAt).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -267,6 +269,8 @@ function DrawerContent({
               readOnly
               value={item.content}
             />
+          ) : isMarkdownItem ? (
+            <MarkdownEditor readOnly value={item.content} />
           ) : (
             <pre className="max-h-80 overflow-auto rounded-xl border border-white/10 bg-white/[0.02] p-4 font-mono text-xs leading-5 text-zinc-300">
               <code>{item.content}</code>
@@ -330,6 +334,7 @@ function DrawerEditContent({
   const [content, setContent] = useState(item.content);
   const [fileExtension, setFileExtension] = useState(item.fileExtension);
   const isCodeItem = isCodeEditorItemType(item.itemTypeId);
+  const isMarkdownItem = isMarkdownEditorItemType(item.itemTypeId);
 
   const isTitleEmpty = title.trim().length === 0;
 
@@ -443,6 +448,12 @@ function DrawerEditContent({
               itemTypeId={item.itemTypeId}
               onChange={setContent}
               placeholder="Item content"
+              value={content}
+            />
+          ) : isMarkdownItem ? (
+            <MarkdownEditor
+              onChange={setContent}
+              placeholder="Write your content in Markdown..."
               value={content}
             />
           ) : (
