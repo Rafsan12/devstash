@@ -60,6 +60,43 @@ body {
   box-shadow: none !important;
 }
 
+/* Markdown editor scrollbars — matches CodeEditor style */
+.devstash-markdown-editor textarea,
+.devstash-markdown-editor .markdown-preview {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(56, 189, 248, 0.45) transparent;
+}
+
+.devstash-markdown-editor textarea::-webkit-scrollbar,
+.devstash-markdown-editor .markdown-preview::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.devstash-markdown-editor textarea::-webkit-scrollbar-track,
+.devstash-markdown-editor .markdown-preview::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.devstash-markdown-editor textarea::-webkit-scrollbar-thumb,
+.devstash-markdown-editor .markdown-preview::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(56, 189, 248, 0.55), rgba(59, 130, 246, 0.35));
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.devstash-markdown-editor textarea::-webkit-scrollbar-thumb:hover,
+.devstash-markdown-editor .markdown-preview::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(125, 211, 252, 0.78), rgba(96, 165, 250, 0.58));
+  background-clip: padding-box;
+}
+
+.devstash-markdown-editor textarea::-webkit-scrollbar-corner,
+.devstash-markdown-editor .markdown-preview::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 /* Markdown preview styles */
 .markdown-preview {
   color: #d4d4d8;

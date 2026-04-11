@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-const MIN_EDITOR_HEIGHT = 164;
+const MIN_EDITOR_HEIGHT = 280;
 const MAX_EDITOR_HEIGHT = 400;
 
 type MarkdownEditorProps = {
@@ -59,7 +59,7 @@ export function MarkdownEditor({
 
   return (
     <div
-      className="relative overflow-hidden rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(17,24,39,0.96)_0%,rgba(10,14,22,0.98)_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
+      className="devstash-markdown-editor relative overflow-hidden rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(17,24,39,0.96)_0%,rgba(10,14,22,0.98)_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
       style={{ minHeight: `${editorHeight}px`, maxHeight: `${MAX_EDITOR_HEIGHT}px` }}
     >
       {/* Header */}
