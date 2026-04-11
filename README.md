@@ -1,46 +1,52 @@
-# 🗃️ DevStash
+# DevStash
 
-> **A developer-first knowledge workspace.**  
-> Think of it as Notion + filesystem + a markdown IDE — where every note is a searchable, organized knowledge file.
+> **A developer-first knowledge workspace.**
+> Think of it as Notion + filesystem + a markdown IDE, where every note is a searchable, organized knowledge file.
 
-## 🌟 Vision
+## Vision
 
-DevStash is a minimal, keyboard-driven knowledge workspace built *for developers, by developers*. Notes behave like files (`.md`, `.ts`, etc.) but are organized like a structured database — fast to write, easy to search, pleasant to use.
+DevStash is a minimal, keyboard-driven knowledge workspace built for developers. Notes behave like files (`.md`, `.ts`, etc.) but are organized like a structured database: fast to write, easy to search, and pleasant to use.
 
-- ⚡ **Speed-first**
-- 🖤 **Minimal dark UI**
-- ⌨️ **Keyboard-driven workflow**
-- 🗂️ **File-like note structure**
-
----
-
-## 🚀 Features
-
-- **Authentication**: Secure email/password login and session management.
-- **Collections**: Group notes logically in smart folders.
-- **Items**: Create notes with specific file types (Markdown, Code, Prompts, Text).
-- **Markdown Editor**: Rich editor integration for seamless documentation.
-- **Search**: Fast global search across titles, content, and tags.
-- **Organization**: Pin important notes and track recently visited items.
+- Speed-first
+- Minimal dark UI
+- Keyboard-driven workflow
+- File-like note structure
 
 ---
 
-## 🛠️ Tech Stack
+## Current Features
 
-- **Framework**: [Next.js](https://nextjs.org/) (App Router)
-- **Language**: [TypeScript](https://www.typescriptlang.org/) (Strict Mode)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Components**: [shadcn/ui](https://ui.shadcn.com/)
-- **Database**: [PostgreSQL](https://www.postgresql.org/)
-- **ORM**: [Prisma](https://www.prisma.io/)
+- Authentication with credentials and GitHub via NextAuth
+- Email verification, resend verification, forgot password, and reset password flows
+- Dashboard with stats, pinned items, recent items, recent collections, and sidebar summaries
+- Collections pages with create, edit, delete, and detail views
+- Item creation, editing, deletion, and collection reassignment
+- Markdown editor and code editor experiences for supported item types
+- Global search / command palette with `Cmd+K` / `Ctrl+K`
+- Profile page and settings page for account actions
 
 ---
 
-## 💻 Getting Started
+## Tech Stack
+
+- Framework: [Next.js](https://nextjs.org/) (App Router)
+- Language: [TypeScript](https://www.typescriptlang.org/) in strict mode
+- Styling: [Tailwind CSS](https://tailwindcss.com/)
+- Components: [shadcn/ui](https://ui.shadcn.com/)
+- Database: [PostgreSQL](https://www.postgresql.org/)
+- ORM: [Prisma](https://www.prisma.io/)
+- Auth: [NextAuth.js](https://next-auth.js.org/)
+- Testing: [Vitest](https://vitest.dev/)
+
+---
+
+## Getting Started
 
 ### Prerequisites
 
-Make sure you have Node.js and npm installed. You'll also need a running PostgreSQL database.
+- Node.js 20+
+- npm
+- A PostgreSQL database
 
 ### Installation
 
@@ -55,40 +61,64 @@ Make sure you have Node.js and npm installed. You'll also need a running Postgre
    npm install
    ```
 
-3. Set up environment variables:
-   Create a `.env` file in the root directory and add your database and authentication configuration:
+3. Create `.env` from `.env.example` and fill in the required values:
    ```env
    DATABASE_URL="postgresql://user:password@localhost:5432/devstash"
-   # Add other required environment variables (e.g., authentication secrets)
+   APP_URL="http://localhost:3000"
+   EMAIL_VERIFICATION_ENABLED="true"
+   RESEND_API_KEY="re_xxxxxxxxx"
+   RESEND_FROM_EMAIL="DevStash <onboarding@resend.dev>"
+   AUTH_SECRET=""
+   AUTH_GITHUB_ID=""
+   AUTH_GITHUB_SECRET=""
+   UPSTASH_REDIS_REST_URL=""
+   UPSTASH_REDIS_REST_TOKEN=""
    ```
 
-4. Run database migrations:
+4. Run database generation and migrations:
    ```bash
-   npx prisma migrate dev
+   npm run db:generate
+   npm run db:migrate
    ```
 
-5. Start the development server:
+5. Seed the database if you want demo data:
+   ```bash
+   npm run db:seed
+   ```
+
+6. Start the development server:
    ```bash
    npm run dev
    ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 📦 Scripts
+## Scripts
 
-- `npm run dev` — Start the development server
-- `npm run build` — Build the application for production
-- `npm run start` — Start the production build
-- `npm run lint` — Run ESLint to catch issues
+- `npm run dev` - start the development server
+- `npm run build` - build the application for production
+- `npm run start` - run the production build
+- `npm run lint` - run ESLint
+- `npm run test` - run the Vitest suite once
+- `npm run test:watch` - run Vitest in watch mode
+- `npm run db:generate` - generate the Prisma client
+- `npm run db:migrate` - run Prisma development migrations
+- `npm run db:seed` - seed the database
+- `npm run db:format` - format the Prisma schema
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request if you'd like to improve DevStash. Ensure you follow the project's coding style and architecture guidelines (refer to `/context/project-overview.md` and `AGENTS.md` for details).
+Contributions are welcome. Please open an issue or submit a pull request if you'd like to improve DevStash.
+
+For project context and implementation guidance, refer to:
+
+- [context/project-overview.md](context/project-overview.md)
+- [AGENTS.md](AGENTS.md)
 
 ---
 
-*DevStash — Every note is a searchable, organized knowledge file.*
+DevStash: Every note is a searchable, organized knowledge file.
