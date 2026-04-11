@@ -18,6 +18,7 @@ import {
   getPinnedDashboardItems,
   getRecentDashboardItems,
 } from "@/lib/db/items";
+import { getSearchData } from "@/lib/db/search";
 
 export default async function DashboardPage() {
   const authenticatedUser = await getAuthenticatedDashboardUser();
@@ -33,6 +34,7 @@ export default async function DashboardPage() {
     sidebarItemTypes,
     favoriteCollections,
     allCollections,
+    searchData,
   ] = await Promise.all([
     getDashboardStats(userId),
     getPinnedDashboardItems(userId),
@@ -41,6 +43,7 @@ export default async function DashboardPage() {
     getDashboardSidebarItemTypes(userId),
     getFavoriteSidebarCollections(userId),
     getAllCollections(userId),
+    getSearchData(userId),
   ]);
 
   const sidebarRecentCollections = recentCollections.slice(0, 3).map((collection) => ({
@@ -57,6 +60,7 @@ export default async function DashboardPage() {
         allCollections={allCollections}
         favoriteCollections={favoriteCollections}
         recentCollections={sidebarRecentCollections}
+        searchData={searchData}
         sidebarItemTypes={sidebarItemTypes}
         user={getDashboardSidebarUser(authenticatedUser)}
       >

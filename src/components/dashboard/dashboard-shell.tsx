@@ -2,18 +2,19 @@
 
 import { SidebarAccountMenu } from "@/components/auth/sidebar-account-menu";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { type DashboardSidebarCollection } from "@/lib/db/collections";
 import {
   type DashboardSidebarItemType,
   type DashboardSidebarUser,
 } from "@/lib/db/items";
+import { type SearchData } from "@/lib/db/search";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { ItemTypeIcon, withAlpha } from "./item-type-icon";
 import { CreateItemModal } from "./create-item-modal";
 import { CreateCollectionModal } from "./create-collection-modal";
+import { GlobalSearchPalette } from "./global-search-palette";
 
 export function DashboardShell({
   children,
@@ -22,6 +23,7 @@ export function DashboardShell({
   sidebarItemTypes,
   allCollections,
   user,
+  searchData,
 }: {
   children: ReactNode;
   favoriteCollections: DashboardSidebarCollection[];
@@ -29,12 +31,15 @@ export function DashboardShell({
   sidebarItemTypes: DashboardSidebarItemType[];
   allCollections: DashboardSidebarCollection[];
   user: DashboardSidebarUser | null;
+  searchData: SearchData;
 }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.12),_transparent_28%),linear-gradient(180deg,_#09090b_0%,_#050507_100%)] text-white">
+    <>
+      <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.12),_transparent_28%),linear-gradient(180deg,_#09090b_0%,_#050507_100%)] text-white">
       <div className="mx-auto flex min-h-screen w-full max-w-[1600px] flex-col px-4 py-4 sm:px-6 lg:px-8">
         <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-black/40 shadow-2xl shadow-black/30 backdrop-blur">
           <button
@@ -192,14 +197,20 @@ export function DashboardShell({
 
                   <div className="flex flex-1 flex-col gap-3 lg:max-w-3xl lg:flex-row lg:items-center lg:justify-end">
                     <div className="relative lg:w-full lg:max-w-xl">
-                      <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">
+                      <button
+                        aria-label="Open search"
+                        className="flex w-full cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-left text-sm text-zinc-500 transition hover:border-white/20 hover:bg-white/[0.06] hover:text-zinc-400"
+                        type="button"
+                        onClick={() => setSearchOpen(true)}
+                      >
                         <SearchIcon />
-                      </span>
-                      <Input
-                        aria-label="Search items"
-                        className="pl-11"
-                        placeholder="Search items..."
-                      />
+                        <span className="flex-1">Search items...</span>
+                        <span className="hidden items-center gap-1 sm:flex">
+                          <kbd className="rounded border border-white/10 bg-white/5 px-1.5 py-0.5 text-[11px]">
+                            ⌘K
+                          </kbd>
+                        </span>
+                      </button>
                     </div>
                     <div className="flex items-center gap-3">
                       <CreateCollectionModal />
@@ -217,7 +228,14 @@ export function DashboardShell({
           </div>
         </div>
       </div>
-    </main>
+      </main>
+
+      <GlobalSearchPalette
+        open={searchOpen}
+        searchData={searchData}
+        onOpenChange={setSearchOpen}
+      />
+    </>
   );
 }
 

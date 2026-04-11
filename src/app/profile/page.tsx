@@ -7,6 +7,7 @@ import {
 } from "@/lib/db/collections";
 import { getAuthenticatedDashboardUser } from "@/lib/db/dashboard-user";
 import { getDashboardSidebarItemTypes, getDashboardSidebarUser, getDashboardStats } from "@/lib/db/items";
+import { getSearchData } from "@/lib/db/search";
 import { ProfileHeader } from "@/components/profile/profile-header";
 import { UsageStatsCard } from "@/components/profile/usage-stats-card";
 import { db } from "@/lib/db";
@@ -35,6 +36,7 @@ export default async function ProfilePage() {
     recentCollections,
     favoriteCollections,
     allCollections,
+    searchData,
   ] = await Promise.all([
     db.user.findUnique({
       where: { id: userId },
@@ -45,6 +47,7 @@ export default async function ProfilePage() {
     getRecentDashboardCollections(userId),
     getFavoriteSidebarCollections(userId),
     getAllCollections(userId),
+    getSearchData(userId),
   ]);
 
   if (!userRecord) {
@@ -64,6 +67,7 @@ export default async function ProfilePage() {
       allCollections={allCollections}
       favoriteCollections={favoriteCollections}
       recentCollections={sidebarRecentCollections}
+      searchData={searchData}
       sidebarItemTypes={sidebarItemTypes}
       user={getDashboardSidebarUser(authenticatedUser)}
     >

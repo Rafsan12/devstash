@@ -1,7 +1,9 @@
 # Current Feature
 
 ## Status
-None
+Completed
+
+## Feature
 
 ## Goals
 
@@ -53,3 +55,4 @@ None
 - **Collections Pages**: Created `/collections` page showing all collections in a grid using `CollectionCard`. Created `/collections/[id]` page showing items in a collection using `ClickableItemCard` + `ItemCard`. Linked sidebar "View all collections" to `/collections` and all collection cards to their detail routes.
 - **Collection Edit & Delete**: Added edit and delete actions to collection cards (3-dots dropdown on `/collections` and dashboard, and dedicated buttons on `/collections/[id]`). Edit opens a pre-filled Dialog modal; delete shows an `AlertDialog` confirmation. On delete, items are moved to another collection before deletion so no content is lost. Favorite button is present but not yet functional.
 - **Settings Page**: Created `/settings` page (protected, redirects to `/sign-in` if unauthenticated) containing the Account Actions (change password, delete account) moved from `/profile`. Added a Settings link with a gear icon to the sidebar account menu dropdown. Profile page now shows only profile info and usage stats.
+- **Global Search / Command Palette**: Added a global search palette opened by Cmd+K / Ctrl+K or the dashboard search trigger. It performs client-side fuzzy search across items and collections, groups results into Items and Collections, supports keyboard navigation, opens items in the drawer, and routes to collection detail pages using preloaded search data.

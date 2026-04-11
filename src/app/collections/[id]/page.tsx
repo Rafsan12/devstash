@@ -19,6 +19,7 @@ import {
   getDashboardSidebarItemTypes,
   getDashboardSidebarUser,
 } from "@/lib/db/items";
+import { getSearchData } from "@/lib/db/search";
 
 export default async function CollectionDetailPage({
   params,
@@ -39,6 +40,7 @@ export default async function CollectionDetailPage({
     favoriteCollections,
     allCollections,
     items,
+    searchData,
   ] = await Promise.all([
     getCollectionById(userId, id),
     getRecentDashboardCollections(userId),
@@ -46,6 +48,7 @@ export default async function CollectionDetailPage({
     getFavoriteSidebarCollections(userId),
     getAllCollections(userId),
     getDashboardItemsByCollection(userId, id),
+    getSearchData(userId),
   ]);
 
   if (!collection) {
@@ -66,6 +69,7 @@ export default async function CollectionDetailPage({
         allCollections={allCollections}
         favoriteCollections={favoriteCollections}
         recentCollections={sidebarRecentCollections}
+        searchData={searchData}
         sidebarItemTypes={sidebarItemTypes}
         user={getDashboardSidebarUser(authenticatedUser)}
       >

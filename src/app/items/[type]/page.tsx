@@ -17,6 +17,7 @@ import {
   getDashboardItemsByType,
   getItemTypeIdFromRoute,
 } from "@/lib/db/items";
+import { getSearchData } from "@/lib/db/search";
 import { notFound } from "next/navigation";
 
 export default async function ItemTypePage({
@@ -42,12 +43,14 @@ export default async function ItemTypePage({
     favoriteCollections,
     allCollections,
     items,
+    searchData,
   ] = await Promise.all([
     getRecentDashboardCollections(userId),
     getDashboardSidebarItemTypes(userId),
     getFavoriteSidebarCollections(userId),
     getAllCollections(userId),
     getDashboardItemsByType(userId, itemTypeId),
+    getSearchData(userId),
   ]);
 
   const sidebarRecentCollections = recentCollections.slice(0, 3).map((collection) => ({
@@ -66,6 +69,7 @@ export default async function ItemTypePage({
         allCollections={allCollections}
         favoriteCollections={favoriteCollections}
         recentCollections={sidebarRecentCollections}
+        searchData={searchData}
         sidebarItemTypes={sidebarItemTypes}
         user={getDashboardSidebarUser(authenticatedUser)}
       >

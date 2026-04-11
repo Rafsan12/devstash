@@ -10,6 +10,7 @@ import {
 } from "@/lib/db/collections";
 import { getAuthenticatedDashboardUser } from "@/lib/db/dashboard-user";
 import { getDashboardSidebarItemTypes, getDashboardSidebarUser } from "@/lib/db/items";
+import { getSearchData } from "@/lib/db/search";
 import { db } from "@/lib/db";
 
 export const metadata: Metadata = {
@@ -27,13 +28,14 @@ export default async function SettingsPage() {
 
   await ensureStarterCollection(userId);
 
-  const [userRecord, sidebarItemTypes, recentCollections, favoriteCollections, allCollections] =
+  const [userRecord, sidebarItemTypes, recentCollections, favoriteCollections, allCollections, searchData] =
     await Promise.all([
       db.user.findUnique({ where: { id: userId }, select: { password: true } }),
       getDashboardSidebarItemTypes(userId),
       getRecentDashboardCollections(userId),
       getFavoriteSidebarCollections(userId),
       getAllCollections(userId),
+      getSearchData(userId),
     ]);
 
   if (!userRecord) {
@@ -55,6 +57,7 @@ export default async function SettingsPage() {
       allCollections={allCollections}
       favoriteCollections={favoriteCollections}
       recentCollections={sidebarRecentCollections}
+      searchData={searchData}
       sidebarItemTypes={sidebarItemTypes}
       user={getDashboardSidebarUser(authenticatedUser)}
     >
