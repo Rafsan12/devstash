@@ -39,18 +39,19 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const defaultCollectionId = collections[0]?.id ?? "";
 
   // Form state
   const [itemTypeId, setItemTypeId] = useState<string>("snippet");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [fileExtension, setFileExtension] = useState("");
+  const [collectionId, setCollectionId] = useState<string>(collections[0]?.id ?? "");
 
   const resetForm = () => {
     setTitle("");
     setContent("");
     setFileExtension("");
+    setCollectionId(collections[0]?.id ?? "");
     // Keep itemTypeId as it is likely to be reused
   };
 
@@ -69,7 +70,7 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
       return;
     }
 
-    if (!defaultCollectionId) {
+    if (!collectionId) {
       toast.error("No collection is available yet");
       return;
     }
@@ -85,7 +86,7 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
           title: title.trim(),
           content: content.trim(),
           itemTypeId,
-          collectionId: defaultCollectionId,
+          collectionId,
           fileExtension: fileExtension.trim(),
         });
 
@@ -139,6 +140,22 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
                         {type.name}
                       </SelectItem>
                     ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="collection">Collection</Label>
+              <Select value={collectionId} onValueChange={setCollectionId}>
+                <SelectTrigger id="collection">
+                  <SelectValue placeholder="Select collection" />
+                </SelectTrigger>
+                <SelectContent>
+                  {collections.map((col) => (
+                    <SelectItem key={col.id} value={col.id}>
+                      {col.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

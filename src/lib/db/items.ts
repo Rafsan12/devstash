@@ -185,6 +185,7 @@ export type UpdateItemData = {
   title: string;
   content: string;
   fileExtension: string;
+  collectionId?: string;
 };
 
 export type CreateItemData = {
@@ -256,6 +257,7 @@ export async function updateItemById(
       title: data.title,
       content: data.content,
       fileExtension: data.fileExtension,
+      ...(data.collectionId ? { collectionId: data.collectionId } : {}),
     },
     select: {
       id: true,
@@ -475,6 +477,36 @@ export async function getRecentDashboardItems(
   `);
 
   return recentItems.map(mapDashboardItem);
+}
+
+export async function getDashboardItemsByCollection(
+  userId: string | null,
+  collectionId: string,
+): Promise<DashboardItemCardData[]> {
+  if (!userId) {
+    return [];
+  }
+
+  const items = await db.$queryRaw<DashboardItemQueryRow[]>(Prisma.sql`
+    SELECT
+      item.id,
+      item.title,
+      LEFT(TRIM(REGEXP_REPLACE(item.content, '\s+', ' ', 'g')), ${DASHBOARD_ITEM_PREVIEW_LENGTH + 1}) AS description,
+      item."itemTypeId",
+      item."fileExtension",
+      item."isPinned",
+      collection.name AS "collectionName",
+      item_type.icon AS "itemTypeIcon",
+      item_type.color AS "itemTypeColor"
+    FROM "Item" AS item
+    INNER JOIN "Collection" AS collection ON collection.id = item."collectionId"
+    INNER JOIN "ItemType" AS item_type ON item_type.id = item."itemTypeId"
+    WHERE item."userId" = ${userId}
+      AND item."collectionId" = ${collectionId}
+    ORDER BY item."updatedAt" DESC, item.title ASC
+  `);
+
+  return items.map(mapDashboardItem);
 }
 
 export async function getDashboardStats(userId: string | null): Promise<DashboardStats> {

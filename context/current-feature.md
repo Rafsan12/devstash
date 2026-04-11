@@ -1,13 +1,11 @@
 # Current Feature
 
 ## Status
-Not Started
+None
 
 ## Goals
-- [ ] 
 
 ## Notes
-- 
 
 ## History
 
@@ -50,3 +48,8 @@ Not Started
 - **Item Create Feature**: Implemented a dynamic "New Item" modal with Zod-validated server actions, supporting multiple item types (snippets, prompts, commands, notes, and links). Standardized the dashboard header with refined premium buttons and smooth icon animations.
 - **Code Editor**: Added a shared Monaco-based editor for snippet and command items in the create modal and item drawer, including read-only and edit modes, macOS-style editor chrome, copy action, inferred language labels, and themed scrollbars. Verified with `npm.cmd run lint` and `npm.cmd run build`.
 - **Markdown Editor**: Added a `MarkdownEditor` component with Write/Preview tabs for note and prompt items. Uses `react-markdown@6` with `remark-gfm` (CJS-compatible) to avoid Next.js ESM bundling issues. Matches the CodeEditor's dark chrome styling with macOS traffic lights, copy button, and fluid height capped at 400px. Integrated into `CreateItemModal` and `ItemDrawer` (both view and edit modes). Preview styled via a custom `.markdown-preview` CSS class in `globals.css` covering headings, code blocks, lists, blockquotes, links, and tables.
+- **Collection Create**: Added a "New Collection" button to the top bar opening a modal with name and description fields. Backed by a Zod-validated server action (`createCollectionAction`) and `createCollection` lib/db function. User-scoped. Toast feedback on success/failure. Collections list updates on save via `router.refresh()`.
+- **Collection Item Selection**: Added a collection selector dropdown to both the New Item modal and item Edit drawer. Replaced hardcoded `collections[0]?.id` default with a user-facing Select. Wired `collectionId` through `updateItemAction` and `updateItemById` so items can be moved between collections.
+- **Collections Pages**: Created `/collections` page showing all collections in a grid using `CollectionCard`. Created `/collections/[id]` page showing items in a collection using `ClickableItemCard` + `ItemCard`. Linked sidebar "View all collections" to `/collections` and all collection cards to their detail routes.
+- **Collection Edit & Delete**: Added edit and delete actions to collection cards (3-dots dropdown on `/collections` and dashboard, and dedicated buttons on `/collections/[id]`). Edit opens a pre-filled Dialog modal; delete shows an `AlertDialog` confirmation. On delete, items are moved to another collection before deletion so no content is lost. Favorite button is present but not yet functional.
+- **Settings Page**: Created `/settings` page (protected, redirects to `/sign-in` if unauthenticated) containing the Account Actions (change password, delete account) moved from `/profile`. Added a Settings link with a gear icon to the sidebar account menu dropdown. Profile page now shows only profile info and usage stats.

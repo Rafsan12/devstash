@@ -2,8 +2,6 @@
 
 import { SidebarAccountMenu } from "@/components/auth/sidebar-account-menu";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { type DashboardSidebarCollection } from "@/lib/db/collections";
 import {
@@ -15,6 +13,7 @@ import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { ItemTypeIcon, withAlpha } from "./item-type-icon";
 import { CreateItemModal } from "./create-item-modal";
+import { CreateCollectionModal } from "./create-collection-modal";
 
 export function DashboardShell({
   children,
@@ -203,13 +202,7 @@ export function DashboardShell({
                       />
                     </div>
                     <div className="flex items-center gap-3">
-                      <Button
-                        variant="premium-outline"
-                        className="px-6"
-                      >
-                        <Plus className="mr-2 h-4 w-4 transition-transform duration-300 group-hover:rotate-90 group-active:scale-90" />
-                        New Collection
-                      </Button>
+                      <CreateCollectionModal />
                       <CreateItemModal
                         collections={allCollections}
                         itemTypes={sidebarItemTypes}

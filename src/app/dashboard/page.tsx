@@ -52,7 +52,7 @@ export default async function DashboardPage() {
   }));
 
   return (
-    <ItemDrawerProvider>
+    <ItemDrawerProvider collections={allCollections}>
       <DashboardShell
         allCollections={allCollections}
         favoriteCollections={favoriteCollections}

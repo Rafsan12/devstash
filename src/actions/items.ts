@@ -9,6 +9,7 @@ const updateItemSchema = z.object({
   title: z.string().trim().min(1, "Title is required"),
   content: z.string().optional().default(""),
   fileExtension: z.string().optional().default(""),
+  collectionId: z.string().min(1, "Collection is required").optional(),
 });
 
 const createItemSchema = z.object({
@@ -48,6 +49,7 @@ export async function updateItem(itemId: string, formData: unknown) {
       title: parsed.data.title,
       content: parsed.data.content,
       fileExtension: parsed.data.fileExtension,
+      collectionId: parsed.data.collectionId,
     });
 
     if (!updatedItem) {

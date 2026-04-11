@@ -1,6 +1,7 @@
 "use client";
 
 import { type ItemDetail } from "@/lib/db/items";
+import { type DashboardSidebarCollection } from "@/lib/db/collections";
 import {
   Sheet,
   SheetContent,
@@ -9,6 +10,13 @@ import {
   SheetDescription,
   SheetClose,
 } from "@/components/ui/sheet";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,6 +38,7 @@ type EditFormData = {
   title: string;
   content: string;
   fileExtension: string;
+  collectionId: string;
 };
 
 type ItemDrawerProps = {
@@ -38,6 +47,7 @@ type ItemDrawerProps = {
   isMutating: boolean;
   isEditing: boolean;
   open: boolean;
+  collections: DashboardSidebarCollection[];
   onOpenChange: (open: boolean) => void;
   onDelete: () => void;
   onTogglePin: () => void;
@@ -54,6 +64,7 @@ export function ItemDrawer({
   isMutating,
   isEditing,
   open,
+  collections,
   onOpenChange,
   onDelete,
   onTogglePin,
@@ -69,6 +80,7 @@ export function ItemDrawer({
         ) : item ? (
           isEditing ? (
             <DrawerEditContent
+              collections={collections}
               isMutating={isMutating}
               item={item}
               onCancel={onCancelEdit}
@@ -322,17 +334,20 @@ function DrawerContent({
 function DrawerEditContent({
   item,
   isMutating,
+  collections,
   onCancel,
   onSave,
 }: {
   item: ItemDetail;
   isMutating: boolean;
+  collections: DashboardSidebarCollection[];
   onCancel: () => void;
   onSave: (data: EditFormData) => void;
 }) {
   const [title, setTitle] = useState(item.title);
   const [content, setContent] = useState(item.content);
   const [fileExtension, setFileExtension] = useState(item.fileExtension);
+  const [collectionId, setCollectionId] = useState(item.collection.id);
   const isCodeItem = isCodeEditorItemType(item.itemTypeId);
   const isMarkdownItem = isMarkdownEditorItemType(item.itemTypeId);
 
@@ -340,7 +355,7 @@ function DrawerEditContent({
 
   const handleSave = () => {
     if (isTitleEmpty) return;
-    onSave({ title: title.trim(), content, fileExtension: fileExtension.trim() });
+    onSave({ title: title.trim(), content, fileExtension: fileExtension.trim(), collectionId });
   };
 
   const formattedCreated = new Date(item.createdAt).toLocaleDateString("en-US", {
@@ -481,12 +496,22 @@ function DrawerEditContent({
         />
       </section>
 
-      {/* Read-only sections */}
       <section>
-        <SectionLabel icon="collection">Collections</SectionLabel>
-        <span className="mt-2 inline-block rounded-md border border-white/10 bg-white/[0.03] px-2.5 py-1 text-xs text-zinc-300">
-          {item.collection.name}
-        </span>
+        <EditLabel htmlFor="edit-collection">Collection</EditLabel>
+        <div className="mt-1.5">
+          <Select value={collectionId} onValueChange={setCollectionId}>
+            <SelectTrigger id="edit-collection" className="w-full">
+              <SelectValue placeholder="Select collection" />
+            </SelectTrigger>
+            <SelectContent>
+              {collections.map((col) => (
+                <SelectItem key={col.id} value={col.id}>
+                  {col.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </section>
 
       <section>

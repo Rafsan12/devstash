@@ -128,6 +128,96 @@ async function getCollectionTypeCounts(
   return countsByCollection;
 }
 
+export type CollectionDetail = {
+  id: string;
+  name: string;
+  description: string;
+};
+
+export async function getCollectionById(
+  userId: string | null,
+  collectionId: string,
+): Promise<CollectionDetail | null> {
+  if (!userId) {
+    return null;
+  }
+
+  const collection = await db.collection.findFirst({
+    where: {
+      id: collectionId,
+      userId,
+    },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+    },
+  });
+
+  if (!collection) {
+    return null;
+  }
+
+  return {
+    id: collection.id,
+    name: collection.name,
+    description: collection.description ?? "No description yet.",
+  };
+}
+
+export async function getAllDashboardCollections(
+  userId: string | null,
+): Promise<DashboardRecentCollection[]> {
+  if (!userId) {
+    return [];
+  }
+
+  const collections = await db.collection.findMany({
+    where: { userId },
+    orderBy: { name: "asc" },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+    },
+  });
+
+  if (collections.length === 0) {
+    return [];
+  }
+
+  const collectionIds = collections.map((c) => c.id);
+
+  const [collectionTotals, collectionTypeCounts] = await Promise.all([
+    db.item.groupBy({
+      by: ["collectionId"],
+      where: { userId, collectionId: { in: collectionIds } },
+      _count: { _all: true },
+    }),
+    getCollectionTypeCounts(userId, collectionIds),
+  ]);
+
+  const collectionTotalsById = new Map(
+    collectionTotals.map((entry) => [entry.collectionId, entry._count._all]),
+  );
+
+  return collections.map((collection) => {
+    const types = buildCollectionTypeSummaries(
+      collectionTypeCounts.get(collection.id) ?? [],
+    );
+
+    return {
+      id: collection.id,
+      name: collection.name,
+      description: collection.description ?? "No description yet.",
+      itemCount: collectionTotalsById.get(collection.id) ?? 0,
+      typeCount: types.length,
+      dominantTypeColor: types[0]?.color ?? "#27272a",
+      types,
+    };
+  });
+}
+
 export async function ensureStarterCollection(userId: string | null) {
   if (!userId) {
     return null;
@@ -360,6 +450,93 @@ export async function getFavoriteSidebarCollections(
       dominantTypeColor,
     };
   });
+}
+
+export async function createCollection(
+  userId: string,
+  data: { name: string; description?: string },
+) {
+  return db.collection.create({
+    data: {
+      name: data.name,
+      description: data.description ?? null,
+      userId,
+    },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+    },
+  });
+}
+
+export async function updateCollection(
+  userId: string,
+  collectionId: string,
+  data: { name: string; description?: string },
+) {
+  const existing = await db.collection.findFirst({
+    where: { id: collectionId, userId },
+    select: { id: true },
+  });
+
+  if (!existing) return null;
+
+  return db.collection.update({
+    where: { id: existing.id },
+    data: {
+      name: data.name,
+      description: data.description ?? null,
+    },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+    },
+  });
+}
+
+export async function deleteCollection(userId: string, collectionId: string) {
+  const collection = await db.collection.findFirst({
+    where: { id: collectionId, userId },
+    select: { id: true },
+  });
+
+  if (!collection) return false;
+
+  // Find another collection to move items to (items must not be deleted)
+  const otherCollection = await db.collection.findFirst({
+    where: { userId, id: { not: collectionId } },
+    orderBy: { createdAt: "asc" },
+    select: { id: true },
+  });
+
+  let targetCollectionId: string;
+
+  if (otherCollection) {
+    targetCollectionId = otherCollection.id;
+  } else {
+    // No other collection — create a General collection to receive the items
+    const general = await db.collection.create({
+      data: {
+        name: DEFAULT_COLLECTION_NAME,
+        description: DEFAULT_COLLECTION_DESCRIPTION,
+        userId,
+      },
+      select: { id: true },
+    });
+    targetCollectionId = general.id;
+  }
+
+  // Move items to the target collection before deleting
+  await db.item.updateMany({
+    where: { collectionId, userId },
+    data: { collectionId: targetCollectionId },
+  });
+
+  await db.collection.delete({ where: { id: collectionId } });
+
+  return true;
 }
 
 export async function getAllCollections(userId: string | null): Promise<DashboardSidebarCollection[]> {

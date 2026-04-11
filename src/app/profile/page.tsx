@@ -9,7 +9,6 @@ import { getAuthenticatedDashboardUser } from "@/lib/db/dashboard-user";
 import { getDashboardSidebarItemTypes, getDashboardSidebarUser, getDashboardStats } from "@/lib/db/items";
 import { ProfileHeader } from "@/components/profile/profile-header";
 import { UsageStatsCard } from "@/components/profile/usage-stats-card";
-import { AccountActions } from "@/components/profile/account-actions";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
@@ -39,7 +38,7 @@ export default async function ProfilePage() {
   ] = await Promise.all([
     db.user.findUnique({
       where: { id: userId },
-      include: { accounts: true },
+      select: { name: true, email: true, image: true, createdAt: true },
     }),
     getDashboardStats(userId),
     getDashboardSidebarItemTypes(userId),
@@ -60,8 +59,6 @@ export default async function ProfilePage() {
     dominantTypeColor: collection.dominantTypeColor,
   }));
 
-  const isEmailUser = !!userRecord.password;
-
   return (
     <DashboardShell
       allCollections={allCollections}
@@ -70,22 +67,17 @@ export default async function ProfilePage() {
       sidebarItemTypes={sidebarItemTypes}
       user={getDashboardSidebarUser(authenticatedUser)}
     >
-      <div className="flex flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
-        <div>
+      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mb-8">
           <h1 className="text-3xl font-semibold text-white">Profile</h1>
           <p className="mt-2 text-sm leading-6 text-zinc-400">
-            Manage your account settings and view your usage statistics.
+            View your profile information and usage statistics.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          <div className="space-y-8">
-            <ProfileHeader user={userRecord} />
-            <AccountActions isEmailUser={isEmailUser} />
-          </div>
-          <div>
-            <UsageStatsCard stats={stats} itemTypes={sidebarItemTypes} />
-          </div>
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2">
+          <ProfileHeader user={userRecord} />
+          <UsageStatsCard itemTypes={sidebarItemTypes} stats={stats} />
         </div>
       </div>
     </DashboardShell>

@@ -1,35 +1,31 @@
+import { notFound } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { ItemCard } from "@/components/dashboard/item-card";
 import {
   ClickableItemCard,
   ItemDrawerProvider,
 } from "@/components/dashboard/item-drawer-provider";
+import { CollectionDetailActions } from "@/components/dashboard/collection-detail-actions";
 import {
   ensureStarterCollection,
   getAllCollections,
+  getCollectionById,
   getFavoriteSidebarCollections,
   getRecentDashboardCollections,
 } from "@/lib/db/collections";
 import { getAuthenticatedDashboardUser } from "@/lib/db/dashboard-user";
 import {
+  getDashboardItemsByCollection,
   getDashboardSidebarItemTypes,
   getDashboardSidebarUser,
-  getDashboardItemsByType,
-  getItemTypeIdFromRoute,
 } from "@/lib/db/items";
-import { notFound } from "next/navigation";
 
-export default async function ItemTypePage({
+export default async function CollectionDetailPage({
   params,
 }: {
-  params: Promise<{ type: string }>;
+  params: Promise<{ id: string }>;
 }) {
-  const { type } = await params;
-  const itemTypeId = getItemTypeIdFromRoute(type);
-
-  if (!itemTypeId) {
-    notFound();
-  }
+  const { id } = await params;
 
   const authenticatedUser = await getAuthenticatedDashboardUser();
   const userId = authenticatedUser?.id ?? null;
@@ -37,28 +33,32 @@ export default async function ItemTypePage({
   await ensureStarterCollection(userId);
 
   const [
+    collection,
     recentCollections,
     sidebarItemTypes,
     favoriteCollections,
     allCollections,
     items,
   ] = await Promise.all([
+    getCollectionById(userId, id),
     getRecentDashboardCollections(userId),
     getDashboardSidebarItemTypes(userId),
     getFavoriteSidebarCollections(userId),
     getAllCollections(userId),
-    getDashboardItemsByType(userId, itemTypeId),
+    getDashboardItemsByCollection(userId, id),
   ]);
 
-  const sidebarRecentCollections = recentCollections.slice(0, 3).map((collection) => ({
-    id: collection.id,
-    name: collection.name,
-    description: collection.description,
-    itemCount: collection.itemCount,
-    dominantTypeColor: collection.dominantTypeColor,
-  }));
+  if (!collection) {
+    notFound();
+  }
 
-  const itemTypeData = sidebarItemTypes.find((t) => t.id === itemTypeId);
+  const sidebarRecentCollections = recentCollections.slice(0, 3).map((c) => ({
+    id: c.id,
+    name: c.name,
+    description: c.description,
+    itemCount: c.itemCount,
+    dominantTypeColor: c.dominantTypeColor,
+  }));
 
   return (
     <ItemDrawerProvider collections={allCollections}>
@@ -70,13 +70,15 @@ export default async function ItemTypePage({
         user={getDashboardSidebarUser(authenticatedUser)}
       >
         <section className="flex-1 space-y-8 px-4 py-6 sm:px-6">
-          <div>
-            <h2 className="text-xl font-semibold text-white">
-              {itemTypeData?.name ?? type}
-            </h2>
-            <p className="mt-1 text-sm text-zinc-400">
-              Browse and manage your {itemTypeData?.name.toLowerCase() ?? type}.
-            </p>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-semibold text-white">{collection.name}</h2>
+              <p className="mt-1 text-sm text-zinc-400">{collection.description}</p>
+              <p className="mt-1 text-xs text-zinc-500">
+                {items.length} {items.length === 1 ? "item" : "items"}
+              </p>
+            </div>
+            <CollectionDetailActions collection={collection} />
           </div>
 
           {items.length > 0 ? (
@@ -88,8 +90,8 @@ export default async function ItemTypePage({
               ))}
             </div>
           ) : (
-            <div className="flex h-64 items-center justify-center rounded-[28px] border border-dashed border-white/10 bg-white/[0.02]">
-              <p className="text-sm text-zinc-500">No items found.</p>
+            <div className="flex h-64 items-center justify-center rounded-[28px] border border-dashed border-white/10 bg-white/2">
+              <p className="text-sm text-zinc-500">No items in this collection yet.</p>
             </div>
           )}
         </section>
