@@ -1,6 +1,7 @@
 "use client";
 
 import { type DashboardItemCardData, type ItemDetail } from "@/lib/db/items";
+import { type DashboardSidebarCollection } from "@/lib/db/collections";
 import { ItemDrawer, type EditFormData } from "@/components/dashboard/item-drawer";
 import { deleteItem, updateItem } from "@/actions/items";
 import { useRouter } from "next/navigation";
@@ -23,7 +24,13 @@ export function useItemDrawer() {
   return ctx;
 }
 
-export function ItemDrawerProvider({ children }: { children: ReactNode }) {
+export function ItemDrawerProvider({
+  children,
+  collections = [],
+}: {
+  children: ReactNode;
+  collections?: DashboardSidebarCollection[];
+}) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [item, setItem] = useState<ItemDetail | null>(null);
@@ -153,6 +160,7 @@ export function ItemDrawerProvider({ children }: { children: ReactNode }) {
     <ItemDrawerContext.Provider value={{ openItem }}>
       {children}
       <ItemDrawer
+        collections={collections}
         isEditing={isEditing}
         isLoading={isLoading}
         isMutating={isMutating}
