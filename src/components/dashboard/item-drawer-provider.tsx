@@ -3,7 +3,7 @@
 import { type DashboardItemCardData, type ItemDetail } from "@/lib/db/items";
 import { type DashboardSidebarCollection } from "@/lib/db/collections";
 import { ItemDrawer, type EditFormData } from "@/components/dashboard/item-drawer";
-import { deleteItem, updateItem } from "@/actions/items";
+import { deleteItem, updateItem, toggleItemPin } from "@/actions/items";
 import { toggleItemFavoriteAction } from "@/actions/favorites";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -60,25 +60,18 @@ export function ItemDrawerProvider({
   }, []);
 
   const handleTogglePin = useCallback(async () => {
-    if (!item) {
-      return;
-    }
+    if (!item) return;
 
     setIsMutating(true);
-
     try {
-      const response = await fetch(`/api/items/${item.id}`, {
-        method: "PATCH",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update pin state.");
+      const result = await toggleItemPin(item.id);
+      if (!result.success) {
+        toast.error(result.error);
+        return;
       }
-
-      const updatedItem: ItemDetail = await response.json();
-      setItem(updatedItem);
+      setItem((prev) => prev ? { ...prev, isPinned: result.data.isPinned } : prev);
       router.refresh();
-      toast.success(updatedItem.isPinned ? "Item pinned." : "Item unpinned.");
+      toast.success(result.data.isPinned ? "Item pinned." : "Item unpinned.");
     } catch (error) {
       console.error("[item-drawer toggle-pin error]", error);
       toast.error("Unable to update the item right now.");
