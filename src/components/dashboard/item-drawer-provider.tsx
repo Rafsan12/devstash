@@ -4,6 +4,7 @@ import { type DashboardItemCardData, type ItemDetail } from "@/lib/db/items";
 import { type DashboardSidebarCollection } from "@/lib/db/collections";
 import { ItemDrawer, type EditFormData } from "@/components/dashboard/item-drawer";
 import { deleteItem, updateItem } from "@/actions/items";
+import { toggleItemFavoriteAction } from "@/actions/favorites";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useState, useCallback, type ReactNode } from "react";
@@ -118,6 +119,27 @@ export function ItemDrawerProvider({
     setIsEditing(true);
   }, []);
 
+  const handleToggleFavorite = useCallback(async () => {
+    if (!item) return;
+
+    setIsMutating(true);
+    try {
+      const result = await toggleItemFavoriteAction(item.id);
+      if (!result.success) {
+        toast.error(result.error);
+        return;
+      }
+      setItem((prev) => prev ? { ...prev, isFavorite: result.data.isFavorite } : prev);
+      router.refresh();
+      toast.success(result.data.isFavorite ? "Added to favorites." : "Removed from favorites.");
+    } catch (error) {
+      console.error("[item-drawer toggle-favorite error]", error);
+      toast.error("Unable to update the item right now.");
+    } finally {
+      setIsMutating(false);
+    }
+  }, [item, router]);
+
   const handleCancelEdit = useCallback(() => {
     setIsEditing(false);
   }, []);
@@ -170,6 +192,7 @@ export function ItemDrawerProvider({
         onEdit={handleEdit}
         onOpenChange={handleOpenChange}
         onSave={handleSave}
+        onToggleFavorite={handleToggleFavorite}
         onTogglePin={handleTogglePin}
         open={open}
       />

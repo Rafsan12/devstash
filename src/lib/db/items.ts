@@ -39,6 +39,7 @@ export type ItemDetail = {
   content: string;
   itemTypeId: string;
   fileExtension: string;
+  isFavorite: boolean;
   isPinned: boolean;
   createdAt: string;
   updatedAt: string;
@@ -60,6 +61,7 @@ function mapItemDetail(item: {
   content: string;
   itemTypeId: string;
   fileExtension: string;
+  isFavorite: boolean;
   isPinned: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -79,6 +81,7 @@ function mapItemDetail(item: {
     content: item.content,
     itemTypeId: item.itemTypeId,
     fileExtension: item.fileExtension,
+    isFavorite: item.isFavorite,
     isPinned: item.isPinned,
     createdAt: item.createdAt.toISOString(),
     updatedAt: item.updatedAt.toISOString(),
@@ -103,6 +106,7 @@ export async function getItemById(
       content: true,
       itemTypeId: true,
       fileExtension: true,
+      isFavorite: true,
       isPinned: true,
       createdAt: true,
       updatedAt: true,
@@ -161,6 +165,7 @@ export async function toggleItemPinned(
       content: true,
       itemTypeId: true,
       fileExtension: true,
+      isFavorite: true,
       isPinned: true,
       createdAt: true,
       updatedAt: true,
@@ -225,6 +230,7 @@ export async function createItem(userId: string, data: CreateItemData): Promise<
       content: true,
       itemTypeId: true,
       fileExtension: true,
+      isFavorite: true,
       isPinned: true,
       createdAt: true,
       updatedAt: true,
@@ -278,6 +284,7 @@ export async function updateItemById(
       content: true,
       itemTypeId: true,
       fileExtension: true,
+      isFavorite: true,
       isPinned: true,
       createdAt: true,
       updatedAt: true,

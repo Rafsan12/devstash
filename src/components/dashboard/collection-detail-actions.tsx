@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Pencil, Trash2, Star, Loader2 } from "lucide-react";
 import { updateCollectionAction, deleteCollectionAction } from "@/actions/collections";
+import { toggleCollectionFavoriteAction } from "@/actions/favorites";
 import {
   Dialog,
   DialogContent,
@@ -32,11 +33,35 @@ type CollectionMeta = {
   id: string;
   name: string;
   description: string;
+  isFavorite: boolean;
 };
 
 export function CollectionDetailActions({ collection }: { collection: CollectionMeta }) {
+  const router = useRouter();
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(collection.isFavorite);
+  const [isFavPending, startFavTransition] = useTransition();
+
+  function handleToggleFavorite() {
+    startFavTransition(async () => {
+      const prev = isFavorite;
+      setIsFavorite(!prev);
+      try {
+        const result = await toggleCollectionFavoriteAction(collection.id);
+        if (result.success) {
+          toast.success(result.data.isFavorite ? "Added to favorites." : "Removed from favorites.");
+          router.refresh();
+        } else {
+          setIsFavorite(prev);
+          toast.error(result.error ?? "Failed to update favorite.");
+        }
+      } catch {
+        setIsFavorite(prev);
+        toast.error("Something went wrong.");
+      }
+    });
+  }
 
   return (
     <>
@@ -51,13 +76,14 @@ export function CollectionDetailActions({ collection }: { collection: Collection
           Edit
         </Button>
         <Button
-          onClick={() => {}}
+          disabled={isFavPending}
+          onClick={handleToggleFavorite}
           size="sm"
-          title="Favorite collection (coming soon)"
+          title={isFavorite ? "Remove from favorites" : "Add to favorites"}
           variant="ghost"
         >
-          <Star className="h-4 w-4" />
-          Favorite
+          <Star className={isFavorite ? "h-4 w-4 fill-amber-400 text-amber-400" : "h-4 w-4"} />
+          {isFavorite ? "Unfavorite" : "Favorite"}
         </Button>
         <Button
           onClick={() => setDeleteOpen(true)}

@@ -20,6 +20,7 @@ export type DashboardRecentCollection = {
   itemCount: number;
   typeCount: number;
   dominantTypeColor: string;
+  isFavorite: boolean;
   types: DashboardCollectionTypeSummary[];
 };
 
@@ -34,6 +35,7 @@ export type DashboardSidebarCollection = {
 type DashboardRecentCollectionWithActivity = DashboardRecentCollection & {
   lastActivityAt: Date;
 };
+
 
 type GroupedCollectionTypeCount = {
   collectionId: string;
@@ -133,6 +135,7 @@ export type CollectionDetail = {
   id: string;
   name: string;
   description: string;
+  isFavorite: boolean;
 };
 
 export async function getCollectionById(
@@ -152,6 +155,7 @@ export async function getCollectionById(
       id: true,
       name: true,
       description: true,
+      isFavorite: true,
     },
   });
 
@@ -163,6 +167,7 @@ export async function getCollectionById(
     id: collection.id,
     name: collection.name,
     description: collection.description ?? "No description yet.",
+    isFavorite: collection.isFavorite,
   };
 }
 
@@ -180,6 +185,7 @@ export async function getAllDashboardCollections(
       id: true,
       name: true,
       description: true,
+      isFavorite: true,
     },
   });
 
@@ -214,6 +220,7 @@ export async function getAllDashboardCollections(
       itemCount: collectionTotalsById.get(collection.id) ?? 0,
       typeCount: types.length,
       dominantTypeColor: types[0]?.color ?? "#27272a",
+      isFavorite: collection.isFavorite,
       types,
     };
   });
@@ -320,6 +327,7 @@ export async function getRecentDashboardCollections(
         id: true,
         name: true,
         description: true,
+        isFavorite: true,
         createdAt: true,
       },
     }),
@@ -364,6 +372,7 @@ export async function getRecentDashboardCollections(
         itemCount: collectionTotalsById.get(collection.id) ?? 0,
         typeCount: types.length,
         dominantTypeColor: types[0]?.color ?? "#27272a",
+        isFavorite: collection.isFavorite,
         types,
         lastActivityAt: fallbackLastActivityAt,
       };
@@ -377,6 +386,7 @@ export async function getRecentDashboardCollections(
       itemCount: collection.itemCount,
       typeCount: collection.typeCount,
       dominantTypeColor: collection.dominantTypeColor,
+      isFavorite: collection.isFavorite,
       types: collection.types,
     }));
 }
@@ -407,18 +417,10 @@ export async function getFavoriteSidebarCollections(
   const collections = await db.collection.findMany({
     where: {
       userId,
+      isFavorite: true,
     },
     take: limit,
-    orderBy: [
-      {
-        items: {
-          _count: "desc",
-        },
-      },
-      {
-        name: "asc",
-      },
-    ],
+    orderBy: { name: "asc" },
     select: {
       id: true,
       name: true,

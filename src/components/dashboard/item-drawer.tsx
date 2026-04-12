@@ -51,6 +51,7 @@ type ItemDrawerProps = {
   onOpenChange: (open: boolean) => void;
   onDelete: () => void;
   onTogglePin: () => void;
+  onToggleFavorite: () => void;
   onEdit: () => void;
   onCancelEdit: () => void;
   onSave: (data: EditFormData) => void;
@@ -68,6 +69,7 @@ export function ItemDrawer({
   onOpenChange,
   onDelete,
   onTogglePin,
+  onToggleFavorite,
   onEdit,
   onCancelEdit,
   onSave,
@@ -92,6 +94,7 @@ export function ItemDrawer({
               item={item}
               onDelete={onDelete}
               onEdit={onEdit}
+              onToggleFavorite={onToggleFavorite}
               onTogglePin={onTogglePin}
             />
           )
@@ -139,12 +142,14 @@ function DrawerContent({
   onDelete,
   onEdit,
   onTogglePin,
+  onToggleFavorite,
 }: {
   item: ItemDetail;
   isMutating: boolean;
   onDelete: () => void;
   onEdit: () => void;
   onTogglePin: () => void;
+  onToggleFavorite: () => void;
 }) {
   const isCodeItem = isCodeEditorItemType(item.itemTypeId);
   const isMarkdownItem = isMarkdownEditorItemType(item.itemTypeId);
@@ -158,10 +163,6 @@ function DrawerContent({
     month: "long",
     day: "numeric",
   });
-
-  const handleFavoriteClick = () => {
-    toast.info("Item favorites are not supported yet.");
-  };
 
   const handleCopyClick = async () => {
     try {
@@ -218,7 +219,13 @@ function DrawerContent({
       </SheetHeader>
 
       <div className="flex items-center gap-1 border-y border-white/10 py-2">
-        <ActionButton icon="star" label="Favorite" onClick={handleFavoriteClick} />
+        <ActionButton
+          active={item.isFavorite}
+          disabled={isMutating}
+          icon="star"
+          label={item.isFavorite ? "Unfavorite" : "Favorite"}
+          onClick={onToggleFavorite}
+        />
         <ActionButton
           active={item.isPinned}
           disabled={isMutating}

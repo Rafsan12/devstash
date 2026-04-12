@@ -29,6 +29,7 @@ export type CollectionMinAggregateOutputType = {
   name: string | null
   description: string | null
   userId: string | null
+  isFavorite: boolean | null
   createdAt: Date | null
 }
 
@@ -37,6 +38,7 @@ export type CollectionMaxAggregateOutputType = {
   name: string | null
   description: string | null
   userId: string | null
+  isFavorite: boolean | null
   createdAt: Date | null
 }
 
@@ -45,6 +47,7 @@ export type CollectionCountAggregateOutputType = {
   name: number
   description: number
   userId: number
+  isFavorite: number
   createdAt: number
   _all: number
 }
@@ -55,6 +58,7 @@ export type CollectionMinAggregateInputType = {
   name?: true
   description?: true
   userId?: true
+  isFavorite?: true
   createdAt?: true
 }
 
@@ -63,6 +67,7 @@ export type CollectionMaxAggregateInputType = {
   name?: true
   description?: true
   userId?: true
+  isFavorite?: true
   createdAt?: true
 }
 
@@ -71,6 +76,7 @@ export type CollectionCountAggregateInputType = {
   name?: true
   description?: true
   userId?: true
+  isFavorite?: true
   createdAt?: true
   _all?: true
 }
@@ -152,6 +158,7 @@ export type CollectionGroupByOutputType = {
   name: string
   description: string | null
   userId: string
+  isFavorite: boolean
   createdAt: Date
   _count: CollectionCountAggregateOutputType | null
   _min: CollectionMinAggregateOutputType | null
@@ -181,6 +188,7 @@ export type CollectionWhereInput = {
   name?: Prisma.StringFilter<"Collection"> | string
   description?: Prisma.StringNullableFilter<"Collection"> | string | null
   userId?: Prisma.StringFilter<"Collection"> | string
+  isFavorite?: Prisma.BoolFilter<"Collection"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Collection"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   items?: Prisma.ItemListRelationFilter
@@ -191,6 +199,7 @@ export type CollectionOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isFavorite?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   items?: Prisma.ItemOrderByRelationAggregateInput
@@ -204,6 +213,7 @@ export type CollectionWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Collection"> | string
   description?: Prisma.StringNullableFilter<"Collection"> | string | null
   userId?: Prisma.StringFilter<"Collection"> | string
+  isFavorite?: Prisma.BoolFilter<"Collection"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Collection"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   items?: Prisma.ItemListRelationFilter
@@ -214,6 +224,7 @@ export type CollectionOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isFavorite?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.CollectionCountOrderByAggregateInput
   _max?: Prisma.CollectionMaxOrderByAggregateInput
@@ -228,6 +239,7 @@ export type CollectionScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Collection"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Collection"> | string | null
   userId?: Prisma.StringWithAggregatesFilter<"Collection"> | string
+  isFavorite?: Prisma.BoolWithAggregatesFilter<"Collection"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Collection"> | Date | string
 }
 
@@ -235,6 +247,7 @@ export type CollectionCreateInput = {
   id?: string
   name: string
   description?: string | null
+  isFavorite?: boolean
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCollectionsInput
   items?: Prisma.ItemCreateNestedManyWithoutCollectionInput
@@ -245,6 +258,7 @@ export type CollectionUncheckedCreateInput = {
   name: string
   description?: string | null
   userId: string
+  isFavorite?: boolean
   createdAt?: Date | string
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutCollectionInput
 }
@@ -253,6 +267,7 @@ export type CollectionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCollectionsNestedInput
   items?: Prisma.ItemUpdateManyWithoutCollectionNestedInput
@@ -263,6 +278,7 @@ export type CollectionUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ItemUncheckedUpdateManyWithoutCollectionNestedInput
 }
@@ -272,6 +288,7 @@ export type CollectionCreateManyInput = {
   name: string
   description?: string | null
   userId: string
+  isFavorite?: boolean
   createdAt?: Date | string
 }
 
@@ -279,6 +296,7 @@ export type CollectionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -287,6 +305,7 @@ export type CollectionUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -305,6 +324,7 @@ export type CollectionCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isFavorite?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -313,6 +333,7 @@ export type CollectionMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isFavorite?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -321,6 +342,7 @@ export type CollectionMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isFavorite?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -389,6 +411,7 @@ export type CollectionCreateWithoutUserInput = {
   id?: string
   name: string
   description?: string | null
+  isFavorite?: boolean
   createdAt?: Date | string
   items?: Prisma.ItemCreateNestedManyWithoutCollectionInput
 }
@@ -397,6 +420,7 @@ export type CollectionUncheckedCreateWithoutUserInput = {
   id?: string
   name: string
   description?: string | null
+  isFavorite?: boolean
   createdAt?: Date | string
   items?: Prisma.ItemUncheckedCreateNestedManyWithoutCollectionInput
 }
@@ -435,6 +459,7 @@ export type CollectionScalarWhereInput = {
   name?: Prisma.StringFilter<"Collection"> | string
   description?: Prisma.StringNullableFilter<"Collection"> | string | null
   userId?: Prisma.StringFilter<"Collection"> | string
+  isFavorite?: Prisma.BoolFilter<"Collection"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Collection"> | Date | string
 }
 
@@ -442,6 +467,7 @@ export type CollectionCreateWithoutItemsInput = {
   id?: string
   name: string
   description?: string | null
+  isFavorite?: boolean
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCollectionsInput
 }
@@ -451,6 +477,7 @@ export type CollectionUncheckedCreateWithoutItemsInput = {
   name: string
   description?: string | null
   userId: string
+  isFavorite?: boolean
   createdAt?: Date | string
 }
 
@@ -474,6 +501,7 @@ export type CollectionUpdateWithoutItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCollectionsNestedInput
 }
@@ -483,6 +511,7 @@ export type CollectionUncheckedUpdateWithoutItemsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -490,6 +519,7 @@ export type CollectionCreateManyUserInput = {
   id?: string
   name: string
   description?: string | null
+  isFavorite?: boolean
   createdAt?: Date | string
 }
 
@@ -497,6 +527,7 @@ export type CollectionUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ItemUpdateManyWithoutCollectionNestedInput
 }
@@ -505,6 +536,7 @@ export type CollectionUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.ItemUncheckedUpdateManyWithoutCollectionNestedInput
 }
@@ -513,6 +545,7 @@ export type CollectionUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -552,6 +585,7 @@ export type CollectionSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   name?: boolean
   description?: boolean
   userId?: boolean
+  isFavorite?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Collection$itemsArgs<ExtArgs>
@@ -563,6 +597,7 @@ export type CollectionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   name?: boolean
   description?: boolean
   userId?: boolean
+  isFavorite?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["collection"]>
@@ -572,6 +607,7 @@ export type CollectionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   name?: boolean
   description?: boolean
   userId?: boolean
+  isFavorite?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["collection"]>
@@ -581,10 +617,11 @@ export type CollectionSelectScalar = {
   name?: boolean
   description?: boolean
   userId?: boolean
+  isFavorite?: boolean
   createdAt?: boolean
 }
 
-export type CollectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "userId" | "createdAt", ExtArgs["result"]["collection"]>
+export type CollectionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "userId" | "isFavorite" | "createdAt", ExtArgs["result"]["collection"]>
 export type CollectionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Collection$itemsArgs<ExtArgs>
@@ -608,6 +645,7 @@ export type $CollectionPayload<ExtArgs extends runtime.Types.Extensions.Internal
     name: string
     description: string | null
     userId: string
+    isFavorite: boolean
     createdAt: Date
   }, ExtArgs["result"]["collection"]>
   composites: {}
@@ -1038,6 +1076,7 @@ export interface CollectionFieldRefs {
   readonly name: Prisma.FieldRef<"Collection", 'String'>
   readonly description: Prisma.FieldRef<"Collection", 'String'>
   readonly userId: Prisma.FieldRef<"Collection", 'String'>
+  readonly isFavorite: Prisma.FieldRef<"Collection", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Collection", 'DateTime'>
 }
     

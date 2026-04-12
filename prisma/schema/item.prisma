@@ -6,6 +6,7 @@ model Item {
   fileExtension String
   collectionId  String
   userId        String
+  isFavorite    Boolean  @default(false)
   isPinned      Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

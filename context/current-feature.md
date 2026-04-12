@@ -1,38 +1,12 @@
-# Current Feature: Editor Preferences Settings
+# Current Feature
 
 ## Status
 
-In Progress
+Completed
 
 ## Goals
 
-- Add an editor preferences section to the settings page
-- Add a font size dropdown
-- Add a tab size dropdown
-- Add a word wrap toggle with default on
-- Add a minimap toggle with default off
-- Add a theme dropdown with `vs-dark`, `monokai`, and `github-dark`, defaulting to `vs-dark`
-- Store preferences in a JSON `editorPreferences` column on the `User` model
-- Create and run a migration for the database without using `db push`
-- Create a server action to update preferences
-- Apply saved settings to the Monaco editor component
-- Auto-save preference changes without a save button
-- Show a success toast after saving
-- Create an `EditorPreferencesContext` for client components
-
 ## Notes
-
-- Spec: `context/features/editor-settings-spec.md`
-- Scope includes schema, migration, settings UI, autosave behavior, server action, and Monaco integration
-- Preferences should persist in the database and flow into client-side editor usage
-- Sub-tasks:
-- Added schema + typed preference defaults and normalization helpers
-- Added DB helper + server action for reading and updating preferences
-- Added client editor preferences context/provider with autosave behavior
-- Added settings UI section for editor preferences
-- Applied preferences to Monaco and defined the requested themes
-- Created `20260412093000_add_editor_preferences`, applied it with `prisma db execute`, and marked it applied with `prisma migrate resolve`
-- Validation completed: `npm.cmd run test`, `npm.cmd run lint`, `npm.cmd run build`, and `npm.cmd run db:generate`
 
 ## History
 
@@ -82,3 +56,5 @@ In Progress
 - **Settings Page**: Created `/settings` page (protected, redirects to `/sign-in` if unauthenticated) containing the Account Actions (change password, delete account) moved from `/profile`. Added a Settings link with a gear icon to the sidebar account menu dropdown. Profile page now shows only profile info and usage stats.
 - **Global Search / Command Palette**: Added a global search palette opened by Cmd+K / Ctrl+K or the dashboard search trigger. It performs client-side fuzzy search across items and collections, groups results into Items and Collections, supports keyboard navigation, opens items in the drawer, and routes to collection detail pages using preloaded search data.
 - **Pagination**: Added page-based fetching and numbered pagination controls to `/items/[type]` and `/collections/[id]`, introduced shared pagination constants, and kept dashboard collection/item limits explicit.
+- **Editor Preferences Settings**: Added a JSON `editorPreferences` column to `User`, migration, server action, DB helper, `EditorPreferencesContext` provider with autosave, and a settings UI section. Preferences (font size, tab size, word wrap, minimap, theme) persist in the database and are applied to the Monaco editor.
+- **Favorites Page**: Added `isFavorite` to `Item` and `Collection` models with a migration. Created `/favorites` page with a compact, high-density list view (monospace, VS Code style) showing favorited items and collections in separate sections with counts. Star toggle wired in the item drawer, collection cards (three-dots menu), and collection detail actions. Sidebar "Favorites" section now filters by real `isFavorite`. Empty state included.

@@ -134,6 +134,7 @@ export const CollectionScalarFieldEnum = {
   name: 'name',
   description: 'description',
   userId: 'userId',
+  isFavorite: 'isFavorite',
   createdAt: 'createdAt'
 } as const
 
@@ -159,6 +160,7 @@ export const ItemScalarFieldEnum = {
   fileExtension: 'fileExtension',
   collectionId: 'collectionId',
   userId: 'userId',
+  isFavorite: 'isFavorite',
   isPinned: 'isPinned',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

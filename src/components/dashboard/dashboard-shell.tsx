@@ -230,6 +230,14 @@ export function DashboardShell({
                       </button>
                     </div>
                     <div className="flex items-center gap-3">
+                      <Link
+                        aria-label="Favorites"
+                        className="inline-flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-white/12 bg-white/5 text-zinc-400 transition-colors hover:bg-white/10 hover:text-amber-300"
+                        href="/favorites"
+                        title="Favorites"
+                      >
+                        <StarIcon />
+                      </Link>
                       <CreateCollectionModal />
                       <CreateItemModal
                         collections={allCollections}
@@ -397,6 +405,24 @@ function SearchIcon() {
         strokeLinecap="round"
         strokeWidth="1.8"
       />
+    </svg>
+  );
+}
+
+function StarIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      className="h-4 w-4"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
     </svg>
   );
 }

@@ -32,6 +32,7 @@ export type ItemMinAggregateOutputType = {
   fileExtension: string | null
   collectionId: string | null
   userId: string | null
+  isFavorite: boolean | null
   isPinned: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -45,6 +46,7 @@ export type ItemMaxAggregateOutputType = {
   fileExtension: string | null
   collectionId: string | null
   userId: string | null
+  isFavorite: boolean | null
   isPinned: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -58,6 +60,7 @@ export type ItemCountAggregateOutputType = {
   fileExtension: number
   collectionId: number
   userId: number
+  isFavorite: number
   isPinned: number
   createdAt: number
   updatedAt: number
@@ -73,6 +76,7 @@ export type ItemMinAggregateInputType = {
   fileExtension?: true
   collectionId?: true
   userId?: true
+  isFavorite?: true
   isPinned?: true
   createdAt?: true
   updatedAt?: true
@@ -86,6 +90,7 @@ export type ItemMaxAggregateInputType = {
   fileExtension?: true
   collectionId?: true
   userId?: true
+  isFavorite?: true
   isPinned?: true
   createdAt?: true
   updatedAt?: true
@@ -99,6 +104,7 @@ export type ItemCountAggregateInputType = {
   fileExtension?: true
   collectionId?: true
   userId?: true
+  isFavorite?: true
   isPinned?: true
   createdAt?: true
   updatedAt?: true
@@ -185,6 +191,7 @@ export type ItemGroupByOutputType = {
   fileExtension: string
   collectionId: string
   userId: string
+  isFavorite: boolean
   isPinned: boolean
   createdAt: Date
   updatedAt: Date
@@ -219,6 +226,7 @@ export type ItemWhereInput = {
   fileExtension?: Prisma.StringFilter<"Item"> | string
   collectionId?: Prisma.StringFilter<"Item"> | string
   userId?: Prisma.StringFilter<"Item"> | string
+  isFavorite?: Prisma.BoolFilter<"Item"> | boolean
   isPinned?: Prisma.BoolFilter<"Item"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Item"> | Date | string
@@ -236,6 +244,7 @@ export type ItemOrderByWithRelationInput = {
   fileExtension?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isFavorite?: Prisma.SortOrder
   isPinned?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -256,6 +265,7 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
   fileExtension?: Prisma.StringFilter<"Item"> | string
   collectionId?: Prisma.StringFilter<"Item"> | string
   userId?: Prisma.StringFilter<"Item"> | string
+  isFavorite?: Prisma.BoolFilter<"Item"> | boolean
   isPinned?: Prisma.BoolFilter<"Item"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Item"> | Date | string
@@ -273,6 +283,7 @@ export type ItemOrderByWithAggregationInput = {
   fileExtension?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isFavorite?: Prisma.SortOrder
   isPinned?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -292,6 +303,7 @@ export type ItemScalarWhereWithAggregatesInput = {
   fileExtension?: Prisma.StringWithAggregatesFilter<"Item"> | string
   collectionId?: Prisma.StringWithAggregatesFilter<"Item"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Item"> | string
+  isFavorite?: Prisma.BoolWithAggregatesFilter<"Item"> | boolean
   isPinned?: Prisma.BoolWithAggregatesFilter<"Item"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Item"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Item"> | Date | string
@@ -302,6 +314,7 @@ export type ItemCreateInput = {
   title: string
   content: string
   fileExtension: string
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -319,6 +332,7 @@ export type ItemUncheckedCreateInput = {
   fileExtension: string
   collectionId: string
   userId: string
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -330,6 +344,7 @@ export type ItemUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -347,6 +362,7 @@ export type ItemUncheckedUpdateInput = {
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -361,6 +377,7 @@ export type ItemCreateManyInput = {
   fileExtension: string
   collectionId: string
   userId: string
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -371,6 +388,7 @@ export type ItemUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -384,6 +402,7 @@ export type ItemUncheckedUpdateManyInput = {
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -407,6 +426,7 @@ export type ItemCountOrderByAggregateInput = {
   fileExtension?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isFavorite?: Prisma.SortOrder
   isPinned?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -420,6 +440,7 @@ export type ItemMaxOrderByAggregateInput = {
   fileExtension?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isFavorite?: Prisma.SortOrder
   isPinned?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -433,6 +454,7 @@ export type ItemMinOrderByAggregateInput = {
   fileExtension?: Prisma.SortOrder
   collectionId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  isFavorite?: Prisma.SortOrder
   isPinned?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -588,6 +610,7 @@ export type ItemCreateWithoutUserInput = {
   title: string
   content: string
   fileExtension: string
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -603,6 +626,7 @@ export type ItemUncheckedCreateWithoutUserInput = {
   itemTypeId: string
   fileExtension: string
   collectionId: string
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -646,6 +670,7 @@ export type ItemScalarWhereInput = {
   fileExtension?: Prisma.StringFilter<"Item"> | string
   collectionId?: Prisma.StringFilter<"Item"> | string
   userId?: Prisma.StringFilter<"Item"> | string
+  isFavorite?: Prisma.BoolFilter<"Item"> | boolean
   isPinned?: Prisma.BoolFilter<"Item"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Item"> | Date | string
@@ -656,6 +681,7 @@ export type ItemCreateWithoutCollectionInput = {
   title: string
   content: string
   fileExtension: string
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -671,6 +697,7 @@ export type ItemUncheckedCreateWithoutCollectionInput = {
   itemTypeId: string
   fileExtension: string
   userId: string
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -708,6 +735,7 @@ export type ItemCreateWithoutItemTypeInput = {
   title: string
   content: string
   fileExtension: string
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -723,6 +751,7 @@ export type ItemUncheckedCreateWithoutItemTypeInput = {
   fileExtension: string
   collectionId: string
   userId: string
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -760,6 +789,7 @@ export type ItemCreateWithoutRecentItemsInput = {
   title: string
   content: string
   fileExtension: string
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -776,6 +806,7 @@ export type ItemUncheckedCreateWithoutRecentItemsInput = {
   fileExtension: string
   collectionId: string
   userId: string
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -802,6 +833,7 @@ export type ItemUpdateWithoutRecentItemsInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -818,6 +850,7 @@ export type ItemUncheckedUpdateWithoutRecentItemsInput = {
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -830,6 +863,7 @@ export type ItemCreateManyUserInput = {
   itemTypeId: string
   fileExtension: string
   collectionId: string
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -840,6 +874,7 @@ export type ItemUpdateWithoutUserInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -855,6 +890,7 @@ export type ItemUncheckedUpdateWithoutUserInput = {
   itemTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -868,6 +904,7 @@ export type ItemUncheckedUpdateManyWithoutUserInput = {
   itemTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -880,6 +917,7 @@ export type ItemCreateManyCollectionInput = {
   itemTypeId: string
   fileExtension: string
   userId: string
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -890,6 +928,7 @@ export type ItemUpdateWithoutCollectionInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -905,6 +944,7 @@ export type ItemUncheckedUpdateWithoutCollectionInput = {
   itemTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -918,6 +958,7 @@ export type ItemUncheckedUpdateManyWithoutCollectionInput = {
   itemTypeId?: Prisma.StringFieldUpdateOperationsInput | string
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -930,6 +971,7 @@ export type ItemCreateManyItemTypeInput = {
   fileExtension: string
   collectionId: string
   userId: string
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -940,6 +982,7 @@ export type ItemUpdateWithoutItemTypeInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -955,6 +998,7 @@ export type ItemUncheckedUpdateWithoutItemTypeInput = {
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -968,6 +1012,7 @@ export type ItemUncheckedUpdateManyWithoutItemTypeInput = {
   fileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   collectionId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  isFavorite?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1012,6 +1057,7 @@ export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   fileExtension?: boolean
   collectionId?: boolean
   userId?: boolean
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1030,6 +1076,7 @@ export type ItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   fileExtension?: boolean
   collectionId?: boolean
   userId?: boolean
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1046,6 +1093,7 @@ export type ItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   fileExtension?: boolean
   collectionId?: boolean
   userId?: boolean
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1062,12 +1110,13 @@ export type ItemSelectScalar = {
   fileExtension?: boolean
   collectionId?: boolean
   userId?: boolean
+  isFavorite?: boolean
   isPinned?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "content" | "itemTypeId" | "fileExtension" | "collectionId" | "userId" | "isPinned" | "createdAt" | "updatedAt", ExtArgs["result"]["item"]>
+export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "content" | "itemTypeId" | "fileExtension" | "collectionId" | "userId" | "isFavorite" | "isPinned" | "createdAt" | "updatedAt", ExtArgs["result"]["item"]>
 export type ItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   collection?: boolean | Prisma.CollectionDefaultArgs<ExtArgs>
   itemType?: boolean | Prisma.ItemTypeDefaultArgs<ExtArgs>
@@ -1102,6 +1151,7 @@ export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     fileExtension: string
     collectionId: string
     userId: string
+    isFavorite: boolean
     isPinned: boolean
     createdAt: Date
     updatedAt: Date
@@ -1539,6 +1589,7 @@ export interface ItemFieldRefs {
   readonly fileExtension: Prisma.FieldRef<"Item", 'String'>
   readonly collectionId: Prisma.FieldRef<"Item", 'String'>
   readonly userId: Prisma.FieldRef<"Item", 'String'>
+  readonly isFavorite: Prisma.FieldRef<"Item", 'Boolean'>
   readonly isPinned: Prisma.FieldRef<"Item", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Item", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Item", 'DateTime'>

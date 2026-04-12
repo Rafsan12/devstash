@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { MoreHorizontal, Pencil, Trash2, Star, Loader2 } from "lucide-react";
 import { type DashboardRecentCollection } from "@/lib/db/collections";
 import { updateCollectionAction, deleteCollectionAction } from "@/actions/collections";
+import { toggleCollectionFavoriteAction } from "@/actions/favorites";
 import { ItemTypeIcon, withAlpha } from "./item-type-icon";
 import {
   Dialog,
@@ -37,9 +38,13 @@ import { Textarea } from "@/components/ui/textarea";
 function CollectionMenu({
   onEdit,
   onDelete,
+  onToggleFavorite,
+  isFavorite,
 }: {
   onEdit: () => void;
   onDelete: () => void;
+  onToggleFavorite: () => void;
+  isFavorite: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -92,11 +97,11 @@ function CollectionMenu({
           </button>
           <button
             className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
-            onClick={stopAndRun(() => {})}
+            onClick={stopAndRun(onToggleFavorite)}
             type="button"
           >
-            <Star className="h-3.5 w-3.5" />
-            Favorite
+            <Star className={isFavorite ? "h-3.5 w-3.5 fill-amber-400 text-amber-400" : "h-3.5 w-3.5"} />
+            {isFavorite ? "Unfavorite" : "Favorite"}
           </button>
           <div className="my-1 border-t border-white/8" />
           <button
@@ -322,6 +327,28 @@ export function ClickableCollectionCard({
   const router = useRouter();
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(collection.isFavorite);
+  const [, startTransition] = useTransition();
+
+  function handleToggleFavorite() {
+    startTransition(async () => {
+      const prev = isFavorite;
+      setIsFavorite(!prev);
+      try {
+        const result = await toggleCollectionFavoriteAction(collection.id);
+        if (result.success) {
+          toast.success(result.data.isFavorite ? "Added to favorites." : "Removed from favorites.");
+          router.refresh();
+        } else {
+          setIsFavorite(prev);
+          toast.error(result.error ?? "Failed to update favorite.");
+        }
+      } catch {
+        setIsFavorite(prev);
+        toast.error("Something went wrong.");
+      }
+    });
+  }
 
   return (
     <>
@@ -351,8 +378,10 @@ export function ClickableCollectionCard({
               {collection.typeCount} types
             </span>
             <CollectionMenu
+              isFavorite={isFavorite}
               onDelete={() => setDeleteOpen(true)}
               onEdit={() => setEditOpen(true)}
+              onToggleFavorite={handleToggleFavorite}
             />
           </div>
         </div>
