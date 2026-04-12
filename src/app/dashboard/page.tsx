@@ -18,6 +18,9 @@ import {
   getPinnedDashboardItems,
   getRecentDashboardItems,
 } from "@/lib/db/items";
+import {
+  SIDEBAR_RECENT_COLLECTIONS_LIMIT,
+} from "@/lib/pagination";
 import { getSearchData } from "@/lib/db/search";
 
 export default async function DashboardPage() {
@@ -46,7 +49,7 @@ export default async function DashboardPage() {
     getSearchData(userId),
   ]);
 
-  const sidebarRecentCollections = recentCollections.slice(0, 3).map((collection) => ({
+  const sidebarRecentCollections = recentCollections.slice(0, SIDEBAR_RECENT_COLLECTIONS_LIMIT).map((collection) => ({
     id: collection.id,
     name: collection.name,
     description: collection.description,

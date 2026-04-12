@@ -3,6 +3,12 @@ import "server-only";
 import { Prisma } from "@/generated/prisma/client/client";
 import { db } from "@/lib/db";
 import { DEMO_USER_EMAIL, type DashboardUserRecord } from "@/lib/db/dashboard-user";
+import {
+  COLLECTIONS_PER_PAGE,
+  DASHBOARD_RECENT_ITEMS_LIMIT,
+  ITEMS_PER_PAGE,
+  getPagination,
+} from "@/lib/pagination";
 
 type DashboardItemTypeSummary = {
   id: string;
@@ -18,6 +24,13 @@ export type DashboardItemCardData = {
   itemType: DashboardItemTypeSummary;
   tags: string[];
   isPinned: boolean;
+};
+
+export type PaginatedDashboardItems = {
+  items: DashboardItemCardData[];
+  page: number;
+  totalCount: number;
+  totalPages: number;
 };
 
 export type ItemDetail = {
@@ -394,10 +407,28 @@ export function getItemTypeIdFromRoute(route: string): string | null {
 export async function getDashboardItemsByType(
   userId: string | null,
   itemTypeId: string,
-): Promise<DashboardItemCardData[]> {
+  page = 1,
+): Promise<PaginatedDashboardItems> {
   if (!userId) {
-    return [];
+    return {
+      items: [],
+      page: 1,
+      totalCount: 0,
+      totalPages: 0,
+    };
   }
+
+  const totalCount = await db.item.count({
+    where: {
+      userId,
+      itemTypeId,
+    },
+  });
+  const pagination = getPagination({
+    page,
+    pageSize: COLLECTIONS_PER_PAGE,
+    totalCount,
+  });
 
   const items = await db.$queryRaw<DashboardItemQueryRow[]>(Prisma.sql`
     SELECT
@@ -416,9 +447,16 @@ export async function getDashboardItemsByType(
     WHERE item."userId" = ${userId}
       AND item."itemTypeId" = ${itemTypeId}
     ORDER BY item."updatedAt" DESC, item.title ASC
+    LIMIT ${pagination.take}
+    OFFSET ${pagination.skip}
   `);
 
-  return items.map(mapDashboardItem);
+  return {
+    items: items.map(mapDashboardItem),
+    page: pagination.page,
+    totalCount,
+    totalPages: pagination.totalPages,
+  };
 }
 
 export async function getPinnedDashboardItems(userId: string | null): Promise<DashboardItemCardData[]> {
@@ -450,7 +488,7 @@ export async function getPinnedDashboardItems(userId: string | null): Promise<Da
 
 export async function getRecentDashboardItems(
   userId: string | null,
-  limit = 10,
+  limit = DASHBOARD_RECENT_ITEMS_LIMIT,
 ): Promise<DashboardItemCardData[]> {
   if (!userId) {
     return [];
@@ -482,10 +520,28 @@ export async function getRecentDashboardItems(
 export async function getDashboardItemsByCollection(
   userId: string | null,
   collectionId: string,
-): Promise<DashboardItemCardData[]> {
+  page = 1,
+): Promise<PaginatedDashboardItems> {
   if (!userId) {
-    return [];
+    return {
+      items: [],
+      page: 1,
+      totalCount: 0,
+      totalPages: 0,
+    };
   }
+
+  const totalCount = await db.item.count({
+    where: {
+      userId,
+      collectionId,
+    },
+  });
+  const pagination = getPagination({
+    page,
+    pageSize: ITEMS_PER_PAGE,
+    totalCount,
+  });
 
   const items = await db.$queryRaw<DashboardItemQueryRow[]>(Prisma.sql`
     SELECT
@@ -504,9 +560,16 @@ export async function getDashboardItemsByCollection(
     WHERE item."userId" = ${userId}
       AND item."collectionId" = ${collectionId}
     ORDER BY item."updatedAt" DESC, item.title ASC
+    LIMIT ${pagination.take}
+    OFFSET ${pagination.skip}
   `);
 
-  return items.map(mapDashboardItem);
+  return {
+    items: items.map(mapDashboardItem),
+    page: pagination.page,
+    totalCount,
+    totalPages: pagination.totalPages,
+  };
 }
 
 export async function getDashboardStats(userId: string | null): Promise<DashboardStats> {
