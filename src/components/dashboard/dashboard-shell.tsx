@@ -101,11 +101,6 @@ export function DashboardShell({
                           </span>
                           <span className={cn("flex items-center gap-2", isDesktopCollapsed && "lg:hidden")}>
                             <span className="truncate text-zinc-200">{itemType.name}</span>
-                            {(itemType.id === "file" || itemType.id === "image") ? (
-                              <Badge className="border-amber-500/50 bg-amber-500/10 px-1.5 py-0 text-[10px] font-bold uppercase tracking-wider text-amber-400 hover:bg-amber-500/20">
-                                PRO
-                              </Badge>
-                            ) : null}
                           </span>
                         </div>
                         <span className={cn("text-xs text-zinc-500", isDesktopCollapsed && "lg:hidden")}>

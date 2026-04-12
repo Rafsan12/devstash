@@ -33,21 +33,6 @@ export function ItemTypeIcon({ icon }: { icon: string }) {
           <path d="M13 20v-5.5a1.5 1.5 0 0 1 1.5-1.5H20" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.8" />
         </svg>
       );
-    case "File":
-      return (
-        <svg aria-hidden="true" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24">
-          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.8" />
-          <path d="M14 3v5h5" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.8" />
-        </svg>
-      );
-    case "Image":
-      return (
-        <svg aria-hidden="true" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24">
-          <rect height="16" rx="2" stroke="currentColor" strokeWidth="1.8" width="18" x="3" y="4" />
-          <circle cx="9" cy="10" fill="currentColor" r="1.5" />
-          <path d="m21 16-5-5-7 7" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
-        </svg>
-      );
     case "Link":
       return (
         <svg aria-hidden="true" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24">

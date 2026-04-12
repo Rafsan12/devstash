@@ -334,8 +334,6 @@ const itemTypeRouteMap: Record<string, string> = {
   prompt: "prompts",
   command: "commands",
   note: "notes",
-  file: "files",
-  image: "images",
   link: "links",
 };
 
@@ -344,8 +342,6 @@ const itemTypeLabelMap: Record<string, string> = {
   prompt: "Prompts",
   command: "Commands",
   note: "Notes",
-  file: "Files",
-  image: "Images",
   link: "Links",
 };
 
@@ -354,9 +350,7 @@ const itemTypeSortOrder: Record<string, number> = {
   prompt: 1,
   command: 2,
   note: 3,
-  file: 4,
-  image: 5,
-  link: 6,
+  link: 4,
 };
 
 const DASHBOARD_ITEM_PREVIEW_LENGTH = 180;
@@ -639,6 +633,7 @@ export async function getDashboardSidebarItemTypes(
     db.itemType.findMany({
       where: {
         isSystem: true,
+        id: { notIn: ["file", "image"] },
       },
       select: {
         id: true,
