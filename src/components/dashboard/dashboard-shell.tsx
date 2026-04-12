@@ -10,6 +10,7 @@ import {
 import { type SearchData } from "@/lib/db/search";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { ItemTypeIcon, withAlpha } from "./item-type-icon";
 import { CreateItemModal } from "./create-item-modal";
@@ -36,6 +37,9 @@ export function DashboardShell({
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const pathname = usePathname();
+  const isDashboardPage = pathname === "/dashboard";
+  const showBackToDashboard = pathname !== "/dashboard";
 
   return (
     <>
@@ -186,11 +190,20 @@ export function DashboardShell({
                       <DrawerIcon />
                     </button>
                     <div>
-                      <p className="text-sm uppercase tracking-[0.3em] text-zinc-500">
-                        Dashboard
-                      </p>
-                      <h1 className="mt-1 text-2xl font-semibold text-white sm:text-3xl">
-                        Your developer workspace
+                      {showBackToDashboard ? (
+                        <Link
+                          className="inline-flex items-center gap-2 text-xs font-medium text-zinc-400 transition hover:text-zinc-200"
+                          href="/dashboard"
+                        >
+                          <ArrowLeftIcon />
+                          Back to dashboard
+                        </Link>
+                      ) : null}
+                      <h1 className={cn(
+                        "font-semibold text-white",
+                        isDashboardPage ? "text-xl sm:text-2xl" : "mt-2 text-lg sm:text-xl"
+                      )}>
+                        Workspace
                       </h1>
                     </div>
                   </div>
@@ -321,6 +334,26 @@ function CollectionListItem({
         <span className={cn("text-amber-300", isDesktopCollapsed && "lg:hidden")}>*</span>
       ) : null}
     </button>
+  );
+}
+
+function ArrowLeftIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      className="h-3.5 w-3.5"
+      fill="none"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M15 18l-6-6 6-6"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
   );
 }
 

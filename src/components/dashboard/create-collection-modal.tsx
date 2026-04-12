@@ -73,9 +73,12 @@ export function CreateCollectionModal() {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="premium-outline" className="px-6">
-          <FolderPlus className="mr-2 h-4 w-4 transition-transform duration-300 group-hover:rotate-90 group-active:scale-90" />
-          New Collection
+        <Button
+          className="h-10 min-w-0 justify-center gap-2 rounded-2xl border-white/10 bg-white/[0.02] px-3 text-xs font-semibold text-zinc-100 whitespace-nowrap hover:bg-white/[0.06] sm:h-11 sm:min-w-[150px] sm:px-4 sm:text-sm"
+          variant="outline"
+        >
+          <FolderPlus className="h-4 w-4 text-sky-300" />
+          <span>New Collection</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[460px]">

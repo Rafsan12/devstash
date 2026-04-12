@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { type Metadata } from "next";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { ItemDrawerProvider } from "@/components/dashboard/item-drawer-provider";
 import { AccountActions } from "@/components/profile/account-actions";
 import {
   ensureStarterCollection,
@@ -53,24 +54,26 @@ export default async function SettingsPage() {
   const isEmailUser = !!userRecord.password;
 
   return (
-    <DashboardShell
-      allCollections={allCollections}
-      favoriteCollections={favoriteCollections}
-      recentCollections={sidebarRecentCollections}
-      searchData={searchData}
-      sidebarItemTypes={sidebarItemTypes}
-      user={getDashboardSidebarUser(authenticatedUser)}
-    >
-      <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-semibold text-white">Settings</h1>
-          <p className="mt-2 text-sm leading-6 text-zinc-400">
-            Manage your account security and preferences.
-          </p>
-        </div>
+    <ItemDrawerProvider collections={allCollections}>
+      <DashboardShell
+        allCollections={allCollections}
+        favoriteCollections={favoriteCollections}
+        recentCollections={sidebarRecentCollections}
+        searchData={searchData}
+        sidebarItemTypes={sidebarItemTypes}
+        user={getDashboardSidebarUser(authenticatedUser)}
+      >
+        <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-semibold text-white">Settings</h1>
+            <p className="mt-2 text-sm leading-6 text-zinc-400">
+              Manage your account security and preferences.
+            </p>
+          </div>
 
-        <AccountActions isEmailUser={isEmailUser} />
-      </div>
-    </DashboardShell>
+          <AccountActions isEmailUser={isEmailUser} />
+        </div>
+      </DashboardShell>
+    </ItemDrawerProvider>
   );
 }

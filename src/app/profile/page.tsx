@@ -1,4 +1,5 @@
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { ItemDrawerProvider } from "@/components/dashboard/item-drawer-provider";
 import {
   ensureStarterCollection,
   getAllCollections,
@@ -63,27 +64,29 @@ export default async function ProfilePage() {
   }));
 
   return (
-    <DashboardShell
-      allCollections={allCollections}
-      favoriteCollections={favoriteCollections}
-      recentCollections={sidebarRecentCollections}
-      searchData={searchData}
-      sidebarItemTypes={sidebarItemTypes}
-      user={getDashboardSidebarUser(authenticatedUser)}
-    >
-      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-semibold text-white">Profile</h1>
-          <p className="mt-2 text-sm leading-6 text-zinc-400">
-            View your profile information and usage statistics.
-          </p>
-        </div>
+    <ItemDrawerProvider collections={allCollections}>
+      <DashboardShell
+        allCollections={allCollections}
+        favoriteCollections={favoriteCollections}
+        recentCollections={sidebarRecentCollections}
+        searchData={searchData}
+        sidebarItemTypes={sidebarItemTypes}
+        user={getDashboardSidebarUser(authenticatedUser)}
+      >
+        <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-semibold text-white">Profile</h1>
+            <p className="mt-2 text-sm leading-6 text-zinc-400">
+              View your profile information and usage statistics.
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2">
-          <ProfileHeader user={userRecord} />
-          <UsageStatsCard itemTypes={sidebarItemTypes} stats={stats} />
+          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2">
+            <ProfileHeader user={userRecord} />
+            <UsageStatsCard itemTypes={sidebarItemTypes} stats={stats} />
+          </div>
         </div>
-      </div>
-    </DashboardShell>
+      </DashboardShell>
+    </ItemDrawerProvider>
   );
 }

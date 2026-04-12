@@ -112,9 +112,12 @@ export function CreateItemModal({ collections, itemTypes }: CreateItemModalProps
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="premium" className="group px-6 shadow-[0_0_20px_-5px_rgba(59,130,246,0.5)] hover:shadow-[0_0_30px_-5px_rgba(139,92,246,0.6)]">
-          <Plus className="mr-2 h-4 w-4 transition-transform duration-300 group-hover:rotate-90 group-active:scale-90" />
-          <span className="relative">New Item</span>
+        <Button
+          className="h-10 min-w-0 justify-center gap-2 rounded-2xl px-3 text-xs font-semibold whitespace-nowrap shadow-[0_10px_24px_-12px_rgba(99,102,241,0.9)] hover:shadow-[0_14px_30px_-14px_rgba(99,102,241,1)] sm:h-11 sm:min-w-[132px] sm:px-4 sm:text-sm"
+          variant="premium"
+        >
+          <Plus className="h-4 w-4" />
+          <span>New Item</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[525px]">
