@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevStash — Developer Knowledge Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2"/>
+          <path d="M8 21h8M12 17v4"/>
+          <path d="m7 8 3 3-3 3M13 14h4"/>
+        </svg>
+        DevStash
+      </a>
+      <div class="nav-links">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#ai" class="nav-link">AI</a>
+        <a href="#workflow" class="nav-link">How it works</a>
+      </div>
+      <div class="nav-actions">
+        <a href="#" class="btn-ghost-sm">Sign in</a>
+        <a href="#" class="btn-primary-sm">Get started</a>
+      </div>
+      <button class="nav-mobile-toggle" id="nav-mobile-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-mobile-menu" id="nav-mobile-menu">
+      <a href="#features" class="nav-mobile-link">Features</a>
+      <a href="#ai" class="nav-mobile-link">AI</a>
+      <a href="#workflow" class="nav-mobile-link">How it works</a>
+      <a href="#" class="nav-mobile-link">Sign in</a>
+      <a href="#" class="btn-primary-sm nav-mobile-cta">Get started free</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-content">
+
+      <!-- Text block: centered above -->
+      <div class="hero-text fade-in">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          Now with AI-powered search
+        </div>
+        <h1>Your developer<br /><span class="hero-gradient">brain, organized.</span></h1>
+        <p class="hero-sub">
+          Snippets, prompts, commands, and notes — searchable, structured,
+          and always within reach. Stop losing knowledge to chat history.
+        </p>
+        <div class="hero-actions">
+          <a href="#" class="btn-primary btn-lg">Start for free</a>
+          <a href="#features" class="btn-ghost btn-lg">See features <span class="arrow-right">→</span></a>
+        </div>
+        <div class="hero-social-proof">
+          <div class="proof-avatars">
+            <div class="proof-avatar" style="background:#3b82f6"></div>
+            <div class="proof-avatar" style="background:#8b5cf6"></div>
+            <div class="proof-avatar" style="background:#f97316"></div>
+            <div class="proof-avatar" style="background:#10b981"></div>
+          </div>
+          <span class="proof-text">Loved by developers worldwide</span>
+        </div>
+      </div>
+
+      <!-- Visual block: below text -->
+      <div class="hero-visual">
+        <!-- Chaos panel -->
+        <div class="chaos-panel hero-anim-left">
+          <canvas id="chaos-canvas"></canvas>
+          <div class="chaos-label">Your scattered knowledge</div>
+        </div>
+
+        <!-- Arrow -->
+        <div class="hero-arrow">
+          <div class="arrow-line"></div>
+          <svg class="arrow-head" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </div>
+
+        <!-- Dashboard mockup -->
+        <div class="dashboard-mockup hero-anim-right">
+          <div class="dm-chrome">
+            <div class="dm-dots">
+              <span class="dm-dot dm-dot-red"></span>
+              <span class="dm-dot dm-dot-yellow"></span>
+              <span class="dm-dot dm-dot-green"></span>
+            </div>
+            <span class="dm-chrome-title">DevStash</span>
+          </div>
+          <div class="dm-body">
+            <div class="dm-sidebar">
+              <div class="dm-sidebar-section">
+                <span class="dm-section-label">Dashboard</span>
+              </div>
+              <div class="dm-sidebar-section">
+                <span class="dm-section-label">PINNED</span>
+                <div class="dm-nav-item">
+                  <span class="dm-type-badge" style="color:#3b82f6;border-color:#3b82f688;background:#3b82f614">.ts</span>
+                  react-hooks
+                </div>
+                <div class="dm-nav-item">
+                  <span class="dm-type-badge" style="color:#8b5cf6;border-color:#8b5cf688;background:#8b5cf614">.p</span>
+                  gpt-base
+                </div>
+              </div>
+              <div class="dm-sidebar-section">
+                <span class="dm-section-label">COLLECTIONS</span>
+                <div class="dm-nav-item">📁 React Patterns</div>
+                <div class="dm-nav-item">📁 AI Prompts</div>
+                <div class="dm-nav-item">📁 DevOps</div>
+              </div>
+            </div>
+            <div class="dm-main">
+              <div class="dm-item-card dm-card-anim" style="--card-i:0;border-color:#3b82f652;box-shadow:inset 0 1px 0 #3b82f624">
+                <div class="dm-card-top">
+                  <span class="dm-card-name">react-hooks.ts</span>
+                  <span class="dm-type-badge" style="color:#3b82f6;border-color:#3b82f640;background:#3b82f614">.ts</span>
+                </div>
+                <div class="dm-card-preview">const [state, setState] = useState&lt;T&gt;(initial);</div>
+              </div>
+              <div class="dm-item-card dm-card-anim" style="--card-i:1;border-color:#8b5cf652;box-shadow:inset 0 1px 0 #8b5cf624">
+                <div class="dm-card-top">
+                  <span class="dm-card-name">gpt-base.prompt</span>
+                  <span class="dm-type-badge" style="color:#8b5cf6;border-color:#8b5cf640;background:#8b5cf614">.p</span>
+                </div>
+                <div class="dm-card-preview">You are an expert developer assistant...</div>
+              </div>
+              <div class="dm-item-card dm-card-anim" style="--card-i:2;border-color:#f9731652;box-shadow:inset 0 1px 0 #f9731624">
+                <div class="dm-card-top">
+                  <span class="dm-card-name">docker-up.sh</span>
+                  <span class="dm-type-badge" style="color:#f97316;border-color:#f9731640;background:#f9731614">.sh</span>
+                </div>
+                <div class="dm-card-preview">docker-compose up -d --build</div>
+              </div>
+            </div>
+          </div>
+          <div class="dm-order-label">Organized DevStash</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- GLASS SHOWCASE -->
+  <section class="glass-section" id="showcase">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="section-tag">Interactive preview</span>
+        <h2>Move your cursor to explore</h2>
+        <p class="section-sub">Your developer knowledge, organized and always in reach.</p>
+      </div>
+    </div>
+
+    <!-- Scene: perspective origin for the 3D tilt -->
+    <div class="glass-scene" id="glass-scene">
+      <!-- Ambient background glows -->
+      <div class="glass-ambient glass-ambient-blue"></div>
+      <div class="glass-ambient glass-ambient-purple"></div>
+
+      <!-- The tilting glass card -->
+      <div class="glass-card" id="glass-card">
+
+        <!-- Specular shine that follows mouse -->
+        <div class="glass-shine" id="glass-shine"></div>
+
+        <!-- ① Deep layer — background grid (moves least) -->
+        <div class="glass-layer" data-depth="0.5">
+          <div class="gl-grid"></div>
+        </div>
+
+        <!-- ② Mid layer — dashboard mockup -->
+        <div class="glass-layer glass-layer-dashboard" data-depth="1">
+          <div class="gl-dashboard">
+
+            <!-- Sidebar -->
+            <div class="gl-sidebar">
+              <div class="gl-sidebar-logo">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="m7 8 3 3-3 3M13 14h4"/></svg>
+                DevStash
+              </div>
+              <div class="gl-nav-item gl-nav-active">⊞ Dashboard</div>
+              <div class="gl-section-lbl">PINNED</div>
+              <div class="gl-nav-item"><span class="gl-badge" style="color:#3b82f6;background:#3b82f614;border-color:#3b82f640">.ts</span>react-hooks</div>
+              <div class="gl-nav-item"><span class="gl-badge" style="color:#8b5cf6;background:#8b5cf614;border-color:#8b5cf640">.p</span>gpt-base</div>
+              <div class="gl-nav-item"><span class="gl-badge" style="color:#f97316;background:#f9731614;border-color:#f9731640">.sh</span>docker-up</div>
+              <div class="gl-section-lbl">COLLECTIONS</div>
+              <div class="gl-nav-item">📁 React Patterns</div>
+              <div class="gl-nav-item">📁 AI Prompts</div>
+              <div class="gl-nav-item">📁 DevOps</div>
+            </div>
+
+            <!-- Main -->
+            <div class="gl-main">
+              <div class="gl-stats">
+                <div class="gl-stat"><span class="gl-stat-n">48</span><span class="gl-stat-l">Items</span></div>
+                <div class="gl-stat"><span class="gl-stat-n">7</span><span class="gl-stat-l">Collections</span></div>
+                <div class="gl-stat"><span class="gl-stat-n">3</span><span class="gl-stat-l">Pinned</span></div>
+                <div class="gl-stat"><span class="gl-stat-n">5</span><span class="gl-stat-l">Today</span></div>
+              </div>
+              <div class="gl-items">
+                <div class="gl-item" style="border-color:#3b82f650;box-shadow:inset 0 1px 0 #3b82f620">
+                  <div class="gl-item-top"><span class="gl-badge" style="color:#3b82f6;background:#3b82f614;border-color:#3b82f640">.ts</span><span class="gl-item-name">react-hooks.ts</span><span class="gl-item-time">2m ago</span></div>
+                  <div class="gl-item-pre">const [state, setState] = useState&lt;T&gt;(initial);</div>
+                </div>
+                <div class="gl-item" style="border-color:#8b5cf650;box-shadow:inset 0 1px 0 #8b5cf620">
+                  <div class="gl-item-top"><span class="gl-badge" style="color:#8b5cf6;background:#8b5cf614;border-color:#8b5cf640">.p</span><span class="gl-item-name">gpt-base.prompt</span><span class="gl-item-time">1h ago</span></div>
+                  <div class="gl-item-pre">You are an expert developer assistant...</div>
+                </div>
+                <div class="gl-item" style="border-color:#f9731650;box-shadow:inset 0 1px 0 #f9731620">
+                  <div class="gl-item-top"><span class="gl-badge" style="color:#f97316;background:#f9731614;border-color:#f9731640">.sh</span><span class="gl-item-name">docker-up.sh</span><span class="gl-item-time">3h ago</span></div>
+                  <div class="gl-item-pre">docker-compose up -d --build</div>
+                </div>
+                <div class="gl-item" style="border-color:#fde04750;box-shadow:inset 0 1px 0 #fde04720">
+                  <div class="gl-item-top"><span class="gl-badge" style="color:#fde047;background:#fde04714;border-color:#fde04740">.md</span><span class="gl-item-name">arch-notes.md</span><span class="gl-item-time">Yesterday</span></div>
+                  <div class="gl-item-pre"># Architecture Notes — App Router patterns...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ③ Front layer — floating item chips (moves most) -->
+        <div class="glass-layer glass-layer-chips" data-depth="2.2">
+          <!-- each chip is a mini floating card -->
+          <div class="gl-chip" style="top:8%;left:3%;--c:#3b82f6">
+            <span class="gl-chip-badge">.ts</span>
+            <span>react-hooks</span>
+          </div>
+          <div class="gl-chip" style="top:6%;right:4%;--c:#8b5cf6">
+            <span class="gl-chip-badge">.prompt</span>
+            <span>gpt-base</span>
+          </div>
+          <div class="gl-chip" style="bottom:14%;left:2%;--c:#f97316">
+            <span class="gl-chip-badge">.sh</span>
+            <span>docker-up</span>
+          </div>
+          <div class="gl-chip" style="bottom:8%;right:3%;--c:#fde047">
+            <span class="gl-chip-badge">.md</span>
+            <span>arch-notes</span>
+          </div>
+          <div class="gl-chip" style="top:42%;right:2%;--c:#10b981">
+            <span class="gl-chip-badge">.url</span>
+            <span>mdn-flexbox</span>
+          </div>
+        </div>
+
+      </div><!-- /glass-card -->
+    </div><!-- /glass-scene -->
+
+    <p class="glass-hint">Move your cursor over the card</p>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="section-tag">What you can stash</span>
+        <h2>Every type of developer knowledge</h2>
+        <p class="section-sub">Six specialized item types, each with its own editor and workflow.</p>
+      </div>
+      <div class="features-grid">
+
+        <div class="feature-card fade-in" style="--accent: #3b82f6; --delay: 0.05s">
+          <div class="feature-card-top"></div>
+          <div class="feature-card-body">
+            <div class="feature-icon-wrap" style="color:#3b82f6;border-color:#3b82f640;background:#3b82f610">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+              </svg>
+            </div>
+            <span class="feature-type-badge" style="color:#3b82f6;border-color:#3b82f640;background:#3b82f614">.ts .js .py</span>
+            <h3>Code Snippets</h3>
+            <p>Syntax-highlighted Monaco editor for any language. Copy with one click. Never lose a useful snippet again.</p>
+          </div>
+        </div>
+
+        <div class="feature-card fade-in" style="--accent: #8b5cf6; --delay: 0.1s">
+          <div class="feature-card-top"></div>
+          <div class="feature-card-body">
+            <div class="feature-icon-wrap" style="color:#8b5cf6;border-color:#8b5cf640;background:#8b5cf610">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+              </svg>
+            </div>
+            <span class="feature-type-badge" style="color:#8b5cf6;border-color:#8b5cf640;background:#8b5cf614">.prompt</span>
+            <h3>AI Prompts</h3>
+            <p>Organize and version your prompt library. Markdown editor with live preview. Reuse your best prompts across projects.</p>
+          </div>
+        </div>
+
+        <div class="feature-card fade-in" style="--accent: #f97316; --delay: 0.15s">
+          <div class="feature-card-top"></div>
+          <div class="feature-card-body">
+            <div class="feature-icon-wrap" style="color:#f97316;border-color:#f9731640;background:#f9731610">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>
+              </svg>
+            </div>
+            <span class="feature-type-badge" style="color:#f97316;border-color:#f9731640;background:#f9731614">.sh</span>
+            <h3>Shell Commands</h3>
+            <p>Never forget that perfect one-liner. Store, search, and copy CLI commands instantly with the Monaco terminal editor.</p>
+          </div>
+        </div>
+
+        <div class="feature-card fade-in" style="--accent: #fde047; --delay: 0.2s">
+          <div class="feature-card-top"></div>
+          <div class="feature-card-body">
+            <div class="feature-icon-wrap" style="color:#fde047;border-color:#fde04740;background:#fde04710">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8Z"/><path d="M15 3v4a1 1 0 0 0 1 1h4"/><path d="M9 13h6M9 17h3"/>
+              </svg>
+            </div>
+            <span class="feature-type-badge" style="color:#fde047;border-color:#fde04740;background:#fde04714">.md</span>
+            <h3>Markdown Notes</h3>
+            <p>Write with GFM markdown. Toggle between Write and Preview modes. Tables, code blocks, and rich formatting built-in.</p>
+          </div>
+        </div>
+
+        <div class="feature-card fade-in" style="--accent: #10b981; --delay: 0.25s">
+          <div class="feature-card-top"></div>
+          <div class="feature-card-body">
+            <div class="feature-icon-wrap" style="color:#10b981;border-color:#10b98140;background:#10b98110">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+              </svg>
+            </div>
+            <span class="feature-type-badge" style="color:#10b981;border-color:#10b98140;background:#10b98114">.url</span>
+            <h3>Smart Links</h3>
+            <p>Bookmark URLs with context. Add notes, tag by project, and find any resource instantly with full-text search.</p>
+          </div>
+        </div>
+
+        <div class="feature-card fade-in" style="--accent: #ec4899; --delay: 0.3s">
+          <div class="feature-card-top"></div>
+          <div class="feature-card-body">
+            <div class="feature-icon-wrap" style="color:#ec4899;border-color:#ec489940;background:#ec489910">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+              </svg>
+            </div>
+            <span class="feature-type-badge" style="color:#ec4899;border-color:#ec489940;background:#ec489914">⌘K</span>
+            <h3>Global Search</h3>
+            <p>Cmd+K command palette for instant search. Fuzzy search across all items and collections with keyboard navigation.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- WORKFLOW SECTION -->
+  <section class="workflow" id="workflow">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="section-tag">How it works</span>
+        <h2>Built around your workflow</h2>
+        <p class="section-sub">A workspace that thinks like a developer.</p>
+      </div>
+      <div class="workflow-grid">
+        <div class="workflow-step fade-in" style="--delay:0.05s">
+          <div class="step-number">01</div>
+          <h3>Capture anything</h3>
+          <p>New Item modal supports all 5 types. Paste code, write notes, drop a URL — capture it before you forget it.</p>
+        </div>
+        <div class="workflow-step fade-in" style="--delay:0.1s">
+          <div class="step-number">02</div>
+          <h3>Organize into Collections</h3>
+          <p>Group related items into Collections — like smart folders. Move items between collections as projects evolve.</p>
+        </div>
+        <div class="workflow-step fade-in" style="--delay:0.15s">
+          <div class="step-number">03</div>
+          <h3>Find it instantly</h3>
+          <p>Full-text search, pinned items, recent activity, and Cmd+K palette. Your knowledge is always one keystroke away.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI SECTION -->
+  <section class="ai-section" id="ai">
+    <div class="container">
+      <div class="ai-inner fade-in">
+        <div class="ai-text">
+          <span class="section-tag" style="margin-bottom:20px">Coming soon</span>
+          <h2>AI that understands your stash</h2>
+          <p>
+            Let AI surface knowledge you didn't know you had. Semantic search,
+            smart summaries, and prompt refinement — all trained on your own workspace.
+          </p>
+          <ul class="ai-features-list">
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Semantic search across all items
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Auto-summarize long notes and snippets
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              AI prompt refinement and suggestions
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Generate docs from code snippets
+            </li>
+          </ul>
+          <a href="#" class="btn-primary">Get early access <span class="arrow-right">→</span></a>
+        </div>
+        <div class="ai-editor">
+          <div class="editor-chrome">
+            <div class="editor-dots">
+              <span class="editor-dot editor-dot-red"></span>
+              <span class="editor-dot editor-dot-yellow"></span>
+              <span class="editor-dot editor-dot-green"></span>
+            </div>
+            <span class="editor-tab">review-assistant.prompt</span>
+            <span class="editor-tab-badge" style="color:#8b5cf6;border-color:#8b5cf640;background:#8b5cf614">.prompt</span>
+          </div>
+          <div class="editor-body">
+            <div class="editor-line"><span class="ln">1</span><span class="t-comment"># AI Code Review Assistant</span></div>
+            <div class="editor-line"><span class="ln">2</span><span></span></div>
+            <div class="editor-line"><span class="ln">3</span><span><span class="t-keyword">You are</span> an expert code reviewer with deep</span></div>
+            <div class="editor-line"><span class="ln">4</span><span>knowledge of TypeScript, React, and Node.js.</span></div>
+            <div class="editor-line"><span class="ln">5</span><span></span></div>
+            <div class="editor-line"><span class="ln">6</span><span><span class="t-keyword">When reviewing code</span>, focus on:</span></div>
+            <div class="editor-line"><span class="ln">7</span><span><span class="t-string">- Type safety and correctness</span></span></div>
+            <div class="editor-line"><span class="ln">8</span><span><span class="t-string">- Performance implications</span></span></div>
+            <div class="editor-line"><span class="ln">9</span><span><span class="t-string">- Security vulnerabilities</span></span></div>
+            <div class="editor-line"><span class="ln">10</span><span><span class="t-string">- Code readability and maintainability</span></span></div>
+          </div>
+          <div class="editor-ai-bar">
+            <div class="editor-ai-suggestion">
+              <span class="ai-suggest-label">✦ AI</span>
+              <span class="ai-suggest-text">This prompt is clear and well-structured. Consider adding an output format specification for consistent responses...</span>
+            </div>
+            <button class="ai-apply-btn">Apply suggestion</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-inner fade-in">
+        <h2>Stop losing developer knowledge</h2>
+        <p>Join developers who've organized their snippets, prompts, and notes in one searchable workspace.</p>
+        <div class="cta-actions">
+          <a href="#" class="btn-primary btn-lg">Start for free</a>
+          <span class="cta-note">No credit card required</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="nav-logo footer-logo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"/>
+              <path d="M8 21h8M12 17v4"/>
+              <path d="m7 8 3 3-3 3M13 14h4"/>
+            </svg>
+            DevStash
+          </a>
+          <p class="footer-tagline">A developer-first knowledge workspace. Every note is a searchable, organized knowledge file.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="#features">Features</a>
+          <a href="#workflow">How it works</a>
+          <a href="#ai">AI</a>
+          <a href="#">Changelog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Developers</h4>
+          <a href="#">Docs</a>
+          <a href="#">API</a>
+          <a href="#">GitHub</a>
+          <a href="#">Status</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="#">About</a>
+          <a href="#">Blog</a>
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 DevStash. Built for developers.</span>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

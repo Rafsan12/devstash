@@ -1,8 +1,8 @@
-# Current Feature: Pinned Items
+# Current Feature
 
 ## Status
 
-Completed
+—
 
 ## Goals
 
@@ -59,3 +59,7 @@ Completed
 - **Editor Preferences Settings**: Added a JSON `editorPreferences` column to `User`, migration, server action, DB helper, `EditorPreferencesContext` provider with autosave, and a settings UI section. Preferences (font size, tab size, word wrap, minimap, theme) persist in the database and are applied to the Monaco editor.
 - **Favorites Page**: Added `isFavorite` to `Item` and `Collection` models with a migration. Created `/favorites` page with a compact, high-density list view (monospace, VS Code style) showing favorited items and collections in separate sections with counts. Star toggle wired in the item drawer, collection cards (three-dots menu), and collection detail actions. Sidebar "Favorites" section now filters by real `isFavorite`. Empty state included.
 - **Pinned Items**: Added `toggleItemPin` server action. Replaced the API-fetch `handleTogglePin` in `ItemDrawerProvider` with the server action pattern (optimistic state, toast, `router.refresh()`). Pinned items now sort to the top of item-type and collection listings via `isPinned DESC` in the ORDER BY clauses.
+- Homepage Mockup added as the current feature
+- **Homepage Mockup**: Implemented standalone marketing prototype at `prototypes/homepage/` with animated chaos canvas (RAF + mouse repulsion), dashboard mockup, features grid with item type accent colors, AI section with code editor mockup, pricing section with yearly toggle, scroll fade-ins, fixed navbar with scroll opacity, and full mobile responsiveness.
+- Homepage added as the current feature — spec written at `context/features/homepage-spec.md`, implementation in progress
+- **Homepage**: Implemented full marketing homepage at `src/app/page.tsx` with 8 components under `src/components/homepage/`. Includes animated chaos canvas (rAF + mouse repulsion), 3D glass showcase card (lerp tilt + parallax layers), hero section with centered text + staggered entrance animations, features grid (6 cards with item-type accent colors), 3-step workflow section, AI section with editor mockup, CTA section, and footer. Removed File and Image item types from dashboard sidebar (filtered at DB query level).
