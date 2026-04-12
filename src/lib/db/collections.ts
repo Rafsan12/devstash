@@ -1,6 +1,7 @@
 import "server-only";
 
 import { db } from "@/lib/db";
+import { DASHBOARD_COLLECTIONS_LIMIT } from "@/lib/pagination";
 
 const DEFAULT_COLLECTION_NAME = "General";
 const DEFAULT_COLLECTION_DESCRIPTION = "Your starter collection for notes, snippets, and links.";
@@ -250,7 +251,7 @@ export async function ensureStarterCollection(userId: string | null) {
 
 export async function getRecentDashboardCollections(
   userId: string | null,
-  limit = 6,
+  limit = DASHBOARD_COLLECTIONS_LIMIT,
 ): Promise<DashboardRecentCollection[]> {
   if (!userId) {
     return [];

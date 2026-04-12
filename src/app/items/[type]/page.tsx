@@ -4,6 +4,7 @@ import {
   ClickableItemCard,
   ItemDrawerProvider,
 } from "@/components/dashboard/item-drawer-provider";
+import { PaginationControls } from "@/components/dashboard/pagination-controls";
 import {
   ensureStarterCollection,
   getAllCollections,
@@ -17,15 +18,19 @@ import {
   getDashboardItemsByType,
   getItemTypeIdFromRoute,
 } from "@/lib/db/items";
+import { SIDEBAR_RECENT_COLLECTIONS_LIMIT, parsePageParam } from "@/lib/pagination";
 import { getSearchData } from "@/lib/db/search";
 import { notFound } from "next/navigation";
 
 export default async function ItemTypePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ type: string }>;
+  searchParams: Promise<{ page?: string }>;
 }) {
   const { type } = await params;
+  const { page } = await searchParams;
   const itemTypeId = getItemTypeIdFromRoute(type);
 
   if (!itemTypeId) {
@@ -42,18 +47,20 @@ export default async function ItemTypePage({
     sidebarItemTypes,
     favoriteCollections,
     allCollections,
-    items,
+    paginatedItems,
     searchData,
   ] = await Promise.all([
     getRecentDashboardCollections(userId),
     getDashboardSidebarItemTypes(userId),
     getFavoriteSidebarCollections(userId),
     getAllCollections(userId),
-    getDashboardItemsByType(userId, itemTypeId),
+    getDashboardItemsByType(userId, itemTypeId, parsePageParam(page)),
     getSearchData(userId),
   ]);
 
-  const sidebarRecentCollections = recentCollections.slice(0, 3).map((collection) => ({
+  const sidebarRecentCollections = recentCollections
+    .slice(0, SIDEBAR_RECENT_COLLECTIONS_LIMIT)
+    .map((collection) => ({
     id: collection.id,
     name: collection.name,
     description: collection.description,
@@ -62,6 +69,7 @@ export default async function ItemTypePage({
   }));
 
   const itemTypeData = sidebarItemTypes.find((t) => t.id === itemTypeId);
+  const { items, page: currentPage, totalCount, totalPages } = paginatedItems;
 
   return (
     <ItemDrawerProvider collections={allCollections}>
@@ -81,15 +89,25 @@ export default async function ItemTypePage({
             <p className="mt-1 text-sm text-zinc-400">
               Browse and manage your {itemTypeData?.name.toLowerCase() ?? type}.
             </p>
+            <p className="mt-1 text-xs text-zinc-500">
+              {totalCount} {totalCount === 1 ? "item" : "items"}
+            </p>
           </div>
 
           {items.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-              {items.map((item) => (
-                <ClickableItemCard item={item} key={item.id}>
-                  <ItemCard item={item} />
-                </ClickableItemCard>
-              ))}
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+                {items.map((item) => (
+                  <ClickableItemCard item={item} key={item.id}>
+                    <ItemCard item={item} />
+                  </ClickableItemCard>
+                ))}
+              </div>
+              <PaginationControls
+                createPageHref={(nextPage) => `/items/${type}?page=${nextPage}`}
+                currentPage={currentPage}
+                totalPages={totalPages}
+              />
             </div>
           ) : (
             <div className="flex h-64 items-center justify-center rounded-[28px] border border-dashed border-white/10 bg-white/[0.02]">

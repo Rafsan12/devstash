@@ -1,13 +1,27 @@
-# Current Feature
+# Current Feature: Pagination
 
 ## Status
-Completed
-
-## Feature
+In Progress
 
 ## Goals
+- Add pagination to `/items/[type]` pages
+- Add pagination to `/collections/[id]` pages
+- Show pagination controls at the bottom with numbered page links and previous/next navigation
+- Disable previous/next controls when there is no corresponding page
+- Use `ITEMS_PER_PAGE = 21` and `COLLECTIONS_PER_PAGE = 21`
+- Keep dashboard limits at `DASHBOARD_COLLECTIONS_LIMIT = 6` and `DASHBOARD_RECENT_ITEMS_LIMIT = 10`
+- Fetch only the data required for the current page
 
 ## Notes
+- Spec: `context/features/pagination-spec.md`
+- Scope covers paginated item-type listings and collection detail listings
+- Data fetching should remain page-sized rather than loading full result sets
+- Sub-tasks completed:
+- Added shared pagination constants and helpers in `src/lib/pagination.ts`
+- Added reusable pagination controls for paged list routes
+- Updated `/items/[type]` to read `?page=` and fetch only the current page
+- Updated `/collections/[id]` to read `?page=` and fetch only the current page
+- Validation completed: `npm.cmd run test`, `npm.cmd run lint`, and `npm.cmd run build`
 
 ## History
 
