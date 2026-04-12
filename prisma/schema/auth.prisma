@@ -6,6 +6,7 @@ model User {
   image         String?
   password      String?
   isPro         Boolean   @default(false)
+  editorPreferences Json?
   createdAt     DateTime  @default(now())
 
   accounts    Account[]

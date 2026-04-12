@@ -76,6 +76,7 @@ export default async function CollectionDetailPage({
       <DashboardShell
         allCollections={allCollections}
         favoriteCollections={favoriteCollections}
+        initialEditorPreferences={authenticatedUser?.editorPreferences}
         recentCollections={sidebarRecentCollections}
         searchData={searchData}
         sidebarItemTypes={sidebarItemTypes}

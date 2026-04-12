@@ -1,6 +1,7 @@
 "use client";
 
 import { SidebarAccountMenu } from "@/components/auth/sidebar-account-menu";
+import { EditorPreferencesProvider } from "@/components/editor-preferences/editor-preferences-provider";
 import { Badge } from "@/components/ui/badge";
 import { type DashboardSidebarCollection } from "@/lib/db/collections";
 import {
@@ -25,6 +26,7 @@ export function DashboardShell({
   allCollections,
   user,
   searchData,
+  initialEditorPreferences,
 }: {
   children: ReactNode;
   favoriteCollections: DashboardSidebarCollection[];
@@ -33,6 +35,7 @@ export function DashboardShell({
   allCollections: DashboardSidebarCollection[];
   user: DashboardSidebarUser | null;
   searchData: SearchData;
+  initialEditorPreferences?: unknown;
 }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
@@ -42,19 +45,20 @@ export function DashboardShell({
   const showBackToDashboard = pathname !== "/dashboard";
 
   return (
-    <>
-      <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.12),_transparent_28%),linear-gradient(180deg,_#09090b_0%,_#050507_100%)] text-white">
-      <div className="mx-auto flex min-h-screen w-full max-w-[1600px] flex-col px-4 py-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-black/40 shadow-2xl shadow-black/30 backdrop-blur">
-          <button
-            aria-label="Close sidebar overlay"
-            className={cn(
-              "absolute inset-0 z-20 bg-black/60 opacity-0 transition-opacity lg:hidden",
-              isMobileOpen ? "pointer-events-auto opacity-100" : "pointer-events-none"
-            )}
-            onClick={() => setIsMobileOpen(false)}
-            type="button"
-          />
+    <EditorPreferencesProvider initialPreferences={initialEditorPreferences}>
+      <>
+        <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.12),_transparent_28%),linear-gradient(180deg,_#09090b_0%,_#050507_100%)] text-white">
+        <div className="mx-auto flex min-h-screen w-full max-w-[1600px] flex-col px-4 py-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-black/40 shadow-2xl shadow-black/30 backdrop-blur">
+            <button
+              aria-label="Close sidebar overlay"
+              className={cn(
+                "absolute inset-0 z-20 bg-black/60 opacity-0 transition-opacity lg:hidden",
+                isMobileOpen ? "pointer-events-auto opacity-100" : "pointer-events-none"
+              )}
+              onClick={() => setIsMobileOpen(false)}
+              type="button"
+            />
 
           <div className="flex min-h-[calc(100vh-2rem)]">
             <aside
@@ -241,14 +245,15 @@ export function DashboardShell({
           </div>
         </div>
       </div>
-      </main>
+        </main>
 
-      <GlobalSearchPalette
-        open={searchOpen}
-        searchData={searchData}
-        onOpenChange={setSearchOpen}
-      />
-    </>
+        <GlobalSearchPalette
+          open={searchOpen}
+          searchData={searchData}
+          onOpenChange={setSearchOpen}
+        />
+      </>
+    </EditorPreferencesProvider>
   );
 }
 

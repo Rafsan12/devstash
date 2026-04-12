@@ -10,6 +10,7 @@ export type DashboardUserRecord = {
   name: string | null;
   email: string | null;
   image: string | null;
+  editorPreferences: unknown;
 };
 
 export async function getDemoDashboardUser(): Promise<DashboardUserRecord | null> {
@@ -22,6 +23,7 @@ export async function getDemoDashboardUser(): Promise<DashboardUserRecord | null
       name: true,
       email: true,
       image: true,
+      editorPreferences: true,
     },
   });
 }
@@ -43,6 +45,7 @@ export async function getAuthenticatedDashboardUser(): Promise<DashboardUserReco
       name: true,
       email: true,
       image: true,
+      editorPreferences: true,
     },
   });
 }

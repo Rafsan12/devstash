@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { type Metadata } from "next";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { ItemDrawerProvider } from "@/components/dashboard/item-drawer-provider";
+import { EditorPreferencesSection } from "@/components/settings/editor-preferences-section";
 import { AccountActions } from "@/components/profile/account-actions";
 import {
   ensureStarterCollection,
@@ -58,6 +59,7 @@ export default async function SettingsPage() {
       <DashboardShell
         allCollections={allCollections}
         favoriteCollections={favoriteCollections}
+        initialEditorPreferences={authenticatedUser?.editorPreferences}
         recentCollections={sidebarRecentCollections}
         searchData={searchData}
         sidebarItemTypes={sidebarItemTypes}
@@ -71,6 +73,7 @@ export default async function SettingsPage() {
             </p>
           </div>
 
+          <EditorPreferencesSection />
           <AccountActions isEmailUser={isEmailUser} />
         </div>
       </DashboardShell>

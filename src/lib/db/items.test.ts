@@ -174,6 +174,7 @@ describe("items db helpers", () => {
         name: null,
         email: null,
         image: null,
+        editorPreferences: null,
       }),
     ).toEqual({
       name: "Demo User",

@@ -3,6 +3,11 @@
 import dynamic from "next/dynamic";
 import { Check, Copy } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
+import { useOptionalEditorPreferences } from "@/components/editor-preferences/editor-preferences-provider";
+import {
+  DEFAULT_EDITOR_PREFERENCES,
+  getMonacoThemeId,
+} from "@/lib/editor-preferences";
 import { toast } from "sonner";
 import type * as Monaco from "monaco-editor";
 
@@ -116,6 +121,8 @@ export function CodeEditor({
   const editorInstanceId = useId().replace(/[:]/g, "");
   const editorRef = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
   const editorLanguage = getEditorLanguage(itemTypeId, fileExtension);
+  const editorPreferences =
+    useOptionalEditorPreferences()?.preferences ?? DEFAULT_EDITOR_PREFERENCES;
   const editorHeight = getEditorHeight(value);
   const editorBodyHeight = Math.max(editorHeight - HEADER_HEIGHT, 116);
   const normalizedExtension = normalizeExtension(fileExtension) || ".txt";
@@ -152,7 +159,7 @@ export function CodeEditor({
   };
 
   const handleBeforeMount = (monaco: typeof Monaco) => {
-    monaco.editor.defineTheme("devstash-code-dark", {
+    monaco.editor.defineTheme("devstash-code-vs-dark", {
       base: "vs-dark",
       inherit: true,
       rules: [],
@@ -166,6 +173,46 @@ export function CodeEditor({
         "editor.inactiveSelectionBackground": "#1e293b66",
         "editorIndentGuide.background1": "#1f293733",
         "editorIndentGuide.activeBackground1": "#38bdf84d",
+      },
+    });
+
+    monaco.editor.defineTheme("devstash-code-monokai", {
+      base: "vs-dark",
+      inherit: true,
+      rules: [
+        { token: "comment", foreground: "75715e" },
+        { token: "string", foreground: "e6db74" },
+        { token: "number", foreground: "ae81ff" },
+        { token: "keyword", foreground: "f92672" },
+        { token: "type.identifier", foreground: "66d9ef" },
+      ],
+      colors: {
+        "editor.background": "#272822",
+        "editor.foreground": "#f8f8f2",
+        "editor.lineHighlightBackground": "#3e3d32",
+        "editorCursor.foreground": "#f8f8f0",
+        "editor.selectionBackground": "#49483e",
+        "editor.inactiveSelectionBackground": "#49483e99",
+      },
+    });
+
+    monaco.editor.defineTheme("devstash-code-github-dark", {
+      base: "vs-dark",
+      inherit: true,
+      rules: [
+        { token: "comment", foreground: "8b949e" },
+        { token: "string", foreground: "a5d6ff" },
+        { token: "keyword", foreground: "ff7b72" },
+        { token: "number", foreground: "79c0ff" },
+        { token: "type.identifier", foreground: "ffa657" },
+      ],
+      colors: {
+        "editor.background": "#0d1117",
+        "editor.foreground": "#c9d1d9",
+        "editor.lineHighlightBackground": "#161b22",
+        "editorCursor.foreground": "#58a6ff",
+        "editor.selectionBackground": "#264f78",
+        "editor.inactiveSelectionBackground": "#264f7855",
       },
     });
   };
@@ -217,9 +264,9 @@ export function CodeEditor({
             domReadOnly: readOnly,
             fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace",
             fontLigatures: true,
-            fontSize: 13,
+            fontSize: editorPreferences.fontSize,
             lineHeight: EDITOR_LINE_HEIGHT,
-            minimap: { enabled: false },
+            minimap: { enabled: editorPreferences.minimap },
             padding: { top: 16, bottom: 16 },
             readOnly,
             renderLineHighlight: "gutter",
@@ -232,11 +279,11 @@ export function CodeEditor({
               verticalScrollbarSize: 10,
             },
             smoothScrolling: true,
-            tabSize: 2,
-            wordWrap: "on",
+            tabSize: editorPreferences.tabSize,
+            wordWrap: editorPreferences.wordWrap ? "on" : "off",
           }}
           path={editorPath}
-          theme="devstash-code-dark"
+          theme={getMonacoThemeId(editorPreferences.theme)}
           value={value}
         />
       </div>

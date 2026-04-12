@@ -62,6 +62,7 @@ export default async function DashboardPage() {
       <DashboardShell
         allCollections={allCollections}
         favoriteCollections={favoriteCollections}
+        initialEditorPreferences={authenticatedUser?.editorPreferences}
         recentCollections={sidebarRecentCollections}
         searchData={searchData}
         sidebarItemTypes={sidebarItemTypes}
