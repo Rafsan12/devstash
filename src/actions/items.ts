@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { auth } from "@/auth";
-import { createItem, deleteItemById, updateItemById } from "@/lib/db/items";
+import { createItem, deleteItemById, toggleItemPinned, updateItemById } from "@/lib/db/items";
 
 const updateItemSchema = z.object({
   title: z.string().trim().min(1, "Title is required"),
@@ -81,6 +81,32 @@ export async function deleteItem(itemId: string) {
     return { success: true as const };
   } catch (error) {
     console.error("[deleteItem action error]", error);
+    return { success: false as const, error: "Something went wrong." };
+  }
+}
+
+export async function toggleItemPin(itemId: string) {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    return { success: false as const, error: "Unauthorized." };
+  }
+
+  try {
+    const updatedItem = await toggleItemPinned(userId, itemId);
+
+    if (!updatedItem) {
+      return { success: false as const, error: "Item not found." };
+    }
+
+    revalidatePath("/dashboard");
+    revalidatePath("/items/[type]", "page");
+    revalidatePath("/collections/[id]", "page");
+
+    return { success: true as const, data: { isPinned: updatedItem.isPinned } };
+  } catch (error) {
+    console.error("[toggleItemPin action error]", error);
     return { success: false as const, error: "Something went wrong." };
   }
 }

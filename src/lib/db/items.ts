@@ -453,7 +453,7 @@ export async function getDashboardItemsByType(
     INNER JOIN "ItemType" AS item_type ON item_type.id = item."itemTypeId"
     WHERE item."userId" = ${userId}
       AND item."itemTypeId" = ${itemTypeId}
-    ORDER BY item."updatedAt" DESC, item.title ASC
+    ORDER BY item."isPinned" DESC, item."updatedAt" DESC, item.title ASC
     LIMIT ${pagination.take}
     OFFSET ${pagination.skip}
   `);
@@ -566,7 +566,7 @@ export async function getDashboardItemsByCollection(
     INNER JOIN "ItemType" AS item_type ON item_type.id = item."itemTypeId"
     WHERE item."userId" = ${userId}
       AND item."collectionId" = ${collectionId}
-    ORDER BY item."updatedAt" DESC, item.title ASC
+    ORDER BY item."isPinned" DESC, item."updatedAt" DESC, item.title ASC
     LIMIT ${pagination.take}
     OFFSET ${pagination.skip}
   `);
