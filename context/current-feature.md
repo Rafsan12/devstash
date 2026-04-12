@@ -1,4 +1,4 @@
-# Current Feature
+# Current Feature: Pinned Items
 
 ## Status
 
@@ -58,3 +58,4 @@ Completed
 - **Pagination**: Added page-based fetching and numbered pagination controls to `/items/[type]` and `/collections/[id]`, introduced shared pagination constants, and kept dashboard collection/item limits explicit.
 - **Editor Preferences Settings**: Added a JSON `editorPreferences` column to `User`, migration, server action, DB helper, `EditorPreferencesContext` provider with autosave, and a settings UI section. Preferences (font size, tab size, word wrap, minimap, theme) persist in the database and are applied to the Monaco editor.
 - **Favorites Page**: Added `isFavorite` to `Item` and `Collection` models with a migration. Created `/favorites` page with a compact, high-density list view (monospace, VS Code style) showing favorited items and collections in separate sections with counts. Star toggle wired in the item drawer, collection cards (three-dots menu), and collection detail actions. Sidebar "Favorites" section now filters by real `isFavorite`. Empty state included.
+- **Pinned Items**: Added `toggleItemPin` server action. Replaced the API-fetch `handleTogglePin` in `ItemDrawerProvider` with the server action pattern (optimistic state, toast, `router.refresh()`). Pinned items now sort to the top of item-type and collection listings via `isPinned DESC` in the ORDER BY clauses.
