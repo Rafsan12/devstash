@@ -38,13 +38,9 @@ import { Textarea } from "@/components/ui/textarea";
 function CollectionMenu({
   onEdit,
   onDelete,
-  onToggleFavorite,
-  isFavorite,
 }: {
   onEdit: () => void;
   onDelete: () => void;
-  onToggleFavorite: () => void;
-  isFavorite: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -86,7 +82,7 @@ function CollectionMenu({
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-1 min-w-[144px] overflow-hidden rounded-xl border border-white/10 bg-zinc-900 py-1 shadow-xl shadow-black/40">
+        <div className="absolute right-0 top-full z-50 mt-1 min-w-36 overflow-hidden rounded-xl border border-white/10 bg-zinc-900 py-1 shadow-xl shadow-black/40">
           <button
             className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
             onClick={stopAndRun(onEdit)}
@@ -94,14 +90,6 @@ function CollectionMenu({
           >
             <Pencil className="h-3.5 w-3.5" />
             Edit
-          </button>
-          <button
-            className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
-            onClick={stopAndRun(onToggleFavorite)}
-            type="button"
-          >
-            <Star className={isFavorite ? "h-3.5 w-3.5 fill-amber-400 text-amber-400" : "h-3.5 w-3.5"} />
-            {isFavorite ? "Unfavorite" : "Favorite"}
           </button>
           <div className="my-1 border-t border-white/8" />
           <button
@@ -178,7 +166,7 @@ function EditCollectionModal({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[460px]">
+      <DialogContent className="sm:max-w-115">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Edit Collection</DialogTitle>
@@ -353,7 +341,7 @@ export function ClickableCollectionCard({
   return (
     <>
       <article
-        className="cursor-pointer rounded-[22px] border bg-black/30 p-5 transition hover:bg-white/[0.02]"
+        className="cursor-pointer rounded-[22px] border bg-black/30 p-5 transition hover:bg-white/2"
         onClick={() => router.push(`/collections/${collection.id}`)}
         style={{
           borderColor: withAlpha(collection.dominantTypeColor, "52"),
@@ -377,11 +365,17 @@ export function ClickableCollectionCard({
             >
               {collection.typeCount} types
             </span>
+            <button
+              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+              className={`flex h-7 w-7 items-center justify-center rounded-lg transition hover:bg-white/10 ${isFavorite ? "text-amber-400" : "text-zinc-500 hover:text-zinc-300"}`}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleToggleFavorite(); }}
+              type="button"
+            >
+              <Star className={isFavorite ? "h-4 w-4 fill-amber-400" : "h-4 w-4"} />
+            </button>
             <CollectionMenu
-              isFavorite={isFavorite}
               onDelete={() => setDeleteOpen(true)}
               onEdit={() => setEditOpen(true)}
-              onToggleFavorite={handleToggleFavorite}
             />
           </div>
         </div>

@@ -24,6 +24,7 @@ export type DashboardItemCardData = {
   itemType: DashboardItemTypeSummary;
   tags: string[];
   isPinned: boolean;
+  isFavorite: boolean;
 };
 
 export type PaginatedDashboardItems = {
@@ -367,6 +368,7 @@ type DashboardItemQueryRow = {
   itemTypeId: string;
   fileExtension: string;
   isPinned: boolean;
+  isFavorite: boolean;
   collectionName: string;
   itemTypeIcon: string;
   itemTypeColor: string;
@@ -403,6 +405,7 @@ function mapDashboardItem(item: DashboardItemQueryRow): DashboardItemCardData {
     },
     tags: createItemTags(item.itemTypeId, item.fileExtension, item.collectionName),
     isPinned: item.isPinned,
+    isFavorite: item.isFavorite,
   };
 }
 
@@ -445,6 +448,7 @@ export async function getDashboardItemsByType(
       item."itemTypeId",
       item."fileExtension",
       item."isPinned",
+      item."isFavorite",
       collection.name AS "collectionName",
       item_type.icon AS "itemTypeIcon",
       item_type.color AS "itemTypeColor"
@@ -479,6 +483,7 @@ export async function getPinnedDashboardItems(userId: string | null): Promise<Da
       item."itemTypeId",
       item."fileExtension",
       item."isPinned",
+      item."isFavorite",
       collection.name AS "collectionName",
       item_type.icon AS "itemTypeIcon",
       item_type.color AS "itemTypeColor"
@@ -509,6 +514,7 @@ export async function getRecentDashboardItems(
       item."itemTypeId",
       item."fileExtension",
       item."isPinned",
+      item."isFavorite",
       collection.name AS "collectionName",
       item_type.icon AS "itemTypeIcon",
       item_type.color AS "itemTypeColor"
@@ -558,6 +564,7 @@ export async function getDashboardItemsByCollection(
       item."itemTypeId",
       item."fileExtension",
       item."isPinned",
+      item."isFavorite",
       collection.name AS "collectionName",
       item_type.icon AS "itemTypeIcon",
       item_type.color AS "itemTypeColor"

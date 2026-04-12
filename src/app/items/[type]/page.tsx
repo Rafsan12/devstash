@@ -1,5 +1,4 @@
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
-import { ItemCard } from "@/components/dashboard/item-card";
 import {
   ClickableItemCard,
   ItemDrawerProvider,
@@ -99,9 +98,7 @@ export default async function ItemTypePage({
             <div className="space-y-6">
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                 {items.map((item) => (
-                  <ClickableItemCard item={item} key={item.id}>
-                    <ItemCard item={item} />
-                  </ClickableItemCard>
+                  <ClickableItemCard item={item} key={item.id} />
                 ))}
               </div>
               <PaginationControls
@@ -111,7 +108,7 @@ export default async function ItemTypePage({
               />
             </div>
           ) : (
-            <div className="flex h-64 items-center justify-center rounded-[28px] border border-dashed border-white/10 bg-white/[0.02]">
+            <div className="flex h-64 items-center justify-center rounded-[28px] border border-dashed border-white/10 bg-white/2">
               <p className="text-sm text-zinc-500">No items found.</p>
             </div>
           )}

@@ -246,7 +246,7 @@ function DrawerContent({
             <ActionButton
               disabled={isMutating}
               icon="trash"
-              label={isMutating ? "Working..." : "Delete"}
+              label="Delete"
               onClick={() => {}}
               variant="danger"
             />

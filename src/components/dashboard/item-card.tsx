@@ -1,10 +1,32 @@
+"use client";
+
 import { type DashboardItemCardData } from "@/lib/db/items";
 import { ItemTypeIcon, withAlpha } from "./item-type-icon";
 
-export function ItemCard({ item }: { item: DashboardItemCardData }) {
+function StarIcon({ filled }: { filled?: boolean }) {
+  return filled ? (
+    <svg aria-hidden="true" className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+      <path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z" />
+    </svg>
+  ) : (
+    <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
+      <path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.8" />
+    </svg>
+  );
+}
+
+export function ItemCard({
+  item,
+  isFavorite,
+  onToggleFavorite,
+}: {
+  item: DashboardItemCardData;
+  isFavorite?: boolean;
+  onToggleFavorite?: (e: React.MouseEvent) => void;
+}) {
   return (
     <article
-      className="flex flex-col justify-between rounded-[22px] border bg-black/30 p-5 transition hover:bg-white/[0.02]"
+      className="flex flex-col justify-between rounded-[22px] border bg-black/30 p-5 transition hover:bg-white/2"
       style={{
         borderColor: withAlpha(item.itemType.color, "52"),
         boxShadow: `inset 0 1px 0 ${withAlpha(item.itemType.color, "24")}`,
@@ -37,16 +59,28 @@ export function ItemCard({ item }: { item: DashboardItemCardData }) {
             </span>
           ))}
         </div>
-        <span
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border"
-          style={{
-            borderColor: withAlpha(item.itemType.color, "5c"),
-            backgroundColor: withAlpha(item.itemType.color, "14"),
-            color: item.itemType.color,
-          }}
-        >
-          <ItemTypeIcon icon={item.itemType.icon} />
-        </span>
+        <div className="flex items-center gap-1.5">
+          {onToggleFavorite !== undefined && (
+            <button
+              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+              className={`flex h-7 w-7 items-center justify-center rounded-lg transition hover:bg-white/10 ${isFavorite ? "text-amber-400" : "text-zinc-600 hover:text-zinc-400"}`}
+              onClick={onToggleFavorite}
+              type="button"
+            >
+              <StarIcon filled={isFavorite} />
+            </button>
+          )}
+          <span
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border"
+            style={{
+              borderColor: withAlpha(item.itemType.color, "5c"),
+              backgroundColor: withAlpha(item.itemType.color, "14"),
+              color: item.itemType.color,
+            }}
+          >
+            <ItemTypeIcon icon={item.itemType.icon} />
+          </span>
+        </div>
       </div>
     </article>
   );

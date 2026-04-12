@@ -3,11 +3,12 @@
 import { type DashboardItemCardData, type ItemDetail } from "@/lib/db/items";
 import { type DashboardSidebarCollection } from "@/lib/db/collections";
 import { ItemDrawer, type EditFormData } from "@/components/dashboard/item-drawer";
+import { ItemCard } from "@/components/dashboard/item-card";
 import { deleteItem, updateItem, toggleItemPin } from "@/actions/items";
 import { toggleItemFavoriteAction } from "@/actions/favorites";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useState, useCallback, type ReactNode } from "react";
+import { useState, useCallback, useTransition, type ReactNode } from "react";
 
 type ItemDrawerContextValue = {
   openItem: (itemId: string) => void;
@@ -193,22 +194,41 @@ export function ItemDrawerProvider({
   );
 }
 
-export function ClickableItemCard({
-  item,
-  children,
-}: {
-  item: DashboardItemCardData;
-  children: ReactNode;
-}) {
+export function ClickableItemCard({ item }: { item: DashboardItemCardData }) {
   const { openItem } = useItemDrawer();
+  const router = useRouter();
+  const [isFavorite, setIsFavorite] = useState(item.isFavorite);
+  const [, startFavTransition] = useTransition();
+
+  const handleToggleFavorite = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    const prev = isFavorite;
+    setIsFavorite(!prev);
+    startFavTransition(async () => {
+      try {
+        const result = await toggleItemFavoriteAction(item.id);
+        if (!result.success) {
+          setIsFavorite(prev);
+          toast.error(result.error ?? "Something went wrong.");
+        } else {
+          router.refresh();
+        }
+      } catch {
+        setIsFavorite(prev);
+        toast.error("Something went wrong.");
+      }
+    });
+  }, [isFavorite, item.id, router]);
 
   return (
-    <button
-      className="w-full cursor-pointer text-left"
+    <div
+      className="w-full cursor-pointer"
       onClick={() => openItem(item.id)}
-      type="button"
+      onKeyDown={(e) => { if (e.key === "Enter") openItem(item.id); }}
+      role="button"
+      tabIndex={0}
     >
-      {children}
-    </button>
+      <ItemCard isFavorite={isFavorite} item={item} onToggleFavorite={handleToggleFavorite} />
+    </div>
   );
 }

@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
-import { ItemCard } from "@/components/dashboard/item-card";
 import {
   ClickableItemCard,
   ItemDrawerProvider,
@@ -98,9 +97,7 @@ export default async function CollectionDetailPage({
             <div className="space-y-6">
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                 {items.map((item) => (
-                  <ClickableItemCard item={item} key={item.id}>
-                    <ItemCard item={item} />
-                  </ClickableItemCard>
+                  <ClickableItemCard item={item} key={item.id} />
                 ))}
               </div>
               <PaginationControls
