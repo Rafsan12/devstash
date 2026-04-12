@@ -1,27 +1,11 @@
-# Current Feature: Pagination
+# Current Feature
 
 ## Status
-In Progress
+Completed
 
 ## Goals
-- Add pagination to `/items/[type]` pages
-- Add pagination to `/collections/[id]` pages
-- Show pagination controls at the bottom with numbered page links and previous/next navigation
-- Disable previous/next controls when there is no corresponding page
-- Use `ITEMS_PER_PAGE = 21` and `COLLECTIONS_PER_PAGE = 21`
-- Keep dashboard limits at `DASHBOARD_COLLECTIONS_LIMIT = 6` and `DASHBOARD_RECENT_ITEMS_LIMIT = 10`
-- Fetch only the data required for the current page
 
 ## Notes
-- Spec: `context/features/pagination-spec.md`
-- Scope covers paginated item-type listings and collection detail listings
-- Data fetching should remain page-sized rather than loading full result sets
-- Sub-tasks completed:
-- Added shared pagination constants and helpers in `src/lib/pagination.ts`
-- Added reusable pagination controls for paged list routes
-- Updated `/items/[type]` to read `?page=` and fetch only the current page
-- Updated `/collections/[id]` to read `?page=` and fetch only the current page
-- Validation completed: `npm.cmd run test`, `npm.cmd run lint`, and `npm.cmd run build`
 
 ## History
 
@@ -70,3 +54,4 @@ In Progress
 - **Collection Edit & Delete**: Added edit and delete actions to collection cards (3-dots dropdown on `/collections` and dashboard, and dedicated buttons on `/collections/[id]`). Edit opens a pre-filled Dialog modal; delete shows an `AlertDialog` confirmation. On delete, items are moved to another collection before deletion so no content is lost. Favorite button is present but not yet functional.
 - **Settings Page**: Created `/settings` page (protected, redirects to `/sign-in` if unauthenticated) containing the Account Actions (change password, delete account) moved from `/profile`. Added a Settings link with a gear icon to the sidebar account menu dropdown. Profile page now shows only profile info and usage stats.
 - **Global Search / Command Palette**: Added a global search palette opened by Cmd+K / Ctrl+K or the dashboard search trigger. It performs client-side fuzzy search across items and collections, groups results into Items and Collections, supports keyboard navigation, opens items in the drawer, and routes to collection detail pages using preloaded search data.
+- **Pagination**: Added page-based fetching and numbered pagination controls to `/items/[type]` and `/collections/[id]`, introduced shared pagination constants, and kept dashboard collection/item limits explicit.
