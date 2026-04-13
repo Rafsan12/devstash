@@ -1,9 +1,9 @@
-import { auth } from "@/auth";
-import { AuthShell } from "@/components/auth/auth-shell";
-import { RegisterForm } from "@/components/auth/register-form";
-import { redirect } from "next/navigation";
+import { auth } from '@/auth';
+import { AuthShell } from '@/components/auth/auth-shell';
+import { RegisterForm } from '@/components/auth/register-form';
+import { redirect } from 'next/navigation';
 
-const ENABLED_VALUES = new Set(["1", "true", "yes", "on"]);
+const ENABLED_VALUES = new Set(['1', 'true', 'yes', 'on']);
 
 function isEmailVerificationEnabled() {
   const rawValue = process.env.EMAIL_VERIFICATION_ENABLED;
@@ -19,7 +19,7 @@ export default async function RegisterPage() {
   const session = await auth();
 
   if (session?.user) {
-    redirect("/dashboard");
+    redirect('/dashboard');
   }
 
   const emailVerificationEnabled = isEmailVerificationEnabled();
