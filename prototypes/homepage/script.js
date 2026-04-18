@@ -255,7 +255,6 @@
     }
 
     // Parallax layers — each depth factor controls how far they shift
-    const rect = card.getBoundingClientRect();
     layers.forEach(({ el, depth }) => {
       // Shift opposite to tilt so content "floats" inside the glass
       const dx = -cY / MAX_TILT * depth * 12;
