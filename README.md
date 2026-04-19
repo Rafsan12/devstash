@@ -5,7 +5,7 @@
 
 ## Vision
 
-DevStash is a minimal, keyboard-driven knowledge workspace built for developers. Notes behave like files (`.md`, `.ts`, etc.) but are organized like a structured database: fast to write, easy to search, and pleasant to use.
+DevStash is a minimal, keyboard-driven knowledge workspace built for developers. Notes behave like files (`.md`, `.ts`, `.prompt`) but are organized like a structured database — fast to write, easy to search, and pleasant to use.
 
 - Speed-first
 - Minimal dark UI
@@ -21,22 +21,27 @@ DevStash is a minimal, keyboard-driven knowledge workspace built for developers.
 - Dashboard with stats, pinned items, recent items, recent collections, and sidebar summaries
 - Collections pages with create, edit, delete, and detail views
 - Item creation, editing, deletion, and collection reassignment
-- Markdown editor and code editor experiences for supported item types
+- Markdown editor (react-markdown) and Monaco code editor for supported item types
 - Global search / command palette with `Cmd+K` / `Ctrl+K`
+- Rate limiting via Upstash Redis
 - Profile page and settings page for account actions
 
 ---
 
 ## Tech Stack
 
-- Framework: [Next.js](https://nextjs.org/) (App Router)
-- Language: [TypeScript](https://www.typescriptlang.org/) in strict mode
-- Styling: [Tailwind CSS](https://tailwindcss.com/)
-- Components: [shadcn/ui](https://ui.shadcn.com/)
-- Database: [PostgreSQL](https://www.postgresql.org/)
-- ORM: [Prisma](https://www.prisma.io/)
-- Auth: [NextAuth.js](https://next-auth.js.org/)
-- Testing: [Vitest](https://vitest.dev/)
+| Layer | Choice |
+|-------|--------|
+| Framework | [Next.js 16](https://nextjs.org/) (App Router) |
+| Language | [TypeScript](https://www.typescriptlang.org/) in strict mode |
+| Styling | [Tailwind CSS v4](https://tailwindcss.com/) |
+| Components | [shadcn/ui](https://ui.shadcn.com/) + [Radix UI](https://www.radix-ui.com/) |
+| Database | [PostgreSQL](https://www.postgresql.org/) |
+| ORM | [Prisma](https://www.prisma.io/) |
+| Auth | [NextAuth.js v5](https://next-auth.js.org/) |
+| Code Editor | [Monaco Editor](https://microsoft.github.io/monaco-editor/) |
+| Rate Limiting | [Upstash Redis](https://upstash.com/) |
+| Testing | [Vitest](https://vitest.dev/) |
 
 ---
 
@@ -97,16 +102,41 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Scripts
 
-- `npm run dev` - start the development server
-- `npm run build` - build the application for production
-- `npm run start` - run the production build
-- `npm run lint` - run ESLint
-- `npm run test` - run the Vitest suite once
-- `npm run test:watch` - run Vitest in watch mode
-- `npm run db:generate` - generate the Prisma client
-- `npm run db:migrate` - run Prisma development migrations
-- `npm run db:seed` - seed the database
-- `npm run db:format` - format the Prisma schema
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start the development server |
+| `npm run build` | Build the application for production |
+| `npm run start` | Run the production build |
+| `npm run lint` | Run ESLint |
+| `npm run test` | Run the Vitest suite once |
+| `npm run test:watch` | Run Vitest in watch mode |
+| `npm run db:generate` | Generate the Prisma client |
+| `npm run db:migrate` | Run Prisma development migrations |
+| `npm run db:seed` | Seed the database |
+| `npm run db:format` | Format the Prisma schema |
+
+---
+
+## Data Model
+
+```
+User
+├── Collections   (logical groupings)
+└── Items         (content with a type: markdown, code, prompt, text)
+    └── ItemType  (system-defined: icon, color, fileExtension)
+RecentItem        (tracks per-user recently visited items)
+```
+
+---
+
+## Roadmap
+
+- [ ] Tags (`#react`, `#security`, `#prompt`)
+- [ ] PostgreSQL full-text search
+- [ ] Wiki-style note linking (`[[JWT Security]]`)
+- [ ] File attachments (images, PDFs)
+- [ ] AI-powered summarization and semantic search
+- [ ] Graph view for note relationships
 
 ---
 
